@@ -6,7 +6,10 @@ import FlyingBats from "../components/FlyingBats.vue";
   <div id="start-view">
     <h1>HALLO WE</h1>
     <p>Trick or Treat. . .</p>
-    <FlyingBats />
+    <div class="flying-bat-container">
+      <FlyingBats />
+    </div>
+    <!-- <FlyingBats /> -->
   </div>
 </template>
 
@@ -19,6 +22,21 @@ import FlyingBats from "../components/FlyingBats.vue";
   background-position: top;
   height: 90vh;
   width: 100%;
+  position: relative;
+}
+h1,
+p {
+  position: relative;
+  z-index: 10;
+}
+
+.flying-bat-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* z-index: 1; */
 }
 
 /* den med lite lättsam stil*/
