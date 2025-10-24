@@ -1,18 +1,8 @@
 <script setup lang="ts">
-
+import Navbar from "./components/NavBar.vue";
 </script>
 
 <template>
-
-      <RouterView />
-
+  <RouterView />
+  <Navbar />
 </template>
-
-<style scoped>
-body{
-  background-color: rgb(50, 32, 101);
-}
-h1{
-  color: aliceblue;
-}
-</style>
