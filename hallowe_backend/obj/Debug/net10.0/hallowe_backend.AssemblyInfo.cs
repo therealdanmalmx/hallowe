@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("hallowe_backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6ab467c9325a11e37202457671bcd3a9e875ea5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+95eeefaa759e590ff3e9a2e84cc3929e42ccc291")]
 [assembly: System.Reflection.AssemblyProductAttribute("hallowe_backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("hallowe_backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
