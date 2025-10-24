@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using hallowe_backend.Data;
@@ -11,9 +12,11 @@ using hallowe_backend.Data;
 namespace hallowe_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251023064727_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,10 +66,7 @@ namespace hallowe_backend.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<TimeOnly>("StartTime")
+                    b.Property<TimeOnly>("Time")
                         .HasColumnType("time without time zone");
 
                     b.HasKey("Id");

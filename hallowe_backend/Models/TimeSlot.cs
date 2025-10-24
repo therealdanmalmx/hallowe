@@ -7,8 +7,9 @@ namespace hallowe_backend.Models
 {
     public class TimeSlot
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public DateOnly Date { get; set; }
-        public TimeOnly Time { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
     }
 }
