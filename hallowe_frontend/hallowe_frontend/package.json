@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fawmi/vue-google-maps": "^0.9.79",
     "@tailwindcss/vite": "^4.1.16",
     "jquery": "^3.7.1",
     "vue": "^3.5.22",

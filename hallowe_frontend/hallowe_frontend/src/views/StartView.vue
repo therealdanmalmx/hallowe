@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import FlyingBats from '../components/FlyingBats.vue'
+  import FlyingBats from '../components/FlyingBatsComp.vue'
 </script>
 
 <template>
