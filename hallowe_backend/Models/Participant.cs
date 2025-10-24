@@ -9,7 +9,7 @@ namespace hallowe_backend.Models
 {
     public class Participant
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -21,7 +21,5 @@ namespace hallowe_backend.Models
         public string PostalCode { get; set; } = string.Empty;
         [Required]
         public TimeSlot TimeSlot { get; set; }
-
-        public List<TimeSlot> TimeSlots { get; set; }
     }
 }

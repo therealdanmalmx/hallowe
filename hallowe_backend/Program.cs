@@ -1,6 +1,8 @@
 using hallowe_backend.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,8 +20,18 @@ builder.Services.AddEndpointsApiExplorer();
    });
 
 // Database connection
-builder.Services.AddDbContextPool<ApplicationDbContext>(opt =>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var connectionUri = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Parse the URI
+var dbBuilder = new NpgsqlDataSourceBuilder(connectionUri);
+var dataSource = dbBuilder.Build();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(dataSource));
+
+// builder.Services.AddDbContextPool<ApplicationDbContext>(opt =>
+//     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add CORS
 builder.Services.AddCors(options =>

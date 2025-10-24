@@ -9,6 +9,6 @@ namespace hallowe_backend.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
             public DbSet<Participant> Participants { get; set; }
-            public DbSet<Participant> TimeSlots { get; set; }
+            public DbSet<TimeSlot> TimeSlots { get; set; }
     }
 }
