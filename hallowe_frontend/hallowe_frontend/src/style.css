@@ -1,12 +1,19 @@
+@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Henny+Penny&family=Rubik+Vinyl&family=Rubik+Wet+Paint&display=swap'); */
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
 
   color-scheme: light dark;
-  color: rgb(255, 255, 255);
+  /* color: rgb(255, 255, 255); */
   /* background-color: #eaeaea; */
 
-  /* background-color: #1C1B29; */
+  background-color: #1c1b29;
   /* background-color: #FF7518; */
   /* background-color: #9aff6b; */
   font-synthesis: none;
@@ -24,17 +31,18 @@ a:hover {
 
 body {
   margin: 0;
-  /* display: flex; */
-  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
   background-color: #1c1b29;
 }
 
 h1 {
-  font-size: 3.2em;
   line-height: 1.1;
   margin: 0;
+  font-family: 'Henny Penny', system-ui;
+  color: #ff7518;
+  text-align: center;
+  /* text-shadow: 0 0 4px #ff0000; */
 }
 
 button {
@@ -43,12 +51,14 @@ button {
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-family: inherit;
-  background-color: #1a1a1a00;
+  background-color: #ff7518;
+  color: #eaeaea;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #ff7518;
+  background-color: #9aff6b;
+  color: #1c1b29;
 }
 button:focus,
 button:focus-visible {
