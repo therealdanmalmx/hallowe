@@ -9,7 +9,7 @@ import addIcon from "../assets/icons/add_icon.png";
     <div>
       <ul>
         <li>
-          <RouterLink to="/home">
+          <RouterLink to="/search">
             <img :src="searchIcon" alt="search" />
           </RouterLink>
         </li>
@@ -19,7 +19,7 @@ import addIcon from "../assets/icons/add_icon.png";
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/home">
+          <RouterLink to="/add-address">
             <img :src="addIcon" alt="add trick or treathouse" />
           </RouterLink>
         </li>
