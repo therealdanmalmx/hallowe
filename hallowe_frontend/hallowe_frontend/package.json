@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.16",
     "jquery": "^3.7.1",
     "vue": "^3.5.22",
+    "vue-loading-overlay": "^6.0.6",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
