@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import type { RefSymbol } from '@vue/reactivity'
+import { ref, computed } from 'vue'
 
   const form = ref({
     name: '',
@@ -13,7 +14,7 @@
   const submitted = ref(false)
 
   function submitForm() {
-    console.log('Formulärdata:', form.value)
+    console.log('Namn:', form.value.name, 'godkänner att man kommer till dem: ', form.value.trickOrTreat)
     submitted.value = true
   }
 
