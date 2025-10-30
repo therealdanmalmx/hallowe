@@ -1,8 +1,30 @@
 <script lang="ts">
-  // import { defineComponent, ref } from 'vue'
+
+  import { defineComponent, ref } from 'vue'
   import { useLoadScript, GMapMap, GMapMarker } from '@fawmi/vue-google-maps'
 
-  // export default defineComponent({
+export default defineComponent({
+
+  setup() {
+    const pos = ref({ lat: 59.3293, lng: 18.0686 })
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        pos.value = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+        console.log({ pos: pos.value })
+      },
+      (error) => {
+        console.error('Error getting location:', error)
+      }
+    )
+    console.log({pos})
+
+    return { pos }
+  }
+
   //   name: 'MapComp',
   //   props: {
   //     // searchLocation: {
@@ -42,17 +64,17 @@
 
   //     return { isLoaded, loadError, center, mapOptions, props }
   //   }
-  // })
+  })
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="flex flex-col justify-center py-8">
     <GMapMap
-      :center="{ lat: 59.3293, lng: 18.0686 }"
-      :zoom="10"
-      style="width: 90%; height: 80vh"
+      :center="{ lat: pos.lat, lng: pos.lng }"
+      :zoom="13"
+    style="width: 90%; height: 80vh; margin: 0 auto;"
     >
-      <GMapMarker :position="{ lat: 59.3293, lng: 18.0686 }" />
+      <GMapMarker :position="{lat: pos.lat, lng: pos.lng}" />
     </GMapMap>
   </div>
 </template>

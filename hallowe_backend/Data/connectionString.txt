@@ -1,0 +1,1 @@
+Host=ep-old-snow-a912uz51-pooler.gwc.azure.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_U5OFE9RIzvbh;SSL Mode=Require;Trust Server Certificate=true

@@ -1,7 +1,4 @@
 @import 'tailwindcss';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Henny+Penny&family=Rubik+Vinyl&family=Rubik+Wet+Paint&display=swap'); */
 
@@ -44,7 +41,6 @@ h1 {
   text-align: center;
   /* text-shadow: 0 0 4px #ff0000; */
 }
-
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -54,7 +50,7 @@ button {
   background-color: #ff7518;
   color: #eaeaea;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background-color 300ms, color 300ms, border-color 300ms;
 }
 button:hover {
   background-color: #9aff6b;

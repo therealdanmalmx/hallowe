@@ -14,8 +14,9 @@ builder.Services.AddEndpointsApiExplorer();
    {
        c.SwaggerDoc("v1", new OpenApiInfo
        {
+           Version = "v1",
            Title = "HalloWe",
-           Version = "v1"
+           Description = "A spooky way to let kids know you are fair game during Halloween",
        });
    });
 
@@ -29,9 +30,6 @@ var dataSource = dbBuilder.Build();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(dataSource));
-
-// builder.Services.AddDbContextPool<ApplicationDbContext>(opt =>
-//     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add CORS
 builder.Services.AddCors(options =>
