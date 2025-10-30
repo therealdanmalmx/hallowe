@@ -72,7 +72,8 @@ export default defineComponent({
     <GMapMap
       :center="{ lat: pos.lat, lng: pos.lng }"
       :zoom="13"
-    style="width: 90%; height: 80vh; margin: 0 auto;"
+      :options="{ mapTypeControl: false }"
+      style="width: 90%; height: 80vh; margin: 0 auto;"
     >
       <GMapMarker :position="{lat: pos.lat, lng: pos.lng}" />
     </GMapMap>
