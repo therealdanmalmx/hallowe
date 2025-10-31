@@ -1,32 +1,65 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-  const form = ref({
-    name: '',
-    street: '',
-    number: '',
-    postal: '',
-    municipality: '',
-    trickOrTreat: false
-  })
+const year = ref(new Date().getFullYear)
 
-  const submitted = ref(false)
+function getDaysAroundOctober31(year: number) {
+  // Create date for October 31st
+  const oct31 = new Date(year, 9, 31); // Month is 0-indexed, so 9 = October
 
-  function submitForm() {
-    console.log('Namn:', form.value.name, 'godkänner att man kommer till dem: ', form.value.trickOrTreat)
-    submitted.value = true
-  }
+  // Get 2 days before
+  const twoDaysBefore = new Date(oct31);
+  twoDaysBefore.setDate(oct31.getDate() - 2);
 
-  const isFormInvalid = computed(() => {
-    return (
-      form.value.name &&
-      form.value.street &&
-      form.value.number &&
-      form.value.postal &&
-      form.value.municipality
-    )
-  })
-  //TODO: Lägg till validering för formuläret samt fixa disabled knappen
+  // Get 1 days before
+  const oneDaysBefore = new Date(oct31);
+  oneDaysBefore.setDate(oct31.getDate() - 1);
+
+  // Get 2 days after
+  const twoDaysAfter = new Date(oct31);
+  twoDaysAfter.setDate(oct31.getDate() + 2);
+
+  // Get 1 days after
+  const oneDaysAfter = new Date(oct31);
+  oneDaysAfter.setDate(oct31.getDate() + 1);
+
+  return {
+    twoDaysBefore,
+    oneDaysBefore,
+    oct31,
+    oneDaysAfter,
+    twoDaysAfter,
+  };
+}
+
+const form = ref({
+  name: '',
+  street: '',
+  number: '',
+  postal: '',
+  municipality: '',
+  trickOrTreat: false,
+  date: Date,
+})
+
+const submitted = ref(false)
+
+function submitForm() {
+  console.log('Namn:', form.value.name, 'godkänner att man kommer till dem: ', form.value.trickOrTreat)
+  submitted.value = true
+}
+
+const isFormInvalid = computed(() => {
+  return (
+    form.value.name &&
+    form.value.street &&
+    form.value.number &&
+    form.value.postal &&
+    form.value.municipality
+  )
+})
+
+//TODO: Lägg till validering för formuläret samt fixa disabled knappen
 </script>
 
 <template>
@@ -147,6 +180,67 @@ import { ref, computed } from 'vue'
       <p v-if="submitted" class="text-green-500 text-center mt-4 font-medium">
         Tack, {{ form.name }}! Din adress har sparats! 🧡
       </p>
+
+      <div class="m-4 text-left">
+        <label class="block text-sm font-medium text-gray-200 mb-1 pl-2">
+          Välj datum runt Halloween
+        </label>
+        <div class="flex gap-2 mt-2">
+          <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
+            <input
+              type="radio"
+              v-model="form.date"
+              :value="getDaysAroundOctober31(2025).twoDaysBefore"
+              class="h-4 w-4 accent-orange-500"
+            />
+            <span class="ml-2">{{getDaysAroundOctober31(2025).twoDaysBefore.getDate()}} / {{getDaysAroundOctober31(2025).twoDaysBefore.getMonth() +1}}</span>
+          </label>
+
+          <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
+            <input
+              type="radio"
+              v-model="form.date"
+              :value="getDaysAroundOctober31(2025).oneDaysBefore"
+              class="h-4 w-4 accent-orange-500"
+            />
+            <span class="ml-2">{{getDaysAroundOctober31(2025).oneDaysBefore.getDate()}} / {{getDaysAroundOctober31(2025).oneDaysBefore.getMonth() + 1}}</span>
+          </label>
+
+          <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
+            <input
+              type="radio"
+              v-model="form.date"
+              :value="getDaysAroundOctober31(2025).oct31"
+              class="h-4 w-4 accent-orange-500"
+            />
+            <span class="ml-2">{{getDaysAroundOctober31(2025).oct31.getDate()}} / {{getDaysAroundOctober31(2025).oct31.getMonth() + 1}}</span>
+          </label>
+
+          <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
+            <input
+              type="radio"
+              v-model="form.date"
+              :value="getDaysAroundOctober31(2025).oneDaysAfter"
+              class="h-4 w-4 accent-orange-500"
+            />
+            <span class="ml-2">{{getDaysAroundOctober31(2025).oneDaysAfter.getDate()}} / {{getDaysAroundOctober31(2025).oneDaysAfter.getMonth() + 1}}</span>
+          </label>
+
+          <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
+            <input
+              type="radio"
+              v-model="form.date"
+              :value="getDaysAroundOctober31(2025).twoDaysAfter"
+              class="h-4 w-4 accent-orange-500"
+            />
+            <span class="ml-2">{{getDaysAroundOctober31(2025).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(2025).twoDaysAfter.getMonth() + 1}}</span>
+          </label>
+        </div>
+
+        <p v-if="form.date" class="text-gray-200 text-sm mt-3 pl-2">
+          Valt datum: {{ form.date }}
+        </p>
+      </div>
     </form>
   </div>
 </template>
