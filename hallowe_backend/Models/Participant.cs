@@ -20,6 +20,8 @@ namespace hallowe_backend.Models
         [Required]
         public string PostalCode { get; set; } = string.Empty;
         [Required]
-        public TimeSlot TimeSlot { get; set; }
+        public TimeSlot TimeSlots { get; set; }
+        public Guid TimeSlotId { get; set; }
+
     }
 }

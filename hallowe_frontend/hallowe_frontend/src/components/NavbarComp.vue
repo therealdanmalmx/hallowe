@@ -5,51 +5,25 @@
 </script>
 
 <template>
-  <nav>
+  <nav class="absoute w-full bottom-10 pt-12">
     <div>
-      <ul>
-        <li>
+      <ul class="flex w-full justify-between items-center">
+        <li class="flex-1 flex justify-center size-12 cursor-pointer">
           <RouterLink to="/search">
-            <img :src="searchIcon" alt="search" />
+        <img :src="searchIcon" alt="search" title="Leta efter en adress" />
           </RouterLink>
         </li>
-        <li>
+        <li class="flex-1 flex justify-center" >
           <RouterLink to="/map">
-            <img :src="houseIcon" alt="map" />
+        <img :src="houseIcon" alt="map" title="Se anmälda hus"/>
           </RouterLink>
         </li>
-        <li>
+        <li class="flex-1 flex justify-center">
           <RouterLink to="/add-address">
-            <img :src="addIcon" alt="add trick or treathouse" />
+        <img :src="addIcon" alt="add trick or treathouse" title="Lägg till ett hus"/>
           </RouterLink>
         </li>
       </ul>
     </div>
   </nav>
 </template>
-
-<style scoped>
-  nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-
-    padding: 1rem 0;
-  }
-
-  ul {
-    display: flex;
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: space-evenly;
-  }
-
-  img {
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
-  }
-</style>

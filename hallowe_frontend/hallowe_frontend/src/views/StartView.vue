@@ -4,7 +4,7 @@
 
 <template>
   <div id="start-view">
-    <h1>HALLO WE</h1>
+    <h1 class="text-5xl">HALLO WE</h1>
     <p>Trick or Treat. . .</p>
     <div class="flying-bat-container">
       <FlyingBats />

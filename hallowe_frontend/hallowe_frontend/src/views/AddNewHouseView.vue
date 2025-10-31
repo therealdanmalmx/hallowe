@@ -30,10 +30,10 @@ import { ref, computed } from 'vue'
 </script>
 
 <template>
-  <div class="flex justify-center min-h-screen">
+  <div class="flex justify-center min-h-full">
     <form
       @submit.prevent="submitForm"
-      class="m-6 p-4 rounded-2xl w-full max-w-md backdrop-blur-sm"
+      class="m-6 p-4 rounded-2xl w-full md:max-w-xl max-w-md backdrop-blur-sm"
     >
       <h1 class="text-4xl font-bold text-center text-orange-700 mb-6">
         Hallo We 🕸️

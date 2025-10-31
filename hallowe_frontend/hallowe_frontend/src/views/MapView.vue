@@ -1,28 +1,37 @@
 <script lang="ts">
- import { defineComponent, ref, onMounted } from 'vue'
-  import { useLoading } from 'vue-loading-overlay'
+
+  import { defineComponent, ref, onMounted } from 'vue'
   import MapComp from '../components/MapComp.vue'
-  import 'vue-loading-overlay/dist/css/index.css'
-  
-  const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
+  const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-  
+  interface House {
+    name: string,
+    city: string
+    streetName: string,
+    postalCode: string
+  }
+
   export default defineComponent({
     name: 'MapView',
     components: { MapComp },
     setup() {
       const defaultCenter = { lat: 57.725, lng: 13.162 }
       const zoom = ref(7)
+      let data = ref<House[]>([]);
 
       const loading = useLoading()  
       const errorMessage = ref<string | null>(null)
 
 
       const fetchData = async () => {
+
+        console.log({data})
         loading.show() 
 errorMessage.value = null 
         try {
+          const res = await fetch('http://localhost:5168/api/Participant')
+          data.value = await res.json();
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
           )
@@ -45,19 +54,20 @@ errorMessage.value = null
 
       onMounted(fetchData)
 
-      return { defaultCenter, zoom, errorMessage  }
+      return { defaultCenter, zoom, data, errorMessage }
     }
   })
 </script>
 
 <template>
   <div>
-    <h1>Map Page</h1>
-     <div v-if="errorMessage" class="error-message">
-      <p>{{ errorMessage }}</p>
+    <h1 class="text-5xl">Map Page</h1>
+    <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
+    <div>
+      <div v-for="house in data">
+        <p>{{ house.name }} | {{ house.streetName }} | {{ house.postalCode }} | {{ house.city }}</p>
+      </div>
     </div>
-       <MapComp v-if="!errorMessage" :defaultCenter="defaultCenter" :zoom="zoom" />
-
   </div>
 </template>
 <!-- :searchLocation="searchLocation"
