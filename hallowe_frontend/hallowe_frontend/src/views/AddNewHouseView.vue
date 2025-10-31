@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-const year = ref(new Date().getFullYear)
+const year = ref(new Date);
 
-function getDaysAroundOctober31(year: number) {
+const currentYear = year.value.getFullYear();
+console.log(year.value)
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString()
+};
+
+const getDaysAroundOctober31 = (year: number) => {
   // Create date for October 31st
   const oct31 = new Date(year, 9, 31); // Month is 0-indexed, so 9 = October
 
@@ -39,7 +46,7 @@ const form = ref({
   postal: '',
   municipality: '',
   trickOrTreat: false,
-  date: Date,
+  date: new Date,
 })
 
 const submitted = ref(false)
@@ -190,55 +197,55 @@ const isFormInvalid = computed(() => {
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(2025).twoDaysBefore"
+              :value="getDaysAroundOctober31(currentYear).twoDaysBefore"
               class="h-4 w-4 accent-orange-500"
             />
-            <span class="ml-2">{{getDaysAroundOctober31(2025).twoDaysBefore.getDate()}} / {{getDaysAroundOctober31(2025).twoDaysBefore.getMonth() +1}}</span>
+            <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysBefore.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysBefore.getMonth() +1}}</span>
           </label>
 
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(2025).oneDaysBefore"
+              :value="getDaysAroundOctober31(currentYear).oneDaysBefore"
               class="h-4 w-4 accent-orange-500"
             />
-            <span class="ml-2">{{getDaysAroundOctober31(2025).oneDaysBefore.getDate()}} / {{getDaysAroundOctober31(2025).oneDaysBefore.getMonth() + 1}}</span>
+            <span class="ml-2">{{getDaysAroundOctober31(currentYear).oneDaysBefore.getDate()}} / {{getDaysAroundOctober31(currentYear).oneDaysBefore.getMonth() + 1}}</span>
           </label>
 
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(2025).oct31"
+              :value="getDaysAroundOctober31(currentYear).oct31"
               class="h-4 w-4 accent-orange-500"
             />
-            <span class="ml-2">{{getDaysAroundOctober31(2025).oct31.getDate()}} / {{getDaysAroundOctober31(2025).oct31.getMonth() + 1}}</span>
+            <span class="ml-2">{{getDaysAroundOctober31(currentYear).oct31.getDate()}} / {{getDaysAroundOctober31(currentYear).oct31.getMonth() + 1}}</span>
           </label>
 
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(2025).oneDaysAfter"
+              :value="getDaysAroundOctober31(currentYear).oneDaysAfter"
               class="h-4 w-4 accent-orange-500"
             />
-            <span class="ml-2">{{getDaysAroundOctober31(2025).oneDaysAfter.getDate()}} / {{getDaysAroundOctober31(2025).oneDaysAfter.getMonth() + 1}}</span>
+            <span class="ml-2">{{getDaysAroundOctober31(currentYear).oneDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).oneDaysAfter.getMonth() + 1}}</span>
           </label>
 
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(2025).twoDaysAfter"
+              :value="getDaysAroundOctober31(currentYear).twoDaysAfter"
               class="h-4 w-4 accent-orange-500"
             />
-            <span class="ml-2">{{getDaysAroundOctober31(2025).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(2025).twoDaysAfter.getMonth() + 1}}</span>
+            <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysAfter.getMonth() + 1}}</span>
           </label>
         </div>
 
         <p v-if="form.date" class="text-gray-200 text-sm mt-3 pl-2">
-          Valt datum: {{ form.date }}
+          Valt datum: {{formatDate(form.date)}} {{ formatDate(form.date) == `31/10/${currentYear}` ? `- Halloween` :  '' }}
         </p>
       </div>
     </form>
