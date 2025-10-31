@@ -39,6 +39,8 @@ const getDaysAroundOctober31 = (year: number) => {
   };
 }
 
+
+
 const form = ref({
   name: '',
   street: '',
@@ -46,7 +48,7 @@ const form = ref({
   postal: '',
   municipality: '',
   trickOrTreat: false,
-  date: new Date,
+  date: null,
 })
 
 const submitted = ref(false)
@@ -79,7 +81,7 @@ const isFormInvalid = computed(() => {
         Hallo We 🕸️
       </h1>
 
-      <div class="m-4 text-left">
+      <div class="my-2 text-left">
         <label
           for="name"
           class="block text-sm font-medium text-gray-200 pl-2 mb-1"
@@ -95,7 +97,7 @@ const isFormInvalid = computed(() => {
         />
       </div>
 
-      <div class="m-4 text-left">
+      <div class="my-2 text-left">
         <label
           for="street"
           class="block text-sm font-medium text-gray-200 mb-1 pl-2"
@@ -111,7 +113,7 @@ const isFormInvalid = computed(() => {
         />
       </div>
 
-      <div class="m-4 text-left">
+      <div class="my-2 text-left">
         <label
           for="number"
           class="block text-sm font-medium text-gray-200 mb-1 pl-2"
@@ -127,7 +129,7 @@ const isFormInvalid = computed(() => {
         />
       </div>
 
-      <div class="m-4 text-left">
+      <div class="my-2 text-left">
         <label
           for="postal"
           class="block text-sm font-medium text-gray-200 mb-1 pl-2"
@@ -143,7 +145,7 @@ const isFormInvalid = computed(() => {
         />
       </div>
 
-      <div class="m-4 text-left">
+      <div class="my-2 text-left">
         <label
           for="municipality"
           class="block text-sm font-medium text-gray-200 mb-1 pl-2"
@@ -159,40 +161,11 @@ const isFormInvalid = computed(() => {
         />
       </div>
 
-      <div class="flex items-center m-5">
-        <input
-          v-model="form.trickOrTreat"
-          id="trickOrTreat"
-          type="checkbox"
-          class="h-5 w-5 focus:ring-orange-800 border-orange-300 rounded accent-green-500"
-        />
-        <label for="trickOrTreat" class="ml-2 text-sm text-gray-200">
-          Ja, vi välkomnar Bus eller Godis! 👻
-        </label>
-      </div>
-
-      <button
-        type="submit"
-        :disabled="!isFormInvalid"
-        :class="[
-          'w-full font-semibold py-2 px-4 rounded-lg mt-12 shadow-2xl transition',
-          isFormInvalid
-            ? 'bg-gray-300 cursor-not-allowed'
-            : 'bg-[#FF7518] hover:bg-[#9AFF6B]'
-        ]"
-      >
-        Skicka in
-      </button>
-
-      <p v-if="submitted" class="text-green-500 text-center mt-4 font-medium">
-        Tack, {{ form.name }}! Din adress har sparats! 🧡
-      </p>
-
-      <div class="m-4 text-left">
+      <div class="my-4 text-left">
         <label class="block text-sm font-medium text-gray-200 mb-1 pl-2">
           Välj datum runt Halloween
         </label>
-        <div class="flex gap-2 mt-2">
+        <div class="flex flex-col items-stretch gap-2 mt-2 xl:flex-row xl:justify-between">
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
@@ -220,7 +193,8 @@ const isFormInvalid = computed(() => {
               :value="getDaysAroundOctober31(currentYear).oct31"
               class="h-4 w-4 accent-orange-500"
             />
-            <span class="ml-2">{{getDaysAroundOctober31(currentYear).oct31.getDate()}} / {{getDaysAroundOctober31(currentYear).oct31.getMonth() + 1}}</span>
+            <span class="ml-2 xl:text-orange-600">{{getDaysAroundOctober31(currentYear).oct31.getDate()}} / {{getDaysAroundOctober31(currentYear).oct31.getMonth() + 1 }}</span>
+            <span class="visible xl:hidden ml-1">(Halloween)</span>
           </label>
 
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
@@ -244,10 +218,41 @@ const isFormInvalid = computed(() => {
           </label>
         </div>
 
-        <p v-if="form.date" class="text-gray-200 text-sm mt-3 pl-2">
-          Valt datum: {{formatDate(form.date)}} {{ formatDate(form.date) == `31/10/${currentYear}` ? `- Halloween` :  '' }}
-        </p>
+        <!-- <p v-if="form.date" class="text-gray-200 text-sm mt-3 pl-2">
+            Valt datum: {{ formatDate(form.date) }} {{ formatDate(form.date) == `31/10/${currentYear}` ? `- Halloween` : '' }}
+        </p> -->
       </div>
+
+      <div class="flex items-center my-4 mt-8">
+        <input
+          v-model="form.trickOrTreat"
+          id="trickOrTreat"
+          type="checkbox"
+          class="h-5 w-5 focus:ring-orange-800 border-orange-300 rounded accent-green-500"
+        />
+        <label for="trickOrTreat" class="ml-2 text-sm text-gray-200">
+          Ja, vi välkomnar Bus eller Godis! 👻
+        </label>
+      </div>
+
+
+      <button
+        type="submit"
+        :disabled="!isFormInvalid"
+        :class="[
+          'w-full font-semibold py-2 px-4 rounded-lg mt-4 shadow-2xl transition',
+          isFormInvalid
+            ? 'bg-gray-300 cursor-not-allowed'
+            : 'bg-[#FF7518] hover:bg-[#9AFF6B]'
+        ]"
+      >
+        Skicka in
+      </button>
+
+      <p v-if="submitted" class="text-green-500 text-center mt-4 font-medium">
+        Tack, {{ form.name }}! Din adress har sparats! 🧡
+      </p>
+
     </form>
   </div>
 </template>
