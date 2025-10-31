@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { RefSymbol } from '@vue/reactivity'
 import { ref, computed } from 'vue'
 
   const form = ref({
