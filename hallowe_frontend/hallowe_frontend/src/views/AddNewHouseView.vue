@@ -11,22 +11,17 @@ const formatDate = (date: Date) => {
 };
 
 const getDaysAroundOctober31 = (year: number) => {
-  // Create date for October 31st
-  const oct31 = new Date(year, 9, 31); // Month is 0-indexed, so 9 = October
+  const oct31 = new Date(year, 9, 31);
 
-  // Get 2 days before
   const twoDaysBefore = new Date(oct31);
   twoDaysBefore.setDate(oct31.getDate() - 2);
 
-  // Get 1 days before
   const oneDaysBefore = new Date(oct31);
   oneDaysBefore.setDate(oct31.getDate() - 1);
 
-  // Get 2 days after
   const twoDaysAfter = new Date(oct31);
   twoDaysAfter.setDate(oct31.getDate() + 2);
 
-  // Get 1 days after
   const oneDaysAfter = new Date(oct31);
   oneDaysAfter.setDate(oct31.getDate() + 1);
 
@@ -39,8 +34,6 @@ const getDaysAroundOctober31 = (year: number) => {
   };
 }
 
-
-
 const form = ref({
   name: '',
   street: '',
@@ -49,6 +42,7 @@ const form = ref({
   municipality: '',
   trickOrTreat: false,
   date: null,
+  timeFrom: null,
 })
 
 const submitted = ref(false)
@@ -163,7 +157,7 @@ const isFormInvalid = computed(() => {
 
       <div class="my-4 text-left">
         <label class="block text-sm font-medium text-gray-200 mb-1 pl-2">
-          Välj datum runt Halloween
+          Välj datum runt Halloween {{ currentYear }}
         </label>
         <div class="flex flex-col items-stretch gap-2 mt-2 xl:flex-row xl:justify-between">
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
@@ -221,6 +215,16 @@ const isFormInvalid = computed(() => {
         <!-- <p v-if="form.date" class="text-gray-200 text-sm mt-3 pl-2">
             Valt datum: {{ formatDate(form.date) }} {{ formatDate(form.date) == `31/10/${currentYear}` ? `- Halloween` : '' }}
         </p> -->
+      </div>
+      <div class="flex justify-between gap-x-4 ">
+        <div class="my-4 text-left w-1/2">
+          <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Från:</label>
+          <input type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+        </div>
+        <div class="my-4 text-left w-1/2">
+          <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Till:</label>
+          <input type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+        </div>
       </div>
 
       <div class="flex items-center my-4 mt-8">
