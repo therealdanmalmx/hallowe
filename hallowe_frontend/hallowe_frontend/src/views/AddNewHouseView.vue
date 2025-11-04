@@ -211,10 +211,6 @@ const isFormInvalid = computed(() => {
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysAfter.getMonth() + 1}}</span>
           </label>
         </div>
-
-        <!-- <p v-if="form.date" class="text-gray-200 text-sm mt-3 pl-2">
-            Valt datum: {{ formatDate(form.date) }} {{ formatDate(form.date) == `31/10/${currentYear}` ? `- Halloween` : '' }}
-        </p> -->
       </div>
       <div class="flex justify-between gap-x-4 ">
         <div class="text-left w-1/2">
