@@ -217,11 +217,11 @@ const isFormInvalid = computed(() => {
         </p> -->
       </div>
       <div class="flex justify-between gap-x-4 ">
-        <div class="my-4 text-left w-1/2">
+        <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Från:</label>
           <input type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
-        <div class="my-4 text-left w-1/2">
+        <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Till:</label>
           <input type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
