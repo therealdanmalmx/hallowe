@@ -2,6 +2,8 @@
 
   import { defineComponent, ref, onMounted } from 'vue'
   import MapComp from '../components/MapComp.vue'
+  // import { useLoading } from 'vue-loading-overlay';
+  import RotateLoader from 'vue-spinner/src/RotateLoader.vue'
 
   const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -14,71 +16,81 @@
 
   export default defineComponent({
     name: 'MapView',
-    components: { MapComp },
+    components: { MapComp, RotateLoader },
     setup() {
       const defaultCenter = { lat: 57.725, lng: 13.162 }
       const zoom = ref(7)
+      let isLoading = ref<boolean>(false);
       let data = ref<House[]>([]);
+      const color = ref<string>("#FF7518");
+      const size = ref('1.25rem');
 
-      const loading = useLoading()  
+      // const loading = useLoading()
       const errorMessage = ref<string | null>(null)
-
 
       const fetchData = async () => {
 
-        console.log({data})
-        loading.show() 
-errorMessage.value = null 
+        errorMessage.value = null;
+
+        isLoading.value = true;
+        // loading.show()
         try {
           const res = await fetch('http://localhost:5168/api/Participant')
-          data.value = await res.json();
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
           )
 
+          if (res.ok) {
+            data.value = await res.json();
+            console.log('Fetched data:', data.value)
+          }
           if (response.ok) {
-            const data = await response.json()
-            console.log('Fetched data:', data)
-            loading.hide()  
+            const mapData = await response.json()
+            console.log('Fetched map:', mapData)
+            isLoading.value = false;
+
+            // loading.hide();
           } else {
             console.error('Error fetching data, Status:', response.statusText)
-            loading.hide() 
+            isLoading.value = false;
+            // loading.hide()
           }
         } catch (error: any) {
           console.error('Error fetching data:', error.message)
-          loading.hide() 
-            errorMessage.value = `Kunde inte ladda kartan. Försök igen senare.` 
-      
+          isLoading.value = false;
+          // loading.hide()
+            errorMessage.value = `Kunde inte ladda kartan. Försök igen senare.`
+
         }
       }
 
       onMounted(fetchData)
 
-      return { defaultCenter, zoom, data, errorMessage }
+      return { defaultCenter, zoom, data, errorMessage, isLoading, color, size }
     }
   })
 </script>
 
 <template>
-  <div>
-    <h1 class="text-5xl">Map Page</h1>
-    <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
-    <div>
+  <h1 class="text-5xl vl-parent">Map Page</h1>
+  <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
+  <div v-else class="py-4">
+      <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
       <div v-for="house in data">
         <p>{{ house.name }} | {{ house.streetName }} | {{ house.postalCode }} | {{ house.city }}</p>
       </div>
-    </div>
   </div>
 </template>
 <!-- :searchLocation="searchLocation"
       :userLocation="userLocation" -->
+
 <style scoped>
-.error-message {
-  color: red;
-  font-size: 1.2em;
-  margin: 20px 0;
-  padding: 10px;
-  border: 1px solid red;
-  background-color: #f8d7da;
-}
+  .error-message {
+    color: red;
+    font-size: 1.2em;
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid red;
+    background-color: #f8d7da;
+  }
 </style>
