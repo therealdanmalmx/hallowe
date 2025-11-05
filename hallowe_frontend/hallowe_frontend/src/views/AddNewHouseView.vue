@@ -42,13 +42,15 @@ const form = ref({
   municipality: '',
   trickOrTreat: false,
   date: null,
-  timeFrom: null,
+  timeFrom: '00:00',
+  timeTo: '23:59',
 })
 
 const submitted = ref(false)
 
 function submitForm() {
-  console.log('Namn:', form.value.name, 'godkänner att man kommer till dem: ', form.value.trickOrTreat)
+  console.log(`form: ${form.value.timeFrom}`)
+  // console.log(`Namn:, ${form.value.name}, 'godkänner att man kommer till dem: ', ${form.value.trickOrTreat}. Object: ${form}`  )
   submitted.value = true
 }
 
@@ -58,7 +60,11 @@ const isFormInvalid = computed(() => {
     form.value.street &&
     form.value.number &&
     form.value.postal &&
-    form.value.municipality
+    form.value.municipality &&
+    form.value.date &&
+    form.value.timeFrom &&
+    form.value.timeTo
+
   )
 })
 
