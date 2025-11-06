@@ -72,10 +72,10 @@
 <template>
   <h1 class="text-5xl vl-parent">Map Page</h1>
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
-  <div v-else class="py-4">
+  <div v-else class="p-4 space-y-4">
       <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
       <div v-for="participant in data">
-        <p>{{ participant.name }} | {{ participant.streetName }} | {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}</p>
+        <p>{{ participant.name }} <span class="block">{{ participant.streetName }}, {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}</span></p>
       </div>
   </div>
 </template>
