@@ -46,10 +46,10 @@ const getDaysAroundOctober31 = (year: number) => {
 
 const form = ref({
   name: '',
-  street: '',
-  number: '',
-  postal: '',
-  municipality: '',
+  streetName: '',
+  streetNumber: '',
+  postalCode: '',
+  city: '',
   trickOrTreat: false,
   timeSlots: {
     date: null as Date | null,
@@ -57,17 +57,16 @@ const form = ref({
     endTime: '23:59',
   }
 })
-
 const submitted = ref(false)
 
 function submitForm() {
   if (form.value.timeSlots.date) {
     const participant: Participant = {
       name: form.value.name,
-      streetName: form.value.street,
-      streetNumber: form.value.number,
-      postalCode: form.value.postal,
-      city: form.value.municipality,
+      streetName: form.value.streetName,
+      streetNumber: form.value.streetNumber,
+      postalCode: form.value.postalCode,
+      city: form.value.city,
       trickOrTreat: form.value.trickOrTreat,
       timeSlots: {
         date: formatDate(form.value.timeSlots.date) as any,
@@ -84,10 +83,10 @@ function submitForm() {
 const isFormInvalid = computed(() => {
   return (
     form.value.name &&
-    form.value.street &&
-    form.value.number &&
-    form.value.postal &&
-    form.value.municipality &&
+    form.value.streetName &&
+    form.value.streetNumber &&
+    form.value.postalCode &&
+    form.value.city &&
     form.value.timeSlots.date &&
     form.value.timeSlots.startTime &&
     form.value.timeSlots.endTime
@@ -132,7 +131,7 @@ const isFormInvalid = computed(() => {
           Gata
         </label>
         <input
-          v-model="form.street"
+          v-model="form.streetName"
           id="street"
           type="text"
           required
@@ -148,7 +147,7 @@ const isFormInvalid = computed(() => {
           Nummer
         </label>
         <input
-          v-model="form.number"
+          v-model="form.streetNumber"
           id="number"
           type="text"
           required
@@ -164,7 +163,7 @@ const isFormInvalid = computed(() => {
           Postadress
         </label>
         <input
-          v-model="form.postal"
+          v-model="form.postalCode"
           id="postal"
           type="text"
           required
@@ -180,7 +179,7 @@ const isFormInvalid = computed(() => {
           Kommun
         </label>
         <input
-          v-model="form.municipality"
+          v-model="form.city"
           id="municipality"
           type="text"
           required
