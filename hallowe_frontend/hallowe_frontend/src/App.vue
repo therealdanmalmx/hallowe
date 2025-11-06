@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <div class="py-4">
+  <div class="py-6">
     <RouterView />
     <Navbar />
   </div>

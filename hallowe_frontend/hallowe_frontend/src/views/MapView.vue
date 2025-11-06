@@ -33,7 +33,6 @@
         try {
 
           const userResponse = await userService.getAll();
-          // const res = await fetch('http://localhost:5168/api/Participant')
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
           )
