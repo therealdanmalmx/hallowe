@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { userService } from '../api/services/participantServices';
+import type { Participant }  from '../types/interfaces';
 
 const year = ref(new Date);
 
 const currentYear = year.value.getFullYear();
 console.log(year.value)
 
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString()
+const formatDate = (date: Date): string => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+
+  const paddedMonth = month.toString().padStart(2, '0');
+  const paddedDay = day.toString().padStart(2, '0');
+
+  const currentDate = `${currentYear}-${paddedMonth}-${paddedDay}`;
+  console.log({ currentDate });
+  return currentDate;
 };
 
 const getDaysAroundOctober31 = (year: number) => {
@@ -41,17 +51,34 @@ const form = ref({
   postal: '',
   municipality: '',
   trickOrTreat: false,
-  date: null,
-  timeFrom: '00:00',
-  timeTo: '23:59',
+  timeSlots: {
+    date: null as Date | null,
+    startTime: '00:00',
+    endTime: '23:59',
+  }
 })
 
 const submitted = ref(false)
 
 function submitForm() {
-  console.log(`form: ${form.value.timeFrom}`)
-  // console.log(`Namn:, ${form.value.name}, 'godkänner att man kommer till dem: ', ${form.value.trickOrTreat}. Object: ${form}`  )
-  submitted.value = true
+  if (form.value.timeSlots.date) {
+    const participant: Participant = {
+      name: form.value.name,
+      streetName: form.value.street,
+      streetNumber: form.value.number,
+      postalCode: form.value.postal,
+      city: form.value.municipality,
+      trickOrTreat: form.value.trickOrTreat,
+      timeSlots: {
+        date: formatDate(form.value.timeSlots.date) as any,
+        startTime: form.value.timeSlots.startTime as any,
+        endTime: form.value.timeSlots.endTime as any,
+      }
+    }
+    userService.create(participant)
+    console.log(`form: ${form.value.timeSlots.startTime}`)
+    submitted.value = true
+  }
 }
 
 const isFormInvalid = computed(() => {
@@ -61,9 +88,9 @@ const isFormInvalid = computed(() => {
     form.value.number &&
     form.value.postal &&
     form.value.municipality &&
-    form.value.date &&
-    form.value.timeFrom &&
-    form.value.timeTo
+    form.value.timeSlots.date &&
+    form.value.timeSlots.startTime &&
+    form.value.timeSlots.endTime
 
   )
 })
@@ -169,7 +196,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.date"
+              v-model="form.timeSlots.date"
               :value="getDaysAroundOctober31(currentYear).twoDaysBefore"
               class="h-4 w-4 accent-orange-500"
             />
@@ -179,7 +206,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.date"
+              v-model="form.timeSlots.date"
               :value="getDaysAroundOctober31(currentYear).oneDaysBefore"
               class="h-4 w-4 accent-orange-500"
             />
@@ -189,7 +216,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.date"
+              v-model="form.timeSlots.date"
               :value="getDaysAroundOctober31(currentYear).oct31"
               class="h-4 w-4 accent-orange-500"
             />
@@ -200,7 +227,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.date"
+              v-model="form.timeSlots.date"
               :value="getDaysAroundOctober31(currentYear).oneDaysAfter"
               class="h-4 w-4 accent-orange-500"
             />
@@ -210,22 +237,23 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.date"
+              v-model="form.timeSlots.date"
               :value="getDaysAroundOctober31(currentYear).twoDaysAfter"
               class="h-4 w-4 accent-orange-500"
             />
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysAfter.getMonth() + 1}}</span>
+            <!-- <span>{{ form.timeSlots.date ? formatDate(form.timeSlots.date) : '' }}</span> -->
           </label>
         </div>
       </div>
       <div class="flex justify-between gap-x-4 ">
         <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Från:</label>
-          <input type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+          <input v-mode="form.timeSlots.startTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
         <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Till:</label>
-          <input type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+          <input v-mode="form.timeSlots.endTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
       </div>
 
