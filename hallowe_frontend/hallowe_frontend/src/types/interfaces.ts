@@ -1,12 +1,13 @@
 export interface Participant {
-    id: number,
     name: string,
-    street: string,
-    number: string,
-    postal: string,
-    municipality: '',
+    streetName: string,
+    streetNumber: string,
+    postalCode: string,
+    city: string,
     trickOrTreat: boolean,
-    date: Date,
-    timeFrom: TimeRanges,
-    timeTo: TimeRanges,
+    timeSlots: {
+        date: Date,
+        startTime: string,
+        endTime: string,
+    }
 }
