@@ -4,6 +4,7 @@
   import MapComp from '../components/MapComp.vue'
   // import { useLoading } from 'vue-loading-overlay';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue'
+import { userService } from '../api/services/participantServices';
 
   const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -35,15 +36,13 @@
         isLoading.value = true;
         // loading.show()
         try {
-          const res = await fetch('http://localhost:5168/api/Participant')
+
+          userService.getAll();
+          // const res = await fetch('http://localhost:5168/api/Participant')
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
           )
-
-          if (res.ok) {
-            data.value = await res.json();
-            console.log('Fetched data:', data.value)
-          }
+          
           if (response.ok) {
             const mapData = await response.json()
             console.log('Fetched map:', mapData)
