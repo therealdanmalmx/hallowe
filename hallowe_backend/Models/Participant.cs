@@ -16,6 +16,8 @@ namespace hallowe_backend.Models
         [Required]
         public string StreetName { get; set; } = string.Empty;
         [Required]
+        public string StreetNumber { get; set; } = string.Empty;
+        [Required]
         public string City { get; set; } = string.Empty;
         [Required]
         public string PostalCode { get; set; } = string.Empty;
