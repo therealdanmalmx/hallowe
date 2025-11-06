@@ -79,12 +79,14 @@ const getDaysAroundOctober31 = (year: number) => {
 }
 
 const form = ref({
+  id: 0,
   name: '',
   streetName: '',
   streetNumber: '',
   postalCode: '',
   city: '',
   trickOrTreat: false,
+  timeSlotId: 0,
   timeSlots: {
     date: null as Date | null,
     startTime: '',
@@ -96,12 +98,14 @@ const submitted = ref(false)
 function submitForm() {
   if (form.value.timeSlots.date) {
     const participant: Participant = {
+      id: form.value.id,
       name: form.value.name,
       streetName: form.value.streetName,
       streetNumber: form.value.streetNumber,
       postalCode: form.value.postalCode,
       city: form.value.city,
       trickOrTreat: form.value.trickOrTreat,
+      timeSlotId: form.value.timeSlotId,
       timeSlots: {
         date: formatDate(form.value.timeSlots.date) as any,
         startTime: form.value.timeSlots.startTime as any,

@@ -5,7 +5,8 @@
   // import { useLoading } from 'vue-loading-overlay';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue'
   import { userService } from '../api/services/participantServices';
-  import type { Participant } from '../types/interfaces';
+  import type { Participant, TimeSlot } from '../types/interfaces';
+import { timeService } from '../api/services/timeslotServices';
 
   const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -18,6 +19,7 @@
       const zoom = ref(7)
       let isLoading = ref<boolean>(false);
       let data = ref<Participant[]>([]);
+      let time = ref<TimeSlot[]>([]);
       const color = ref<string>("#FF7518");
       const size = ref('1.25rem');
 
@@ -33,14 +35,24 @@
         try {
 
           const userResponse = await userService.getAll();
+          const timeResponse = await timeService.getAll();
+
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
           )
 
           if (userResponse) {
             data.value = await userResponse.data;
-            console.log('Fetched data:', data)
+            console.log('userResponse', data.value)
           }
+            if (timeResponse) {
+              time.value = await timeResponse.data;
+
+              userResponse.data.forEach((element: Participant): void => {
+                const specificTime: TimeSlot | undefined = timeResponse.data.find((t: TimeSlot) => t.id === element.id)
+                console.log(specificTime)
+              });
+            }
           if (response.ok) {
             const mapData = await response.json()
             console.log('Fetched map:', mapData)
@@ -63,7 +75,7 @@
 
       onMounted(fetchData)
 
-      return { defaultCenter, zoom, data, errorMessage, isLoading, color, size }
+      return { defaultCenter, zoom, data, errorMessage, time, isLoading, color, size }
     }
   })
 </script>
@@ -74,7 +86,13 @@
   <div v-else class="p-4 space-y-4">
       <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
       <div v-for="participant in data">
-        <p>{{ participant.name }} <span class="block">{{ participant.streetName }}, {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}</span></p>
+        <p>{{ participant.name }}
+          <span class="block">{{ participant.streetName }}, {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}
+            <div v-for="slot in time.filter(t => t.id === participant.timeSlotId)">
+              <span class="text-white">{{ slot.date}} | {{ slot.startTime }} | {{ slot.endTime }}</span>
+            </div>
+          </span>
+        </p>
       </div>
   </div>
 </template>
