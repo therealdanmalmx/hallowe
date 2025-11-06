@@ -4,9 +4,9 @@ import { userService } from '../api/services/participantServices';
 import type { Participant }  from '../types/interfaces';
 
 const year = ref(new Date);
-
-const currentYear = year.value.getFullYear();
-console.log(year.value)
+let currentYear = year.value.getFullYear();
+const currentDay = year.value.getDate();
+const currentMonth = year.value.getMonth() + 1;
 
 const formatDate = (date: Date): string => {
   const day = date.getDate();
@@ -16,10 +16,44 @@ const formatDate = (date: Date): string => {
   const paddedDay = day.toString().padStart(2, '0');
 
   const currentDate = `${currentYear}-${paddedMonth}-${paddedDay}`;
-  console.log({ currentDate });
+
   return currentDate;
 };
 
+const getDayOfTheWeek = (date: Date) => {
+
+  switch (date.getDay()) {
+    case 0:
+      return 'Måndag'
+    case 1:
+      return 'Tisdag'
+    case 2:
+      return 'Onsdag'
+    case 3:
+      return 'Torsdag'
+    case 4:
+      return 'Fredag'
+    case 5:
+      return 'Lördag'
+    case 6:
+      return 'Söndag'
+  }
+};
+
+const getChosenMonth = (date: Date) => {
+
+  switch (date.getMonth() + 1) {
+    case 10:
+      return 'Oktober'
+    case 11:
+      return 'November'
+  }
+};
+
+if (currentMonth > 10 || currentMonth < 10 && currentDay < 29) {
+  currentYear++;
+  console.log({currentYear})
+};
 const getDaysAroundOctober31 = (year: number) => {
   const oct31 = new Date(year, 9, 31);
 
@@ -53,8 +87,8 @@ const form = ref({
   trickOrTreat: false,
   timeSlots: {
     date: null as Date | null,
-    startTime: '00:00',
-    endTime: '23:59',
+    startTime: '',
+    endTime: '',
   }
 })
 const submitted = ref(false)
@@ -241,21 +275,23 @@ const isFormInvalid = computed(() => {
               class="h-4 w-4 accent-orange-500"
             />
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysAfter.getMonth() + 1}}</span>
-            <!-- <span>{{ form.timeSlots.date ? formatDate(form.timeSlots.date) : '' }}</span> -->
           </label>
         </div>
       </div>
       <div class="flex justify-between gap-x-4 ">
         <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Från:</label>
-          <input v-mode="form.timeSlots.startTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+          <input v-model="form.timeSlots.startTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
         <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Till:</label>
-          <input v-mode="form.timeSlots.endTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+          <input v-model="form.timeSlots.endTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
       </div>
 
+      <div v-if="form.timeSlots.date && form.timeSlots.startTime && form.timeSlots.endTime" class="flex items-center my-4 mt-8 text-sm text-[#FF7518]">
+        Du har valt att ha Halloween på {{ getDayOfTheWeek(form.timeSlots.date) }} den {{ form.timeSlots.date.getDate()}}:e {{ getChosenMonth(form.timeSlots.date) }}  mellan {{ form.timeSlots.startTime }} och {{ form.timeSlots.endTime }}
+      </div>
       <div class="flex items-center my-4 mt-8">
         <input
           v-model="form.trickOrTreat"
