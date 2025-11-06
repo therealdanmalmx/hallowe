@@ -4,15 +4,11 @@
   import MapComp from '../components/MapComp.vue'
   // import { useLoading } from 'vue-loading-overlay';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue'
+  import { userService } from '../api/services/participantServices';
+  import type { Participant } from '../types/interfaces';
 
   const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-  interface House {
-    name: string,
-    city: string
-    streetName: string,
-    postalCode: string
-  }
 
   export default defineComponent({
     name: 'MapView',
@@ -21,7 +17,7 @@
       const defaultCenter = { lat: 57.725, lng: 13.162 }
       const zoom = ref(7)
       let isLoading = ref<boolean>(false);
-      let data = ref<House[]>([]);
+      let data = ref<Participant[]>([]);
       const color = ref<string>("#FF7518");
       const size = ref('1.25rem');
 
@@ -35,14 +31,16 @@
         isLoading.value = true;
         // loading.show()
         try {
-          const res = await fetch('http://localhost:5168/api/Participant')
+
+          const userResponse = await userService.getAll();
+          // const res = await fetch('http://localhost:5168/api/Participant')
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
           )
 
-          if (res.ok) {
-            data.value = await res.json();
-            console.log('Fetched data:', data.value)
+          if (userResponse) {
+            data.value = await userResponse.data;
+            console.log('Fetched data:', data)
           }
           if (response.ok) {
             const mapData = await response.json()
@@ -74,10 +72,10 @@
 <template>
   <h1 class="text-5xl vl-parent">Map Page</h1>
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
-  <div v-else class="py-4">
+  <div v-else class="p-4 space-y-4">
       <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
-      <div v-for="house in data">
-        <p>{{ house.name }} | {{ house.streetName }} | {{ house.postalCode }} | {{ house.city }}</p>
+      <div v-for="participant in data">
+        <p>{{ participant.name }} <span class="block">{{ participant.streetName }}, {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}</span></p>
       </div>
   </div>
 </template>

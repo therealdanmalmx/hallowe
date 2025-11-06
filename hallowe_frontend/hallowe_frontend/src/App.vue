@@ -4,6 +4,8 @@
 </script>
 
 <template>
-  <RouterView />
-  <Navbar />
+  <div class="py-4">
+    <RouterView />
+    <Navbar />
+  </div>
 </template>
