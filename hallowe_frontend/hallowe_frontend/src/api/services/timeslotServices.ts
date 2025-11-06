@@ -1,4 +1,4 @@
-import type { Participant, TimeSlot } from '../../types/interfaces'
+import type { TimeSlot } from '../../types/interfaces'
 import apiClient from '../client'
 
 export const timeService = {
