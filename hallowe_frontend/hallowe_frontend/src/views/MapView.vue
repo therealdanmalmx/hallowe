@@ -89,7 +89,7 @@ import { timeService } from '../api/services/timeslotServices';
         <p>{{ participant.name }}
           <span class="block">{{ participant.streetName }}, {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}
             <div v-for="slot in time.filter(t => t.id === participant.timeSlotId)">
-              <span class="text-white">{{ slot.date}} | {{ slot.startTime }} | {{ slot.endTime }}</span>
+              <span class="text-white">{{ slot.date }} | {{ slot.startTime.slice(0, 5) }} - {{ slot.endTime.slice(0, 5) }}</span>
             </div>
           </span>
         </p>
