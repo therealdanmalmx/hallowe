@@ -77,7 +77,7 @@ const getDaysAroundOctober31 = (year: number) => {
 }
 
 const getLatLngForAddress = async (streetName: string, streetNumber: string, postalCode: string, city: string): Promise<boolean> => {
-  const apiKey = import.meta.env.VITE_GEOCODING_API_KEY;
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const address = `${streetName} ${streetNumber}, ${postalCode} ${city}`;
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
 
