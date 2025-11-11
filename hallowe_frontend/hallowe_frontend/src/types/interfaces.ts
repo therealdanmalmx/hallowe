@@ -1,12 +1,14 @@
 export interface Participant {
-    id: number
+    id?: number
     name: string,
     streetName: string,
     streetNumber: string,
     postalCode: string,
     city: string,
     trickOrTreat: boolean,
-    timeSlotId: number,
+    latitude: number,
+    longitude: number,
+    timeSlotId?: number,
     timeSlots: {
         date: Date,
         startTime: string,
@@ -15,7 +17,7 @@ export interface Participant {
 }
 
 export interface TimeSlot {
-    id: number
+    id?: number
     date: Date,
     startTime: string,
     endTime: string
