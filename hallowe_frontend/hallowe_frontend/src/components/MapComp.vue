@@ -1,70 +1,43 @@
 <script lang="ts">
 
-  import { defineComponent, ref } from 'vue'
-  import { useLoadScript, GMapMap, GMapMarker } from '@fawmi/vue-google-maps'
+  import { GMapMap, GMapMarker } from '@fawmi/vue-google-maps';
+  import { defineComponent, ref, onMounted } from 'vue';
+  import { userService } from '../api/services/participantServices';
+  import type { Participant } from '../types/interfaces';
 
-export default defineComponent({
+  export default defineComponent({
 
-  setup() {
-    const pos = ref({ lat: 59.3293, lng: 18.0686 })
+    setup() {
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        pos.value = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
+      let participants = ref<Participant[]>([]);
+      const pos = ref({ lat: 0, lng: 0 })
+
+      const fetchAllParticipants = async () => {
+        const userResponse = await userService.getAll();
+
+        if (userResponse) {
+          participants.value = await userResponse.data;
         }
-        console.log({ pos: pos.value })
-      },
-      (error) => {
-        console.error('Error getting location:', error)
       }
-    )
-    console.log({pos})
 
-    return { pos }
-  }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          pos.value = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }
+        },
+        (error) => {
+          console.error('Error getting location:', error)
+        }
+      )
 
-  //   name: 'MapComp',
-  //   props: {
-  //     // searchLocation: {
-  //     //   type: Object,
-  //     //   default: null
-  //     // },
-  //     // userLocation: {
-  //     //   type: Object,
-  //     //   default: null
-  //     // },
-  //     defaultCenter: {
-  //       type: Object,
-  //       default: () => ({ lat: 57.725, lng: 13.162 })
-  //     },
-  //     zoom: {
-  //       type: Number,
-  //       default: 7
-  //     }
-  //   },
-  //   setup(props) {
-  //     const center = ref(props.defaultCenter)
+      onMounted(fetchAllParticipants);
 
-  //     const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-  //     const { isLoaded, loadError } = useLoadScript({
-  //       googleMapsApiKey: mapsApiKey
-  //     })
-
-  //     const mapOptions = {
-  //       mapTypeControl: false,
-  //       fullscreenControl: false,
-  //       streetViewControl: false
-  //     }
-
-  //     // const onMapClick = () => {
-  //     //   props.searchLocation = null
-  //     // }
-
-  //     return { isLoaded, loadError, center, mapOptions, props }
-  //   }
+      return { pos, participants }
+    }
   })
+
 </script>
 
 <template>
@@ -79,7 +52,11 @@ export default defineComponent({
       }"
       style="width: 90%; height: 80vh; margin: 0 auto;"
     >
-      <GMapMarker :position="{lat: pos.lat, lng: pos.lng}" />
+      <GMapMarker
+        :key="user.id"
+        v-for="user in participants"
+        :position="{lat: user.latitude, lng: user.longitude}"
+      />
     </GMapMap>
   </div>
 </template>
