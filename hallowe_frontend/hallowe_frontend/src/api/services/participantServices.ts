@@ -3,7 +3,7 @@ import apiClient from '../client'
 
 export const userService = {
     getAll() {
-    return apiClient.get('/Participant')
+        return apiClient.get('/Participant')
     },
     getById(id: string | number): Promise<any> {
         return apiClient.get(`/Participant/${id}`)
