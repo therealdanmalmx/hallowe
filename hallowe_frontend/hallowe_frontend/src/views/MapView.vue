@@ -45,14 +45,15 @@ import { timeService } from '../api/services/timeslotServices';
             data.value = await userResponse.data;
             console.log('userResponse', data.value)
           }
-            if (timeResponse) {
-              time.value = await timeResponse.data;
 
-              userResponse.data.forEach((element: Participant): void => {
-                const specificTime: TimeSlot | undefined = timeResponse.data.find((t: TimeSlot) => t.id === element.id)
-                console.log(specificTime)
-              });
-            }
+          if (timeResponse) {
+            time.value = await timeResponse.data;
+
+            userResponse.data.forEach((element: Participant): void => {
+              timeResponse.data.find((t: TimeSlot) => t.id === element.id)
+            });
+          }
+
           if (response.ok) {
             const mapData = await response.json()
             console.log('Fetched map:', mapData)
@@ -63,13 +64,13 @@ import { timeService } from '../api/services/timeslotServices';
             console.error('Error fetching data, Status:', response.statusText)
             isLoading.value = false;
             // loading.hide()
+
           }
         } catch (error: any) {
           console.error('Error fetching data:', error.message)
           isLoading.value = false;
           // loading.hide()
             errorMessage.value = `Kunde inte ladda kartan. Försök igen senare.`
-
         }
       }
 
