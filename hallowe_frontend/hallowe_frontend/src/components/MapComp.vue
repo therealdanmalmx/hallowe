@@ -11,6 +11,7 @@
 
       let participants = ref<Participant[]>([]);
       const pos = ref({ lat: 0, lng: 0 })
+      const zoom = ref<number>(12);
 
       const fetchAllParticipants = async () => {
         const userResponse = await userService.getAll();
@@ -34,7 +35,7 @@
 
       onMounted(fetchAllParticipants);
 
-      return { pos, participants }
+      return { pos, zoom, participants }
     }
   })
 
@@ -44,17 +45,22 @@
   <div class="flex flex-col justify-center py-8">
     <GMapMap
       :center="{ lat: pos.lat, lng: pos.lng }"
-      :zoom="13"
+      :zoom="zoom"
       :options="{
+        zoomControl: true,
         mapTypeControl: false,
-        fullscreenControl: false,
-        streetViewControl: false
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: true,
+        disableDefaultUi: false,
       }"
       style="width: 90%; height: 80vh; margin: 0 auto;"
     >
       <GMapMarker
         :key="user.id"
         v-for="user in participants"
+         :clickable="true"
         :position="{lat: user.latitude, lng: user.longitude}"
       />
     </GMapMap>
