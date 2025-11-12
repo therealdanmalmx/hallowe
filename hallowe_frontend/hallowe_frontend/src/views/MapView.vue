@@ -86,15 +86,6 @@ import { timeService } from '../api/services/timeslotServices';
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
   <div v-else class="p-4 space-y-4">
       <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
-      <div v-for="participant in data">
-        <p>{{ participant.name }}
-          <span class="block">{{ participant.streetName }}, {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}
-            <div v-for="slot in time.filter(t => t.id === participant.timeSlotId)">
-              <span class="text-white">{{ slot.date }} | {{ slot.startTime.slice(0, 5) }} - {{ slot.endTime.slice(0, 5) }}</span>
-            </div>
-          </span>
-        </p>
-      </div>
   </div>
 </template>
 <!-- :searchLocation="searchLocation"

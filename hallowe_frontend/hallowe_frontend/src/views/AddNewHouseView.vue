@@ -353,6 +353,5 @@ const isFormInvalid = computed(() => {
       </p>
 
     </form>
-    <button @click="getLatLngForAddress(form.streetName, form.streetNumber, form.postalCode, form.city)">Get address</button>
   </div>
 </template>
