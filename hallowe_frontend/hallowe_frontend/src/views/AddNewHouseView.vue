@@ -41,7 +41,6 @@ const getDayOfTheWeek = (date: Date) => {
 };
 
 const getChosenMonth = (date: Date) => {
-
   switch (date.getMonth() + 1) {
     case 10:
       return 'Oktober'
@@ -50,9 +49,8 @@ const getChosenMonth = (date: Date) => {
   }
 };
 
-if (currentMonth > 10 || currentMonth < 10 && currentDay < 29) {
+if (currentMonth > 10 && currentDay < 29) {
   currentYear++;
-  console.log({currentYear})
 };
 const getDaysAroundOctober31 = (year: number) => {
   const oct31 = new Date(year, 9, 31);
@@ -78,15 +76,40 @@ const getDaysAroundOctober31 = (year: number) => {
   };
 }
 
+const getLatLngForAddress = async (streetName: string, streetNumber: string, postalCode: string, city: string): Promise<boolean> => {
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const address = `${streetName} ${streetNumber}, ${postalCode} ${city}`;
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === 'OK' && data.results.length > 0) {
+      const location = data.results[0].geometry.location;
+      form.value.latitude = location.lat;
+      form.value.longitude = location.lng;
+      console.log(form.value.latitude, form.value.longitude);
+      return true;
+    } else {
+      console.error('Geocoding failed:', data.status);
+      return false;
+    }
+  } catch (error) {
+    console.error('Error fetching geocoding data:', error);
+    return false;
+  }
+};
+
 const form = ref({
-  id: 0,
   name: '',
   streetName: '',
   streetNumber: '',
   postalCode: '',
   city: '',
   trickOrTreat: false,
-  timeSlotId: 0,
+  latitude: 0,
+  longitude: 0,
   timeSlots: {
     date: null as Date | null,
     startTime: '',
@@ -94,29 +117,34 @@ const form = ref({
   }
 })
 const submitted = ref(false)
+const submitForm = async () => {
+  const getCoords = await getLatLngForAddress(form.value.streetName, form.value.streetNumber, form.value.postalCode, form.value.city);
 
-function submitForm() {
-  if (form.value.timeSlots.date) {
+  if (form.value.timeSlots.date && getCoords) {
     const participant: Participant = {
-      id: form.value.id,
       name: form.value.name,
       streetName: form.value.streetName,
       streetNumber: form.value.streetNumber,
       postalCode: form.value.postalCode,
+      latitude: form.value.latitude,
+      longitude: form.value.longitude,
       city: form.value.city,
       trickOrTreat: form.value.trickOrTreat,
-      timeSlotId: form.value.timeSlotId,
       timeSlots: {
-        date: formatDate(form.value.timeSlots.date) as any,
+        date: formatDate(form.value.timeSlots.date!) as any,
         startTime: form.value.timeSlots.startTime as any,
         endTime: form.value.timeSlots.endTime as any,
       }
     }
+    console.log({ participant });
     userService.create(participant)
     console.log(`form: ${form.value.timeSlots.startTime}`)
     submitted.value = true
+
   }
+
 }
+
 
 const isFormInvalid = computed(() => {
   return (
@@ -294,7 +322,7 @@ const isFormInvalid = computed(() => {
       </div>
 
       <div v-if="form.timeSlots.date && form.timeSlots.startTime && form.timeSlots.endTime" class="flex items-center my-4 mt-8 text-sm text-[#FF7518]">
-        Du har valt att ha Halloween på {{ getDayOfTheWeek(form.timeSlots.date) }} den {{ form.timeSlots.date.getDate()}}:e {{ getChosenMonth(form.timeSlots.date) }}  mellan {{ form.timeSlots.startTime }} och {{ form.timeSlots.endTime }}
+        Du har valt att fira Halloween på {{ getDayOfTheWeek(form.timeSlots.date) }} den {{ form.timeSlots.date.getDate()}}:e {{ getChosenMonth(form.timeSlots.date) }}  mellan {{ form.timeSlots.startTime }} och {{ form.timeSlots.endTime }}
       </div>
       <div class="flex items-center my-4 mt-8">
         <input
@@ -307,8 +335,6 @@ const isFormInvalid = computed(() => {
           Ja, vi välkomnar Bus eller Godis! 👻
         </label>
       </div>
-
-
       <button
         type="submit"
         :disabled="!isFormInvalid"

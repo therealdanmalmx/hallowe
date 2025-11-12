@@ -45,14 +45,15 @@ import { timeService } from '../api/services/timeslotServices';
             data.value = await userResponse.data;
             console.log('userResponse', data.value)
           }
-            if (timeResponse) {
-              time.value = await timeResponse.data;
 
-              userResponse.data.forEach((element: Participant): void => {
-                const specificTime: TimeSlot | undefined = timeResponse.data.find((t: TimeSlot) => t.id === element.id)
-                console.log(specificTime)
-              });
-            }
+          if (timeResponse) {
+            time.value = await timeResponse.data;
+
+            userResponse.data.forEach((element: Participant): void => {
+              timeResponse.data.find((t: TimeSlot) => t.id === element.id)
+            });
+          }
+
           if (response.ok) {
             const mapData = await response.json()
             console.log('Fetched map:', mapData)
@@ -63,13 +64,13 @@ import { timeService } from '../api/services/timeslotServices';
             console.error('Error fetching data, Status:', response.statusText)
             isLoading.value = false;
             // loading.hide()
+
           }
         } catch (error: any) {
           console.error('Error fetching data:', error.message)
           isLoading.value = false;
           // loading.hide()
             errorMessage.value = `Kunde inte ladda kartan. Försök igen senare.`
-
         }
       }
 
@@ -85,15 +86,6 @@ import { timeService } from '../api/services/timeslotServices';
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
   <div v-else class="p-4 space-y-4">
       <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
-      <div v-for="participant in data">
-        <p>{{ participant.name }}
-          <span class="block">{{ participant.streetName }}, {{ participant.streetNumber }} | {{ participant.postalCode }} | {{ participant.city }}
-            <div v-for="slot in time.filter(t => t.id === participant.timeSlotId)">
-              <span class="text-white">{{ slot.date }} | {{ slot.startTime.slice(0, 5) }} - {{ slot.endTime.slice(0, 5) }}</span>
-            </div>
-          </span>
-        </p>
-      </div>
   </div>
 </template>
 <!-- :searchLocation="searchLocation"

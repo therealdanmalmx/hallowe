@@ -21,6 +21,8 @@ namespace hallowe_backend.Models
         public string City { get; set; } = string.Empty;
         [Required]
         public string PostalCode { get; set; } = string.Empty;
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
         [Required]
         public TimeSlot TimeSlots { get; set; }
         public Guid TimeSlotId { get; set; }

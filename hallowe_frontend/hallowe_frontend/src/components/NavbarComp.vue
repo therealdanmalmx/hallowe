@@ -5,22 +5,22 @@
 </script>
 
 <template>
-  <nav class="absoute w-full bottom-10 pt-12">
+  <nav class="absoute w-full bottom-20 pt-12">
     <div>
       <ul class="flex w-full justify-between items-center">
-        <li class="flex-1 flex justify-center size-12 cursor-pointer">
+        <li class="flex-1 flex justify-center cursor-pointer">
           <RouterLink to="/search">
-        <img :src="searchIcon" alt="search" title="Leta efter en adress" />
+        <img class="size-8" :src="searchIcon" alt="search" title="Leta efter en adress" />
           </RouterLink>
         </li>
-        <li class="flex-1 flex justify-center" >
+        <li class="flex-1 flex justify-center cursor-pointer">
           <RouterLink to="/map">
-        <img :src="houseIcon" alt="map" title="Se anmälda hus"/>
+        <img class="size-8" :src="houseIcon" alt="map" title="Se anmälda hus"/>
           </RouterLink>
         </li>
-        <li class="flex-1 flex justify-center">
+        <li class="flex-1 flex justify-center cursor-pointer">
           <RouterLink to="/add-address">
-        <img :src="addIcon" alt="add trick or treathouse" title="Lägg till ett hus"/>
+        <img class="size-8" :src="addIcon" alt="add trick or treathouse" title="Lägg till ett hus"/>
           </RouterLink>
         </li>
       </ul>
