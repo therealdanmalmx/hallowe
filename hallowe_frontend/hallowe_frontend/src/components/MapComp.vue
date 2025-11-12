@@ -94,11 +94,11 @@ import { timeService } from '../api/services/timeslotServices';
               </div>
               <div v-for="slot in times.filter(t => t.id === user.timeSlotId)">
               <div class="flex flex-col space-y-2">
-                  <div class="flex items-center text-lg space-x-4">
+                  <div class="flex items-center text-lg space-x-2 font-bold">
                     <i class="text-[#ff7518] pi pi-calendar "></i>
                     <p class="text-sm">{{slot.date}}</p>
                   </div>
-                  <div class="flex items-center text-lg space-x-4">
+                  <div class="flex items-center text-lg space-x-2 font-bold">
                     <i class="text-[#ff7518] pi pi-clock"></i>
                     <p class="text-sm">{{ slot.startTime.slice(0, 5) }} - {{ slot.endTime.slice(0, 5) }}</p>
                   </div>
