@@ -16,7 +16,7 @@ import { timeService } from '../api/services/timeslotServices';
     components: { MapComp, RotateLoader },
     setup() {
       const defaultCenter = { lat: 57.725, lng: 13.162 }
-      const zoom = ref(7)
+      const zoom = ref(6)
       let isLoading = ref<boolean>(false);
       let data = ref<Participant[]>([]);
       let time = ref<TimeSlot[]>([]);
