@@ -1,6 +1,6 @@
 <template>
 
-<form class="m-10">
+<form class="my-10">
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">search</label>
     <div class="relative flex items-center justify-end">
         <div class="p-4 absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
