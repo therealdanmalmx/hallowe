@@ -3,10 +3,13 @@ import { ref, computed } from 'vue'
 import { userService } from '../api/services/participantServices';
 import type { Participant }  from '../types/interfaces';
 
+let isSubmitting = ref<boolean>(false);
+
 const year = ref(new Date);
 let currentYear = year.value.getFullYear();
 const currentDay = year.value.getDate();
 const currentMonth = year.value.getMonth() + 1;
+
 
 const formatDate = (date: Date): string => {
   const day = date.getDate();
@@ -118,6 +121,7 @@ const form = ref({
 })
 const submitted = ref(false)
 const submitForm = async () => {
+  isSubmitting.value = true;
   const getCoords = await getLatLngForAddress(form.value.streetName, form.value.streetNumber, form.value.postalCode, form.value.city);
 
   if (form.value.timeSlots.date && getCoords) {
@@ -140,6 +144,7 @@ const submitForm = async () => {
     userService.create(participant)
     console.log(`form: ${form.value.timeSlots.startTime}`)
     submitted.value = true
+    isSubmitting.value = false;
 
   }
 
@@ -339,13 +344,14 @@ const isFormInvalid = computed(() => {
         type="submit"
         :disabled="!isFormInvalid"
         :class="[
-          'w-full font-semibold py-2 px-4 rounded-lg mt-4 shadow-2xl transition',
+          'w-full h-12 font-semibold py-2 px-4 rounded-lg mt-4 shadow-2xl transition',
           isFormInvalid
             ? 'bg-gray-300 cursor-not-allowed'
             : 'bg-[#FF7518] hover:bg-[#9AFF6B]'
         ]"
       >
-        Skicka in
+        <i v-if="isSubmitting" class="pi pi-spin pi-spinner-dotted font-bold text-xl"></i>
+        <span v-else>Skicka in</span>
       </button>
 
       <p v-if="submitted" class="text-green-500 text-center mt-4 font-medium">
