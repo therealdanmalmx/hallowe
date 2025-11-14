@@ -16,7 +16,7 @@ export const useTimeSlotsStore = defineStore('timeslotStore', () => {
             times.value = response.data;
         } catch (err) {
             console.error('Fetching time slots failed:', error);
-            error.value = "Kunde inte hämta tider. Prova igen."
+            error.value = "Kunde inte hämta tider. Försök igen."
             throw error;
         }
     }

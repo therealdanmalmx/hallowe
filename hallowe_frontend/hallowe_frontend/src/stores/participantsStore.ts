@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { userService } from '../api/services/participantServices';
 import type { Participant } from "../types/interfaces";
+import { userService } from "../api/services/participantServices";
 
 export const useParticipantStore = defineStore('participantStore', () => {
     const participants = ref<Participant[]>([]);
@@ -17,7 +17,7 @@ export const useParticipantStore = defineStore('participantStore', () => {
             participants.value = response.data;
         } catch (err) {
             console.error('Failed to fetch participant:', err);
-            error.value = "Kunde inte ladda deltagare";
+            error.value = "Kunde inte ladda deltagare. Försök igen";
             throw error;
         }
     }

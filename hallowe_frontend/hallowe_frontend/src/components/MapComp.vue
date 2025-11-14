@@ -47,7 +47,8 @@
       const fetchMap = async () => {
 
         participantStore.isLoading = true;
-        participantStore.error = null
+        participantStore.error = null;
+
         try {
 
           const response = await fetch(
@@ -64,10 +65,11 @@
             console.error('Error fetching data, Status:', response.statusText)
             participantStore.isLoading = false;
           }
-        } catch (error: any) {
-            console.error('Error fetching data:', error.message)
+        } catch (err: any) {
+
+          !err.message.includes('w') ? console.error('Error fetching data:', err.message) : null;
+            !err.message.includes('w') ? participantStore.error = `Kunde inte ladda kartan. Försök igen senare.` : null;
             participantStore.isLoading = false;
-            participantStore.error = `Kunde inte ladda kartan. Försök igen senare.`
         }
       }
 
@@ -75,6 +77,7 @@
         getUserCoords();
         fetchMap();
         await participantStore.getAllParticiants();
+        console.log(participantStore.error)
         await timeStore.getAllTimeSlots();
       });
 
