@@ -92,7 +92,6 @@ const getLatLngForAddress = async (streetName: string, streetNumber: string, pos
       const location = data.results[0].geometry.location;
       form.value.latitude = location.lat;
       form.value.longitude = location.lng;
-      console.log(form.value.latitude, form.value.longitude);
       return true;
     } else {
       console.error('Geocoding failed:', data.status);
@@ -140,9 +139,7 @@ const submitForm = async () => {
         endTime: form.value.timeSlots.endTime as any,
       }
     }
-    console.log({ participant });
     userService.create(participant)
-    console.log(`form: ${form.value.timeSlots.startTime}`)
     submitted.value = true
     isSubmitting.value = false;
 

@@ -1,64 +1,94 @@
 <script lang="ts">
 
-  import { GMapMap, GMapMarker, GMapInfoWindow } from '@fawmi/vue-google-maps';
-  import { defineComponent, ref, onMounted } from 'vue';
-  import { userService } from '../api/services/participantServices';
-  import { type TimeSlot, type Participant } from '../types/interfaces';
-import { timeService } from '../api/services/timeslotServices';
+  import { storeToRefs } from 'pinia';
+  import { defineComponent, onMounted, ref } from 'vue';
+  import { useParticipantStore } from '../stores/participantsStore';
+  import { useTimeSlotsStore } from '../stores/timeSlotsStore';
+  import { GMapInfoWindow, GMapMap, GMapMarker } from '@fawmi/vue-google-maps';
+  import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
 
-  export default defineComponent({
 
-    setup() {
+export default defineComponent({
+  name: 'MapComponent',
+  components: { RotateLoader },
 
-      let participants = ref<Participant[]>([]);
-      let times = ref<TimeSlot[]>([]);
-      const pos = ref({ lat: 0, lng: 0 })
-      const zoom = ref<number>(12);
-      const defaultCenter = ref<object>({ lat: 0, lng: 0 })
-      const openedMarkerID = ref<number>(0);
+  setup() {
 
+    const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+    const color = ref<string>("#FF7518");
+    const size = ref('1.25rem');
+
+    const participantStore = useParticipantStore();
+    const timeStore = useTimeSlotsStore();
+    const data = ref([]);
+    const pos = ref({ lat: 0, lng: 0 })
+    const zoom = ref<number>(12);
+    const defaultCenter = ref<object>({ lat: 0, lng: 0 })
+    const openedMarkerID = ref<number>(0);
+
+    const getUserCoords = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           pos.value = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
           }
-          defaultCenter.value = {lat: pos.value.lat, lng: pos.value.lng}
+          defaultCenter.value = { lat: pos.value.lat, lng: pos.value.lng }
         },
         (error) => {
           console.error('Error getting location:', error)
         }
-      )
+      );
+    };
 
-      const openMarker = (id: number | null) => {
-        console.log({id})
-        openedMarkerID.value = id ?? 0;
-      }
-
-      const fetchAllParticipants = async () => {
-        const userResponse = await userService.getAll();
-        const timeResponse = await timeService.getAll();
-
-
-        if (userResponse) {
-          participants.value = await userResponse.data;
-        }
-
-        if (timeResponse) {
-          times.value = await timeResponse.data;
-        }
-      }
-
-      onMounted(fetchAllParticipants);
-
-      return { pos, defaultCenter, openedMarkerID, times, openMarker, zoom, participants }
+    const openMarker = (id: number | null) => {
+      openedMarkerID.value = id ?? 0;
     }
-  })
+
+    const fetchMap = async () => {
+
+      participantStore.isLoading = true;
+      participantStore.error = null
+      try {
+
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
+        )
+
+        if (response.ok) {
+          const map = await response.json()
+          data.value = map.data
+
+          participantStore.isLoading = false;
+
+        } else {
+          console.error('Error fetching data, Status:', response.statusText)
+          participantStore.isLoading = false;
+        }
+      } catch (error: any) {
+          console.error('Error fetching data:', error.message)
+          participantStore.isLoading = false;
+          participantStore.error = `Kunde inte ladda kartan. Försök igen senare.`
+      }
+    }
+
+    onMounted(async () => {
+      getUserCoords();
+      fetchMap();
+      await participantStore.getAllParticiants();
+      await timeStore.getAllTimeSlots();
+    });
+
+    return { pos, defaultCenter, openedMarkerID, openMarker, color, size, zoom, data, participantStore, timeStore }
+  }
+})
 
 </script>
 
 <template>
-  <div class="flex flex-col justify-center py-8">
+  <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading"><rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader></div>
+  <div v-else class="flex flex-col justify-center py-8">
     <GMapMap
       :center="defaultCenter"
       :zoom="zoom"
@@ -74,7 +104,7 @@ import { timeService } from '../api/services/timeslotServices';
       style="width: 90%; height: 80vh; margin: 0 auto;"
     >
       <GMapMarker
-          v-for="user in participants"
+          v-for="user in participantStore.participants"
           :key="user.id"
           @click="openMarker(user.id ?? null)"
           :position="{lat: user.latitude, lng: user.longitude}"
@@ -92,15 +122,15 @@ import { timeService } from '../api/services/timeslotServices';
                   <p>{{ user.postalCode }} {{ user.city }}</p>
                 </span>
               </div>
-              <div v-for="slot in times.filter(t => t.id === user.timeSlotId)">
+              <div v-for="time in timeStore.times.filter(t => t.id === user.timeSlotId)">
               <div class="flex flex-col space-y-2">
                   <div class="flex items-center text-lg space-x-2 font-bold">
                     <i class="text-[#ff7518] pi pi-calendar "></i>
-                    <p class="text-sm">{{slot.date}}</p>
+                    <p class="text-sm">{{time.date}}</p>
                   </div>
                   <div class="flex items-center text-lg space-x-2 font-bold">
                     <i class="text-[#ff7518] pi pi-clock"></i>
-                    <p class="text-sm">{{ slot.startTime.slice(0, 5) }} - {{ slot.endTime.slice(0, 5) }}</p>
+                    <p class="text-sm">{{ time.startTime.slice(0, 5) }} - {{ time.endTime.slice(0, 5) }}</p>
                   </div>
 
                 </div>

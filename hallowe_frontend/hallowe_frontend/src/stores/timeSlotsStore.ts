@@ -1,24 +1,26 @@
 import { defineStore } from "pinia";
-import { onMounted, ref } from "vue";
-import { userService } from '../api/services/participantServices';
+import { ref } from "vue";
+import { timeService } from "../api/services/timeslotServices";
 import type { TimeSlot } from "../types/interfaces";
 
 export const useTimeSlotsStore = defineStore('timeslotStore', () => {
     const times = ref<TimeSlot[]>([]);
+    const isLoading = ref<boolean>(false);
+    const error = ref<string | null>(null);
 
     async function getAllTimeSlots() {
         try {
-            const response = await userService.getAll();
+            isLoading.value = true;
+            error.value = null;
+            const response = await timeService.getAll();
             times.value = response.data;
-        } catch (error) {
-            // Handle registration error
-            console.error('Registration failed:', error);
+        } catch (err) {
+            console.error('Fetching time slots failed:', error);
+            error.value = "Kunde inte hämta tider. Prova igen."
             throw error;
         }
     }
 
-    onMounted(getAllTimeSlots());
-
-  return { times }
+  return { times, isLoading, error, getAllTimeSlots }
 })
 

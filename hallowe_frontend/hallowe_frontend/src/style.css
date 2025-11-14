@@ -82,3 +82,6 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+.error-message {
+  @apply text-red-600 text-xl my-5 p-2.5 border border-red-600 bg-red-100;
+}
