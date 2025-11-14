@@ -1,5 +1,16 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import SearchComp from '../components/SearchComp.vue';
+import { useParticipantStore } from '../stores/participantsStore';
+
+const participantStore = useParticipantStore();
+
+onMounted(() => {
+  participantStore;
+})
+
+
+
 
 </script>
 
@@ -26,37 +37,15 @@ import SearchComp from '../components/SearchComp.vue';
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-neutral-primary border-b border-[#ff7518]">
+                <tr v-for="user in participantStore.participants" :key="user.id" class="bg-neutral-primary border-b border-[#ff7518]">
                     <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        Torstensonsgatan, 53B
+                        {{user.streetName}}, {{ user.streetNumber }}
                     </th>
                     <td class="px-6 py-4">
-                        503 42
+                        {{user.postalCode}}
                     </td>
                     <td class="px-6 py-4">
-                        Borås
-                    </td>
-                </tr>
-                <tr class="bg-neutral-primary border-b border-[#ff7518]">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        Folkungagatan, 23B
-                    </th>
-                    <td class="px-6 py-4">
-                        506 35
-                    </td>
-                    <td class="px-6 py-4">
-                        Borås
-                    </td>
-                </tr>
-                <tr class="bg-neutral-primary">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        Stenbrogatan, 4B
-                    </th>
-                    <td class="px-6 py-4">
-                        431 43
-                    </td>
-                    <td class="px-6 py-4">
-                        Mölndal
+                        {{user.city}}
                     </td>
                 </tr>
             </tbody>
