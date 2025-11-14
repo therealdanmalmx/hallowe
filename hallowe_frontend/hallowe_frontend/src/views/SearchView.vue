@@ -1,16 +1,28 @@
-<script setup lang="ts">
-import { onMounted } from 'vue';
+<script lang="ts">
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import SearchComp from '../components/SearchComp.vue';
 import { useParticipantStore } from '../stores/participantsStore';
 
-const participantStore = useParticipantStore();
+  export default defineComponent({
+    name: 'SearchView',
 
-onMounted(() => {
-  participantStore;
-})
+    setup() {
 
+      const participantStore = useParticipantStore();
 
+      const sortedParticipants = computed(() => {
+          return [...participantStore.participants].sort((a: any, b: any) =>
+              a.city.localeCompare(b.city)
+          );
+      });
 
+      onMounted( async () => {
+        await participantStore.getAllParticiants();
+      })
+
+      return { sortedParticipants, participantStore }
+    }
+  })
 
 </script>
 
@@ -25,28 +37,32 @@ onMounted(() => {
         <table class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-[#ff7518]">
                 <tr>
-                    <th scope="col" class="px-6 py-3 font-medium">
+                    <th scope="col" class="px-6 py-3 font-bold">
                         Address
                     </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
+                    <th scope="col" class="px-6 py-3 font-bold">
                         Postnummer
                     </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
+                    <th scope="col" class="px-6 py-3 font-bold">
                         Stad
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="user in participantStore.participants" :key="user.id" class="bg-neutral-primary border-b border-[#ff7518]">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        {{user.streetName}}, {{ user.streetNumber }}
-                    </th>
-                    <td class="px-6 py-4">
-                        {{user.postalCode}}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{user.city}}
-                    </td>
+                <tr
+                  v-for="user in sortedParticipants"
+                  :key="user.id"
+                  class="bg-neutral-primary border-b border-[#ff7518]"
+                >
+                  <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                    {{user.streetName}}, {{ user.streetNumber }}
+                  </th>
+                  <td class="px-6 py-4">
+                    {{user.postalCode}}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{user.city}}
+                  </td>
                 </tr>
             </tbody>
         </table>
