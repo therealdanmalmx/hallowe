@@ -15,11 +15,7 @@ import { timeService } from '../api/services/timeslotServices';
     name: 'MapView',
     components: { MapComp, RotateLoader },
     setup() {
-      const defaultCenter = { lat: 57.725, lng: 13.162 }
-      const zoom = ref(6)
       let isLoading = ref<boolean>(false);
-      let data = ref<Participant[]>([]);
-      let time = ref<TimeSlot[]>([]);
       const color = ref<string>("#FF7518");
       const size = ref('1.25rem');
 
@@ -34,25 +30,9 @@ import { timeService } from '../api/services/timeslotServices';
         // loading.show()
         try {
 
-          const userResponse = await userService.getAll();
-          const timeResponse = await timeService.getAll();
-
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/js?key=${mapsApiKey}&libraries=places`
           )
-
-          if (userResponse) {
-            data.value = await userResponse.data;
-            console.log('userResponse', data.value)
-          }
-
-          if (timeResponse) {
-            time.value = await timeResponse.data;
-
-            userResponse.data.forEach((element: Participant): void => {
-              timeResponse.data.find((t: TimeSlot) => t.id === element.id)
-            });
-          }
 
           if (response.ok) {
             const mapData = await response.json()
@@ -76,7 +56,7 @@ import { timeService } from '../api/services/timeslotServices';
 
       onMounted(fetchData)
 
-      return { defaultCenter, zoom, data, errorMessage, time, isLoading, color, size }
+      return { errorMessage, isLoading, color, size }
     }
   })
 </script>
@@ -85,7 +65,7 @@ import { timeService } from '../api/services/timeslotServices';
   <h1 class="text-5xl vl-parent">Map Page</h1>
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
   <div v-else class="p-4 space-y-4">
-      <MapComp :defaultCenter="defaultCenter" :zoom="zoom" />
+      <MapComp />
   </div>
 </template>
 <!-- :searchLocation="searchLocation"
