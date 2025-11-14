@@ -2,7 +2,7 @@
 
   import { defineComponent } from 'vue';
   import MapComp from '../components/MapComp.vue';
-import { useParticipantStore } from '../stores/participantsStore';
+  import { useParticipantStore } from '../stores/participantsStore';
   // import { useLoading } from 'vue-loading-overlay';
 
   export default defineComponent({
