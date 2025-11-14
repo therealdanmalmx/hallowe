@@ -1,17 +1,22 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
-import SearchComp from '../components/SearchComp.vue';
-import { useParticipantStore } from '../stores/participantsStore';
+  import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+  import SearchComp from '../components/SearchComp.vue';
+  import { useParticipantStore } from '../stores/participantsStore';
+  import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
+
 
   export default defineComponent({
     name: 'SearchView',
+    components: { SearchComp, RotateLoader},
 
     setup() {
 
+      const color = ref<string>("#FF7518");
+      const size = ref('1.25rem');
       const participantStore = useParticipantStore();
 
       const sortedParticipants = computed(() => {
-          return [...participantStore.participants].sort((a: any, b: any) =>
+          return participantStore.participants.sort((a: any, b: any) =>
               a.city.localeCompare(b.city)
           );
       });
@@ -20,14 +25,16 @@ import { useParticipantStore } from '../stores/participantsStore';
         await participantStore.getAllParticiants();
       })
 
-      return { sortedParticipants, participantStore }
+
+      return { sortedParticipants, participantStore, color, size }
     }
   })
 
 </script>
 
 <template>
-  <div class="px-12">
+  <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading"><rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader></div>
+  <div v-else class="px-12">
     <div class="h-calc(100vh_-_40px)">
       <h1 class="text-5xl">search-view</h1>
       <SearchComp />
@@ -67,7 +74,6 @@ import { useParticipantStore } from '../stores/participantsStore';
             </tbody>
         </table>
     </div>
-  </div>
-
+    </div>
 
 </template>
