@@ -50,10 +50,10 @@ import { storeToRefs } from 'pinia';
         <table class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-[#ff7518]">
                 <tr>
-                    <th scope="col" class="px-6 py-3 font-bold">
+                    <th scope="col" class="h px-6 py-3 font-bold">
                         Address
                     </th>
-                    <th scope="col" class="px-6 py-3 font-bold">
+                    <th scope="col" class="hidden sm:block px-6 py-3 font-bold">
                         Postnummer
                     </th>
                     <th scope="col" class="px-6 py-3 font-bold">
@@ -70,7 +70,7 @@ import { storeToRefs } from 'pinia';
                   <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                     {{user.streetName}}, {{ user.streetNumber }}
                   </th>
-                  <td class="px-6 py-4">
+                  <td class="hidden sm:block px-6 py-4">
                     {{user.postalCode}}
                   </td>
                   <td class="px-6 py-4">

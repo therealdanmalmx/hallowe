@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <nav class="absoute w-full bottom-20 pt-12">
+  <nav class="absoute w-full bottom-10 pt-6">
     <div>
       <ul class="flex w-full justify-between items-center">
         <li class="flex-1 flex justify-center cursor-pointer">

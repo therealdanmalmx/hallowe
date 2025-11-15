@@ -3,8 +3,7 @@
   import { defineComponent } from 'vue';
   import MapComp from '../components/MapComp.vue';
   import { useParticipantStore } from '../stores/participantsStore';
-import { useTimeSlotsStore } from '../stores/timeSlotsStore';
-  // import { useLoading } from 'vue-loading-overlay';
+  import { useTimeSlotsStore } from '../stores/timeSlotsStore';
 
   export default defineComponent({
     name: 'MapView',

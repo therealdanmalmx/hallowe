@@ -6,8 +6,7 @@
   import { FetchMap } from '../api/getMap';
   import { useParticipantStore } from '../stores/participantsStore';
   import { useTimeSlotsStore } from '../stores/timeSlotsStore';
-  import { getUserCoords } from '../utils/getUserCoordinates';
-  import { defaultCenter } from '../utils/getUserCoordinates';
+  import { getUserCoords, defaultCenter } from '../utils/getUserCoordinates';
 
   export default defineComponent({
     name: 'MapComponent',
@@ -22,7 +21,7 @@
       const timeStore = useTimeSlotsStore();
       const data = ref([]);
       const pos = ref({ lat: 0, lng: 0 })
-      const zoom = ref<number>(12);
+      const zoom = ref<number>(window.innerWidth < 768 ? 10 : 12);
       const openedMarkerID = ref<number>(0);
 
       const openMarker = (id: number | null) => {
@@ -49,15 +48,15 @@
       :center="defaultCenter"
       :zoom="zoom"
       :options="{
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: true,
-        disableDefaultUi: false,
+      zoomControl: true,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      rotateControl: false,
+      fullscreenControl: true,
+      disableDefaultUi: false,
       }"
-      style="width: 90%; height: 80vh; margin: 0 auto;"
+      class="w-full h-[65vh] md:h-[70vh] mx-auto"
     >
       <GMapMarker
           v-for="user in participantStore.participants"
