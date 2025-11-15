@@ -62,6 +62,9 @@
           v-for="user in participantStore.participants"
           :key="user.id"
           @click="openMarker(user.id ?? null)"
+          place: {
+            location="{lat: user.latitude, lng: user.longitude}"
+          }
           :position="{lat: user.latitude, lng: user.longitude}"
         >
           <GMapInfoWindow
@@ -69,14 +72,16 @@
             @closeclick="openMarker(null)"
             :opened="openedMarkerID === user.id"
             >
-            <div class="flex flex-col justify-start mt-2">
+            <div class="flex flex-col text-left justify-start mt-2">
               <div class="text-black text-base mb-2">
                 <p class="font-bold">{{ user.name }}</p>
-                <span class="flex flex-col text-left justify-start text-sm">
+                <span class="flex flex-col justify-start text-sm">
                   <p>{{ user.streetName }}, {{ user.streetNumber }}</p>
                   <p>{{ user.postalCode }} {{ user.city }}</p>
                 </span>
               </div>
+              <!-- <div class="border-t border-gray-300 mt-2 pt-2 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]"></div> -->
+
               <div v-for="time in timeStore.times.filter(t => t.id === user.timeSlotId)">
               <div class="flex flex-col space-y-2">
                   <div class="flex items-center text-lg space-x-2 font-bold">
@@ -87,10 +92,12 @@
                     <i class="text-[#ff7518] pi pi-clock"></i>
                     <p class="text-sm">{{ time.startTime.slice(0, 5) }} - {{ time.endTime.slice(0, 5) }}</p>
                   </div>
-
+                    <div class="border-t border-gray-300 mt-2 pt-1.5 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]">
+                    <a class="googel-maps-links" :href="`https://www.google.com/maps?q=${user.latitude},${user.longitude}&z=15/dir`" target="_blank">Se på Google Maps</a>
+                  </div>
                 </div>
-              </div>
             </div>
+          </div>
           </GMapInfoWindow>
       </GMapMarker>
     </GMapMap>

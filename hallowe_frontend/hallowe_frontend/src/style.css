@@ -27,6 +27,16 @@ a {
 a:hover {
   color: #9aff6b;
 }
+a:hover:not {
+  color: #9aff6b;
+}
+
+.googel-maps-links {
+  @apply text-blue-600
+}
+.googel-maps-links:hover {
+  @apply text-blue-800
+}
 
 body {
   margin: 0;
