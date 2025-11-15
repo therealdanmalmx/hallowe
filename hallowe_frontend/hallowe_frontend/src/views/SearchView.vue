@@ -3,6 +3,7 @@
   import SearchComp from '../components/SearchComp.vue';
   import { useParticipantStore } from '../stores/participantsStore';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
+import { storeToRefs } from 'pinia';
 
 
   export default defineComponent({
@@ -15,25 +16,30 @@
       const size = ref('1.25rem');
       const participantStore = useParticipantStore();
 
-      const sortedParticipants = computed(() => {
-          return participantStore.participants.sort((a: any, b: any) =>
-              a.city.localeCompare(b.city)
-          );
+      const { filteredParticipants, searchText, isLoading, error } = storeToRefs(participantStore);
+
+      console.log({ filteredParticipants });
+
+      const sortedAndFilteredParticipants = computed(() => {
+        return filteredParticipants.value.sort((a: any, b: any) =>
+        a.city.localeCompare(b.city)
+      );
+    });
+
+      onMounted(async () => {
+        await participantStore.getAllParticiants();
+        console.log('First participant:', participantStore.participants[0]);
+        console.log('All keys:', Object.keys(participantStore.participants[0] || {}));
       });
 
-      onMounted( async () => {
-        await participantStore.getAllParticiants();
-      })
-
-
-      return { sortedParticipants, participantStore, color, size }
+      return { sortedAndFilteredParticipants, searchText, isLoading, error, participantStore, color, size }
     }
   })
 
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading"><rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader></div>
+  <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
   <div v-else class="px-12">
     <div class="h-calc(100vh_-_40px)">
       <h1 class="text-5xl">search-view</h1>
@@ -57,7 +63,7 @@
             </thead>
             <tbody>
                 <tr
-                  v-for="user in sortedParticipants"
+                  v-for="user in sortedAndFilteredParticipants"
                   :key="user.id"
                   class="bg-neutral-primary border-b border-[#ff7518]"
                 >
