@@ -13,10 +13,10 @@
     "@tailwindcss/vite": "^4.1.16",
     "axios": "^1.13.2",
     "jquery": "^3.7.1",
+    "pinia": "^3.0.4",
     "primeicons": "^7.0.0",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.22",
-    "vue-loading-overlay": "^6.0.6",
     "vue-router": "^4.6.3",
     "vue-spinner": "^1.0.4"
   },

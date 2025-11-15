@@ -1,82 +1,70 @@
 <script lang="ts">
 
-  import { GMapMap, GMapMarker, GMapInfoWindow } from '@fawmi/vue-google-maps';
-  import { defineComponent, ref, onMounted } from 'vue';
-  import { userService } from '../api/services/participantServices';
-  import { type TimeSlot, type Participant } from '../types/interfaces';
-import { timeService } from '../api/services/timeslotServices';
+  import { GMapInfoWindow, GMapMap, GMapMarker } from '@fawmi/vue-google-maps';
+  import { defineComponent, onMounted, ref } from 'vue';
+  import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
+  import { FetchMap } from '../api/getMap';
+  import { useParticipantStore } from '../stores/participantsStore';
+  import { useTimeSlotsStore } from '../stores/timeSlotsStore';
+  import { getUserCoords, defaultCenter } from '../utils/getUserCoordinates';
 
   export default defineComponent({
+    name: 'MapComponent',
+    components: { RotateLoader },
 
     setup() {
 
-      let participants = ref<Participant[]>([]);
-      let times = ref<TimeSlot[]>([]);
+      const color = ref<string>("#FF7518");
+      const size = ref('1.25rem');
+
+      const participantStore = useParticipantStore();
+      const timeStore = useTimeSlotsStore();
+      const data = ref([]);
       const pos = ref({ lat: 0, lng: 0 })
-      const zoom = ref<number>(12);
-      const defaultCenter = ref<object>({ lat: 0, lng: 0 })
+      const zoom = ref<number>(window.innerWidth < 768 ? 10 : 12);
       const openedMarkerID = ref<number>(0);
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          pos.value = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          }
-          defaultCenter.value = {lat: pos.value.lat, lng: pos.value.lng}
-        },
-        (error) => {
-          console.error('Error getting location:', error)
-        }
-      )
-
       const openMarker = (id: number | null) => {
-        console.log({id})
         openedMarkerID.value = id ?? 0;
       }
 
-      const fetchAllParticipants = async () => {
-        const userResponse = await userService.getAll();
-        const timeResponse = await timeService.getAll();
+      onMounted(async () => {
+        getUserCoords();
+        FetchMap();
+        await participantStore.getAllParticiants();
+        await timeStore.getAllTimeSlots();
+      });
 
-
-        if (userResponse) {
-          participants.value = await userResponse.data;
-        }
-
-        if (timeResponse) {
-          times.value = await timeResponse.data;
-        }
-      }
-
-      onMounted(fetchAllParticipants);
-
-      return { pos, defaultCenter, openedMarkerID, times, openMarker, zoom, participants }
+      return { pos, openedMarkerID, defaultCenter, openMarker, color, size, zoom, data, participantStore, timeStore }
     }
   })
 
 </script>
 
 <template>
-  <div class="flex flex-col justify-center py-8">
+  <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading"><rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader></div>
+  <div v-else class="flex flex-col justify-center py-8">
     <GMapMap
       :center="defaultCenter"
       :zoom="zoom"
       :options="{
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: true,
-        disableDefaultUi: false,
+      zoomControl: true,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      rotateControl: false,
+      fullscreenControl: true,
+      disableDefaultUi: false,
       }"
-      style="width: 90%; height: 80vh; margin: 0 auto;"
+      class="w-full h-[65vh] md:h-[70vh] mx-auto"
     >
       <GMapMarker
-          v-for="user in participants"
+          v-for="user in participantStore.participants"
           :key="user.id"
           @click="openMarker(user.id ?? null)"
+          place: {
+            location="{lat: user.latitude, lng: user.longitude}"
+          }
           :position="{lat: user.latitude, lng: user.longitude}"
         >
           <GMapInfoWindow
@@ -84,28 +72,32 @@ import { timeService } from '../api/services/timeslotServices';
             @closeclick="openMarker(null)"
             :opened="openedMarkerID === user.id"
             >
-            <div class="flex flex-col justify-start mt-2">
+            <div class="flex flex-col text-left justify-start mt-2">
               <div class="text-black text-base mb-2">
                 <p class="font-bold">{{ user.name }}</p>
-                <span class="flex flex-col text-left justify-start text-sm">
+                <span class="flex flex-col justify-start text-sm">
                   <p>{{ user.streetName }}, {{ user.streetNumber }}</p>
                   <p>{{ user.postalCode }} {{ user.city }}</p>
                 </span>
               </div>
-              <div v-for="slot in times.filter(t => t.id === user.timeSlotId)">
+              <!-- <div class="border-t border-gray-300 mt-2 pt-2 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]"></div> -->
+
+              <div v-for="time in timeStore.times.filter(t => t.id === user.timeSlotId)">
               <div class="flex flex-col space-y-2">
                   <div class="flex items-center text-lg space-x-2 font-bold">
                     <i class="text-[#ff7518] pi pi-calendar "></i>
-                    <p class="text-sm">{{slot.date}}</p>
+                    <p class="text-sm">{{time.date}}</p>
                   </div>
                   <div class="flex items-center text-lg space-x-2 font-bold">
                     <i class="text-[#ff7518] pi pi-clock"></i>
-                    <p class="text-sm">{{ slot.startTime.slice(0, 5) }} - {{ slot.endTime.slice(0, 5) }}</p>
+                    <p class="text-sm">{{ time.startTime.slice(0, 5) }} - {{ time.endTime.slice(0, 5) }}</p>
                   </div>
-
+                    <div class="border-t border-gray-300 mt-2 pt-1.5 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]">
+                    <a class="googel-maps-links" :href="`https://www.google.com/maps?q=${user.latitude},${user.longitude}&z=15`" target="_blank">Se på Google Maps</a>
+                  </div>
                 </div>
-              </div>
             </div>
+          </div>
           </GMapInfoWindow>
       </GMapMarker>
     </GMapMap>

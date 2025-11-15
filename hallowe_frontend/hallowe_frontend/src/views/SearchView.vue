@@ -1,10 +1,46 @@
-<script setup lang="ts">
-import SearchComp from '../components/SearchComp.vue';
+<script lang="ts">
+  import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+  import SearchComp from '../components/SearchComp.vue';
+  import { useParticipantStore } from '../stores/participantsStore';
+  import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
+import { storeToRefs } from 'pinia';
+
+
+  export default defineComponent({
+    name: 'SearchView',
+    components: { SearchComp, RotateLoader},
+
+    setup() {
+
+      const color = ref<string>("#FF7518");
+      const size = ref('1.25rem');
+      const participantStore = useParticipantStore();
+
+      const { filteredParticipants, searchText, isLoading, error } = storeToRefs(participantStore);
+
+      console.log({ filteredParticipants });
+
+      const sortedAndFilteredParticipants = computed(() => {
+        return filteredParticipants.value.sort((a: any, b: any) =>
+        a.city.localeCompare(b.city)
+      );
+    });
+
+      onMounted(async () => {
+        await participantStore.getAllParticiants();
+        console.log('First participant:', participantStore.participants[0]);
+        console.log('All keys:', Object.keys(participantStore.participants[0] || {}));
+      });
+
+      return { sortedAndFilteredParticipants, searchText, isLoading, error, participantStore, color, size }
+    }
+  })
 
 </script>
 
 <template>
-  <div class="px-12">
+  <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
+  <div v-else class="px-12">
     <div class="h-calc(100vh_-_40px)">
       <h1 class="text-5xl">search-view</h1>
       <SearchComp />
@@ -14,55 +50,36 @@ import SearchComp from '../components/SearchComp.vue';
         <table class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-[#ff7518]">
                 <tr>
-                    <th scope="col" class="px-6 py-3 font-medium">
+                    <th scope="col" class="h px-6 py-3 font-bold">
                         Address
                     </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
+                    <th scope="col" class="hidden sm:block px-6 py-3 font-bold">
                         Postnummer
                     </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
+                    <th scope="col" class="px-6 py-3 font-bold">
                         Stad
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-neutral-primary border-b border-[#ff7518]">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        Torstensonsgatan, 53B
-                    </th>
-                    <td class="px-6 py-4">
-                        503 42
-                    </td>
-                    <td class="px-6 py-4">
-                        Borås
-                    </td>
-                </tr>
-                <tr class="bg-neutral-primary border-b border-[#ff7518]">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        Folkungagatan, 23B
-                    </th>
-                    <td class="px-6 py-4">
-                        506 35
-                    </td>
-                    <td class="px-6 py-4">
-                        Borås
-                    </td>
-                </tr>
-                <tr class="bg-neutral-primary">
-                    <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        Stenbrogatan, 4B
-                    </th>
-                    <td class="px-6 py-4">
-                        431 43
-                    </td>
-                    <td class="px-6 py-4">
-                        Mölndal
-                    </td>
+                <tr
+                  v-for="user in sortedAndFilteredParticipants"
+                  :key="user.id"
+                  class="bg-neutral-primary border-b border-[#ff7518]"
+                >
+                  <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                    {{user.streetName}}, {{ user.streetNumber }}
+                  </th>
+                  <td class="hidden sm:block px-6 py-4">
+                    {{user.postalCode}}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{user.city}}
+                  </td>
                 </tr>
             </tbody>
         </table>
     </div>
-  </div>
-
+    </div>
 
 </template>
