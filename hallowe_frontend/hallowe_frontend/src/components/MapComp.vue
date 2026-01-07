@@ -29,8 +29,8 @@
       }
 
       onMounted(async () => {
-        getUserCoords();
-        FetchMap();
+       getUserCoords();
+        await FetchMap();
         await participantStore.getAllParticiants();
         await timeStore.getAllTimeSlots();
       });
@@ -63,7 +63,7 @@
           :key="user.id"
           @click="openMarker(user.id ?? null)"
           place: {
-            location="{lat: user.latitude, lng: user.longitude}"
+            :location="{lat: user.latitude, lng: user.longitude}"
           }
           :position="{lat: user.latitude, lng: user.longitude}"
         >
