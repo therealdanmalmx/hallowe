@@ -22,7 +22,7 @@
 
 <template>
   <h1 class="text-5xl vl-parent">Map Page</h1>
-  <div class="p-4 space-y-4">
+  <div class="p-4 md:p-0">
       <MapComp />
       <div v-if="participantStore.error" class="error-message">{{ participantStore.error }}</div>
       <div v-else-if="timeSlotsStore.error" class="error-message">{{ timeSlotsStore.error }}</div>
