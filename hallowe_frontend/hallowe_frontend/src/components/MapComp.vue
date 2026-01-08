@@ -7,10 +7,11 @@
   import { useParticipantStore } from '../stores/participantsStore';
   import { useTimeSlotsStore } from '../stores/timeSlotsStore';
   import { getUserCoords, defaultCenter } from '../utils/getUserCoordinates';
+  import SearchComp from './SearchComp.vue';
 
   export default defineComponent({
     name: 'MapComponent',
-    components: { RotateLoader },
+    components: { RotateLoader, SearchComp },
 
     setup() {
 
@@ -43,7 +44,7 @@
 
 <template>
   <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading"><rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader></div>
-  <div v-else class="flex flex-col justify-center py-8">
+  <div v-else class="flex flex-col justify-center pt-8">
     <GMapMap
       :center="defaultCenter"
       :zoom="zoom"
@@ -102,6 +103,7 @@
       </GMapMarker>
     </GMapMap>
   </div>
+  <SearchComp />
 </template>
 
 <style>
