@@ -1,7 +1,7 @@
-<script>
-import { defineComponent, onMounted } from "vue";
-import { useParticipantStore } from "../stores/participantsStore";
+<script lang="ts">
 import { storeToRefs } from "pinia";
+import { defineComponent } from "vue";
+import { useParticipantStore } from "../stores/participantsStore";
 
 export default defineComponent({
 
@@ -10,7 +10,7 @@ export default defineComponent({
 
         const { searchText } = storeToRefs(participantStore);
 
-        return { searchText }
+        return { searchText };
     }
 })
 </script>
@@ -32,7 +32,6 @@ export default defineComponent({
                 placeholder="Gatuadress, kommun, etc . . ."
                 required
             />
-            <button type="submit" class="text-white absolute end-1 transition duration-300 ease-in-out bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sök</button>
         </div>
     </form>
 
