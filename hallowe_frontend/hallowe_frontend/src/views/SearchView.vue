@@ -3,12 +3,14 @@
   import SearchComp from '../components/SearchComp.vue';
   import { useParticipantStore } from '../stores/participantsStore';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
-import { storeToRefs } from 'pinia';
+  import { storeToRefs } from 'pinia';
+  import NavbarComp from '../components/NavbarComp.vue';
+import AddNewAddress from '../components/AddNewAddress.vue';
 
 
   export default defineComponent({
     name: 'SearchView',
-    components: { SearchComp, RotateLoader},
+    components: { SearchComp, RotateLoader, NavbarComp, AddNewAddress},
 
     setup() {
 
@@ -40,7 +42,7 @@ import { storeToRefs } from 'pinia';
 
 <template>
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
-  <div v-else class="px-4 md:px-0">
+  <div v-else class="px-4 lg:px-0">
     <div class="h-calc(100vh_-_40px)">
       <h1 class="text-5xl">List Page</h1>
       <SearchComp />
@@ -80,6 +82,8 @@ import { storeToRefs } from 'pinia';
             </tbody>
         </table>
     </div>
-    </div>
+
+  </div>
+  <AddNewAddress />
 
 </template>

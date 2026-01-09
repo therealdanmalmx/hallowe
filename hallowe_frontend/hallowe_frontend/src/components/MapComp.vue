@@ -1,17 +1,19 @@
 <script lang="ts">
 
   import { GMapInfoWindow, GMapMap, GMapMarker } from '@fawmi/vue-google-maps';
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { computed, defineComponent, onMounted, ref } from 'vue';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
   import { FetchMap } from '../api/getMap';
   import { useParticipantStore } from '../stores/participantsStore';
   import { useTimeSlotsStore } from '../stores/timeSlotsStore';
   import { getUserCoords, defaultCenter } from '../utils/getUserCoordinates';
   import SearchComp from './SearchComp.vue';
+  import NavbarComp from './NavbarComp.vue';
+  import AddNewAddress from './AddNewAddress.vue';
 
   export default defineComponent({
     name: 'MapComponent',
-    components: { RotateLoader, SearchComp },
+    components: { RotateLoader, SearchComp, NavbarComp, AddNewAddress },
 
     setup() {
 
@@ -21,9 +23,9 @@
       const participantStore = useParticipantStore();
       const timeStore = useTimeSlotsStore();
       const data = ref([]);
-      const pos = ref({ lat: 0, lng: 0 })
       const zoom = ref<number>(window.innerWidth < 768 ? 10 : 12);
       const openedMarkerID = ref<number>(0);
+
 
       const openMarker = (id: number | null) => {
         openedMarkerID.value = id ?? 0;
@@ -60,7 +62,7 @@
       class="w-full h-[65vh] md:h-[70vh] mx-auto"
     >
       <GMapMarker
-          v-for="user in participantStore.participants"
+          v-for="user in participantStore.filteredParticipants"
           :key="user.id"
           @click="openMarker(user.id ?? null)"
           place: {
@@ -104,6 +106,8 @@
     </GMapMap>
   </div>
   <SearchComp />
+  <!-- <NavbarComp /> -->
+  <AddNewAddress />
 </template>
 
 <style>
