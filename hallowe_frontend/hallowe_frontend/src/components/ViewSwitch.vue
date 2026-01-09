@@ -10,7 +10,12 @@
       <!-- Left circle -->
          <RouterLink to="/map">
            <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 cursor-pointer" title="map page">
-            <span class="pi pi-map-marker text-[#ff7518] hover:text-white transition-colors duration-300 ease-in-out" :class="{ 'text-white': $route.path === '/map' }" style="font-size: 1.2rem"></span>
+              <span
+                class="pi pi-map-marker hover:text-[#ff7518] transition-colors duration-300 ease-in-out"
+                :class="$route.path === '/map' ? 'text-[#ff7518]' : 'text-white'"
+                style="font-size: 1.2rem"
+              >
+            </span>
            </div>
           </RouterLink>
 
@@ -18,7 +23,12 @@
 
         <RouterLink to="/search">
           <div class="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 cursor-pointer" title="list page">
-            <span class="pi pi-list text-[#ff7518] hover:text-white transition-colors duration-300 ease-in-out" :class="{ 'text-white': $route.path === '/search' }" style="font-size: 1.2rem"></span>
+              <span
+                class="pi pi-list hover:text-[#ff7518] transition-colors duration-300 ease-in-out"
+                :class="$route.path === '/search' ? 'text-[#ff7518]' : 'text-white'"
+                style="font-size: 1.2rem"
+              >
+            </span>
           </div>
         </RouterLink>
     </div>
