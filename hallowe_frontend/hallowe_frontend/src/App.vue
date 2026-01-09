@@ -8,6 +8,5 @@ import ViewSwitch from './components/ViewSwitch.vue';
   <div class="py-6">
     <ViewSwitch />
     <RouterView />
-    <Navbar />
   </div>
 </template>
