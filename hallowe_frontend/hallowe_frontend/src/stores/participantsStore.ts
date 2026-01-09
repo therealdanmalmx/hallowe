@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { userService } from "../api/services/participantServices";
 import type { Participant } from "../types/interfaces";
 
@@ -10,6 +10,8 @@ export const useParticipantStore = defineStore('participantStore', () => {
     const error = ref<string | null>(null);
     const searchText = ref<string>("");
 
+    const mapCenter = ref<{ lat: number; lng: number } | null>(null);
+    const mapZoom = ref<number | null>(12);
 
     const filteredParticipants = computed(() => {
 
@@ -29,8 +31,30 @@ export const useParticipantStore = defineStore('participantStore', () => {
             return streetName.includes(search) ||
             postalCode.includes(searchNoSpaces) ||
             city.includes(search);
-        })
+        });
     });
+
+    watch(filteredParticipants, (newFiltered) => {
+        if (newFiltered.length > 0 && searchText.value.trim() !== '') {
+            const first = newFiltered[0];
+            mapCenter.value = {
+                lat: first!.latitude,
+                lng: first!.longitude
+            };
+        }
+    });
+
+    function zoomToParticipant(participant: Participant) {
+        mapCenter.value = {
+            lat: participant.latitude,
+            lng: participant.longitude
+        };
+    }
+
+    function resetMapView() {
+        mapCenter.value = null;
+        mapZoom.value = null;
+    }
 
     async function getAllParticiants() {
         isLoading.value = true;
@@ -47,6 +71,16 @@ export const useParticipantStore = defineStore('participantStore', () => {
         }
     }
 
-  return { participants, filteredParticipants, searchText, error, isLoading, getAllParticiants }
-})
-
+    return {
+        participants,
+        filteredParticipants,
+        searchText,
+        mapCenter,
+        mapZoom,
+        error,
+        isLoading,
+        getAllParticiants,
+        zoomToParticipant,
+        resetMapView
+    }
+});

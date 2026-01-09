@@ -23,41 +23,61 @@
       const participantStore = useParticipantStore();
       const timeStore = useTimeSlotsStore();
       const data = ref([]);
-      const zoom = ref<number>(window.innerWidth < 768 ? 10 : 12);
+      const baseZoom = ref<number>(window.innerWidth < 768 ? 10 : 12);
       const openedMarkerID = ref<number>(0);
 
+      // Computed properties for dynamic center and zoom
+      const currentCenter = computed(() => {
+        return participantStore.mapCenter || defaultCenter.value;
+      });
+
+      const currentZoom = computed(() => {
+        return participantStore.mapZoom || baseZoom.value;
+      });
 
       const openMarker = (id: number | null) => {
         openedMarkerID.value = id ?? 0;
       }
 
       onMounted(async () => {
-       getUserCoords();
+        getUserCoords();
         await FetchMap();
         await participantStore.getAllParticiants();
         await timeStore.getAllTimeSlots();
       });
 
-      return { pos, openedMarkerID, defaultCenter, openMarker, color, size, zoom, data, participantStore, timeStore }
+      return {
+        openedMarkerID,
+        currentCenter,
+        currentZoom,
+        openMarker,
+        color,
+        size,
+        data,
+        participantStore,
+        timeStore
+      }
     }
   })
 
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading"><rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader></div>
+  <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading">
+    <rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader>
+  </div>
   <div v-else class="flex flex-col justify-center pt-8">
     <GMapMap
-      :center="defaultCenter"
-      :zoom="zoom"
+      :center="currentCenter"
+      :zoom="currentZoom"
       :options="{
-      zoomControl: true,
-      mapTypeControl: false,
-      scaleControl: false,
-      streetViewControl: false,
-      rotateControl: false,
-      fullscreenControl: true,
-      disableDefaultUi: false,
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: true,
+        disableDefaultUi: false,
       }"
       class="w-full h-[65vh] md:h-[70vh] mx-auto"
     >
@@ -65,9 +85,6 @@
           v-for="user in participantStore.filteredParticipants"
           :key="user.id"
           @click="openMarker(user.id ?? null)"
-          place: {
-            :location="{lat: user.latitude, lng: user.longitude}"
-          }
           :position="{lat: user.latitude, lng: user.longitude}"
         >
           <GMapInfoWindow
@@ -83,10 +100,9 @@
                   <p>{{ user.postalCode }} {{ user.city }}</p>
                 </span>
               </div>
-              <!-- <div class="border-t border-gray-300 mt-2 pt-2 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]"></div> -->
 
               <div v-for="time in timeStore.times.filter(t => t.id === user.timeSlotId)">
-              <div class="flex flex-col space-y-2">
+                <div class="flex flex-col space-y-2">
                   <div class="flex items-center text-lg space-x-2 font-bold">
                     <i class="text-[#ff7518] pi pi-calendar "></i>
                     <p class="text-sm">{{time.date}}</p>
@@ -95,18 +111,17 @@
                     <i class="text-[#ff7518] pi pi-clock"></i>
                     <p class="text-sm">{{ time.startTime.slice(0, 5) }} - {{ time.endTime.slice(0, 5) }}</p>
                   </div>
-                    <div class="border-t border-gray-300 mt-2 pt-1.5 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]">
+                  <div class="border-t border-gray-300 mt-2 pt-1.5 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]">
                     <a class="googel-maps-links" :href="`https://www.google.com/maps?q=${user.latitude},${user.longitude}&z=15`" target="_blank">Se på Google Maps</a>
                   </div>
                 </div>
+              </div>
             </div>
-          </div>
           </GMapInfoWindow>
       </GMapMarker>
     </GMapMap>
   </div>
   <SearchComp />
-  <!-- <NavbarComp /> -->
   <AddNewAddress />
 </template>
 
