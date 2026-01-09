@@ -42,7 +42,7 @@ import AddNewAddress from '../components/AddNewAddress.vue';
 
 <template>
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
-  <div v-else class="px-4 lg:px-0">
+  <div v-else class="px-4 xl:px-0">
     <div class="h-calc(100vh_-_40px)">
       <h1 class="text-5xl">List Page</h1>
       <SearchComp />
@@ -83,7 +83,7 @@ import AddNewAddress from '../components/AddNewAddress.vue';
         </table>
     </div>
 
+    <AddNewAddress />
   </div>
-  <AddNewAddress />
 
 </template>
