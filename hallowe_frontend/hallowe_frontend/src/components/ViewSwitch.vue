@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full justify-center md:justify-end pb-12 md:pb-0">
+  <div class="flex w-full justify-center md:justify-end px-4 xl:px-0 pb-12 md:pb-0">
     <div class="relative w-30 h-12">
       <!-- Main pill shape -->
       <div class="absolute inset-0 border-2 border-[#ff7518] rounded-full"></div>

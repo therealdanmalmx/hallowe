@@ -79,7 +79,7 @@
         fullscreenControl: true,
         disableDefaultUi: false,
       }"
-      class="w-full h-[65vh] md:h-[70vh] mx-auto"
+      class="w-full h-[50vh] xl:h-[70vh] mx-auto"
     >
       <GMapMarker
           v-for="user in participantStore.filteredParticipants"
