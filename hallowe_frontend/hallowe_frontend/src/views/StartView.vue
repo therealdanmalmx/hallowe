@@ -3,14 +3,16 @@
 </script>
 
 <template>
-  <div id="start-view">
-    <h1 class="text-5xl">HALLO WE</h1>
-    <p>Trick or Treat. . .</p>
-    <div class="flying-bat-container">
-      <FlyingBats />
+  <RouterLink to="/map">
+    <div id="start-view">
+      <h1 class="text-5xl">HALLO WE</h1>
+      <p>Trick or Treat. . .</p>
+      <div class="flying-bat-container">
+        <FlyingBats />
+      </div>
+      <!-- <FlyingBats /> -->
     </div>
-    <!-- <FlyingBats /> -->
-  </div>
+  </RouterLink>
 </template>
 
 <style lang="css" scoped>
