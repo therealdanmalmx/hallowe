@@ -6,7 +6,7 @@ import ViewSwitch from './components/ViewSwitch.vue';
 
 <template>
   <div class="py-6">
-    <ViewSwitch />
+    <ViewSwitch v-if="$route.path != '/'" />
     <RouterView />
   </div>
 </template>
