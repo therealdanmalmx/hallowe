@@ -22,7 +22,7 @@
     background-image: url('../../public/images/mobile_bg.png');
     background-size: cover;
     background-position: top;
-    height: 90vh;
+    height: 100vh;
     width: 100%;
     position: relative;
   }
