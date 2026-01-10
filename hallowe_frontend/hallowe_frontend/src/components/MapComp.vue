@@ -63,7 +63,7 @@
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center" v-if="participantStore.isLoading">
+  <div class="h-[50vh] flex items-center justify-center" v-if="participantStore.isLoading">
     <rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader>
   </div>
   <div v-else class="flex flex-col justify-center pt-8">
@@ -121,8 +121,10 @@
       </GMapMarker>
     </GMapMap>
   </div>
-  <SearchComp />
-  <AddNewAddress />
+  <div v-if="!participantStore.isLoading">
+    <SearchComp />
+    <AddNewAddress />
+  </div>
 </template>
 
 <style>
