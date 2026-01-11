@@ -4,6 +4,7 @@ import StartView from "./views/StartView.vue";
 import MapView from "./views/MapView.vue";
 import Search from "./views/SearchView.vue";
 import AddNewHouse from "./views/AddNewHouseView.vue";
+import Login from "./views/Login.vue";
 
 export default createRouter({
   history: createWebHistory(),
@@ -18,6 +19,7 @@ export default createRouter({
     },
     { component: Search, path: "/search" },
     { component: AddNewHouse, path: "/add-address" },
+    { component: Login, path: "/login" },
   ],
   // scrollBehavior(to, from, savedPosition) {
   //   if (savedPosition) {
