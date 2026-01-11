@@ -8,12 +8,11 @@
   import { useTimeSlotsStore } from '../stores/timeSlotsStore';
   import { getUserCoords, defaultCenter } from '../utils/getUserCoordinates';
   import SearchComp from './SearchComp.vue';
-  import NavbarComp from './NavbarComp.vue';
   import AddNewAddress from './AddNewAddress.vue';
 
   export default defineComponent({
     name: 'MapComponent',
-    components: { RotateLoader, SearchComp, NavbarComp, AddNewAddress },
+    components: { RotateLoader, SearchComp, AddNewAddress },
 
     setup() {
 

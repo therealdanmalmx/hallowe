@@ -4,13 +4,12 @@
   import { useParticipantStore } from '../stores/participantsStore';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
   import { storeToRefs } from 'pinia';
-  import NavbarComp from '../components/NavbarComp.vue';
-import AddNewAddress from '../components/AddNewAddress.vue';
+  import AddNewAddress from '../components/AddNewAddress.vue';
 
 
   export default defineComponent({
     name: 'SearchView',
-    components: { SearchComp, RotateLoader, NavbarComp, AddNewAddress},
+    components: { SearchComp, RotateLoader, AddNewAddress},
 
     setup() {
 
