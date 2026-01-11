@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import FlyingBats from '../components/FlyingBatsComp.vue'
+  import '../style.css'
 </script>
 
 <template>
@@ -10,13 +11,11 @@
       <div class="flying-bat-container">
         <FlyingBats />
       </div>
-      <!-- <FlyingBats /> -->
     </div>
   </RouterLink>
 </template>
 
 <style lang="css" scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Henny+Penny&family=Rubik+Vinyl&family=Rubik+Wet+Paint&display=swap');
 
   #start-view {
     background-image: url('../../public/images/mobile_bg.png');
