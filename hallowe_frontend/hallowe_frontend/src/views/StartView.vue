@@ -4,26 +4,29 @@
 </script>
 
 <template>
-  <RouterLink to="/map">
-    <div id="start-view">
-      <h1 class="text-5xl">HALLO WE</h1>
-      <p>Trick or Treat. . .</p>
-      <div class="flying-bat-container">
-        <FlyingBats />
-      </div>
+  <div id="start-view">
+    <h1 class="text-5xl">HALLO WE</h1>
+    <!-- <p>Trick or Treat. . .</p> -->
+    <p class="mx-auto rounded-xl max-w-10/12 lg:max-w-1/3 text-3xl text-black font-[Henny-Penny]">Din spöklika adressbok för säsongen. Hitta ställen som är öppna för trick-or-treat under Halloween, eller bjud in till dina egna spökliga äventyr.</p>
+    <div class="flying-bat-container">
+      <FlyingBats />
     </div>
-  </RouterLink>
+    <RouterLink to="/map">
+      <button class="fixed left-1/2 -translate-x-1/2 bottom-10">Fortsätt, om du vågar...</button>
+    </RouterLink>
+    </div>
+    <div>
+    </div>
 </template>
 
 <style lang="css" scoped>
 
   #start-view {
-    background-image: url('../../public/images/mobile_bg.png');
+    background-image: url('../../images/mobile_bg.png');
     background-size: cover;
     background-position: top;
     height: 100vh;
     width: 100%;
-    position: relative;
   }
   h1,
   p {
@@ -47,17 +50,16 @@
     font-size: 4rem;
     text-align: center;
     padding-top: 39vh;
-    text-shadow: 0 0 4px #ff0000;
+    text-shadow: 0 0 px #ff0000;
   }
 
   p {
     font-family: 'Fredoka', system-ui;
-    font-size: 2.5rem;
     font-weight: 600;
     text-align: center;
     margin-top: 1.2rem;
     color: black;
-    text-shadow: 0 0 3px #ff0000;
+    text-shadow: 0 0 2px #ff0000;
     /* text-shadow: 0 0 4px #000000; */
   }
 
