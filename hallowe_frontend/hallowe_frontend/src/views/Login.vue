@@ -3,9 +3,9 @@
     <div class="w-full max-w-md relative z-10">
 ´      <div class="text-center mb-8">
         <h1 class="text-5xl font-bold text-orange-500 mb-2 drop-shadow-lg" style="text-shadow: 0 0 20px rgba(249, 115, 22, 0.5)">
-          {{ isLogin ? 'Welcome' : 'Join Us' }}
+          {{ isLogin ? 'Välkommen' : 'Registrera dig' }}
         </h1>
-        <p class="text-orange-400 text-sm">Trick or Treat...</p>
+        <h1 class="text-orange-400 text-sm">Trick or Treat...</h1>
       </div>
       <div class="bg-slate-800/50 backdrop-blur-md border-2 border-orange-500 rounded-lg p-8 shadow-2xl">
         <div class="flex gap-2 mb-8 bg-slate-900/50 p-1 rounded-lg border border-orange-500/30">
@@ -121,7 +121,7 @@
             Facebook
           </button>
 
-          <button
+          <!-- <button
             @click="handleSocialAuth('Email')"
             class="w-full flex items-center justify-center gap-3 bg-slate-900/50 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-500 text-white py-3 px-4 rounded-lg transition-all font-medium"
           >
@@ -129,11 +129,11 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             Email Link
-          </button>
+          </button> -->
         </div>
 
         <p class="text-center text-slate-400 text-xs mt-6">
-        Genom att fortsätta godkänner du våra villkor och integritetspolicy
+        Genom att fortsätta godkänner du våran <span class="text-[#ff7518]"> <RouterLink to="#">integritetspolicy</RouterLink>  </span>
         </p>
       </div>
     </div>
