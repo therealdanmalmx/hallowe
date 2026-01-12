@@ -5,9 +5,9 @@
 </script>
 
 <template>
-  <div class="py-6" v-if="$route.path != '/' && $route.path != '/login'">
+  <div class="py-6" v-if="$route.path != '/' && $route.path != '/login' && $route.path != '/register'">
     <ViewSwitch  />
   </div>
   <RouterView />
-  <Footer v-if="$route.path != '/' && $route.path != '/login'" />
+  <Footer v-if="$route.path != '/' && $route.path != '/login' && $route.path != '/register'" />
 </template>
