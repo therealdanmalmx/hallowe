@@ -2,7 +2,7 @@
   <div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
     <div class="w-full max-w-md relative z-10">
       <div class="text-center mb-8">
-        <h1 class="text-5xl font-bold text-orange-500 mb-2 drop-shadow-lg" style="text-shadow: 0 0 20px rgba(249, 115, 22, 0.5)">
+        <h1 class="scary-font text-5xl font-bold text-orange-500 mb-2 drop-shadow-lg" style="text-shadow: 0 0 20px rgba(249, 115, 22, 0.5)">
           Välkommen
         </h1>
       </div>
