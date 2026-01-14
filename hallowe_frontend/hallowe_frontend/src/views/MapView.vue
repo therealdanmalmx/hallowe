@@ -21,10 +21,13 @@
 </script>
 
 <template>
-  <h1 class="text-5xl vl-parent">Map Page</h1>
-  <div class="p-4 xl:p-0">
-      <MapComp />
-      <div v-if="participantStore.error" class="error-message">{{ participantStore.error }}</div>
-      <div v-else-if="timeSlotsStore.error" class="error-message">{{ timeSlotsStore.error }}</div>
+  <div class="py-2">
+    <h1 class="text-5xl scary-font text-[#ff7518] text-center">Map Page</h1>
+    <div class="p-4 xl:p-0">
+        <MapComp />
+        <div v-if="participantStore.error" class="error-message">{{ participantStore.error }}</div>
+        <div v-else-if="timeSlotsStore.error" class="error-message">{{ timeSlotsStore.error }}</div>
+    </div>
+
   </div>
 </template>
