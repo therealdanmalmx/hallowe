@@ -4,78 +4,15 @@
 </script>
 
 <template>
-  <div id="start-view">
-    <h1 class="text-5xl">HALLO WE</h1>
-    <!-- <p>Trick or Treat. . .</p> -->
-    <p class="mx-auto rounded-xl max-w-10/12 lg:max-w-1/3 text-3xl text-black font-[Henny-Penny]">Din spöklika adressbok för säsongen. Hitta ställen som är öppna för trick-or-treat under Halloween, eller bjud in till dina egna spökliga äventyr.</p>
-    <div class="flying-bat-container">
+  <div class="bg-[url('../../images/mobile_bg.png')] bg-cover bg-no-repeat bg-position-[center_bottom] bg-fixed text-center h-screen w-screen overflow-hidden">
+    <div class="flex flex-col items-center justify-around lg:justify-center w-full h-dvh gap-8">
+      <h1 class="scary-font text-[#ff7518] text-shadow-[#ff0000] text-[4rem]">HALLO WE</h1>
+      <!-- <p>Trick or Treat. . .</p> -->
+      <p class="secondary-font max-w-10/12 mx-auto my-12 lg:max-w-1/3 text-3xl font-semibold text-center text-black text-shadow-[0_0_2px_#ff0000]">Din spöklika adressbok för säsongen. Hitta ställen som är öppna för bus eller godis under Halloween, eller bjud in till dina egna spökliga äventyr!</p>
       <FlyingBats />
+      <RouterLink to="/map">
+        <button class="scary-font text-slate-800 pt">Fortsätt, om du vågar...</button>
+      </RouterLink>
     </div>
-    <RouterLink to="/map">
-      <button class="fixed left-1/2 -translate-x-1/2 bottom-10">Fortsätt, om du vågar...</button>
-    </RouterLink>
-    </div>
-    <div>
-    </div>
+  </div>
 </template>
-
-<style lang="css" scoped>
-
-  #start-view {
-    background-image: url('../../images/mobile_bg.png');
-    background-size: cover;
-    background-position: top;
-    height: 100vh;
-    width: 100%;
-  }
-  h1,
-  p {
-    position: relative;
-    z-index: 10;
-  }
-
-  .flying-bat-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* z-index: 1; */
-  }
-
-  /* den med lite lättsam stil*/
-  h1 {
-    font-family: 'Henny Penny', system-ui;
-    color: #ff7518;
-    font-size: 4rem;
-    text-align: center;
-    padding-top: 39vh;
-    text-shadow: 0 0 px #ff0000;
-  }
-
-  p {
-    font-family: 'Fredoka', system-ui;
-    font-weight: 600;
-    text-align: center;
-    margin-top: 1.2rem;
-    color: black;
-    text-shadow: 0 0 2px #ff0000;
-    /* text-shadow: 0 0 4px #000000; */
-  }
-
-  /* den som ser lite läskig ut */
-  /* h1 {
-    font-family: "Rubik Wet Paint", system-ui;
-  font-size: 4rem;
-  text-align: center;
-  padding-top: 38vh;
-  color: #ff7518;
-} */
-
-  /* h1 {
-  font-family: "Rubik Vinyl", system-ui;
-  font-size: 4rem;
-  color: #ff7518;
-  padding-top: 4vh;
-} */
-</style>
