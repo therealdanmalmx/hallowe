@@ -4,9 +4,9 @@
 
 * {
   margin: 0 auto;
-  text-align: center;
   padding: 0;
 }
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -27,9 +27,11 @@
 a {
   text-decoration: none;
 }
+
 a:hover {
   color: #9aff6b;
 }
+
 a:hover:not {
   color: #9aff6b;
 }
@@ -43,9 +45,7 @@ a:hover:not {
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  height: 100vh;
   background-color: #1c1b29;
 }
 
