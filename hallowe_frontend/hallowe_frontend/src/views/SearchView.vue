@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { computed, defineComponent, onMounted, ref, watch } from 'vue';
-  import SearchComp from '../components/SearchComp.vue';
-  import { useParticipantStore } from '../stores/participantsStore';
-  import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
   import { storeToRefs } from 'pinia';
-  import AddNewAddress from '../components/AddNewAddress.vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
+import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
+import AddNewAddress from '../components/AddNewAddress.vue';
+import SearchComp from '../components/SearchComp.vue';
+import { useParticipantStore } from '../stores/participantsStore';
 
 
   export default defineComponent({
