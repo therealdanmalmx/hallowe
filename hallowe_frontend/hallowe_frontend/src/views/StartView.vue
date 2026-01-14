@@ -11,7 +11,7 @@
       <p class="secondary-font max-w-10/12 mx-auto lg:max-w-1/3 text-3xl font-semibold text-center text-black text-shadow-[0_0_6px_#ff0000]">Din spöklika adressbok för säsongen. Hitta ställen som är öppna för bus eller godis under Halloween, eller bjud in till dina egna spökliga äventyr!</p>
       <FlyingBats />
       <RouterLink to="/map">
-        <button class="scary-font text-slate-800 pt">Fortsätt, om du vågar...</button>
+        <button class="scary-font text-slate-800 text-xl">Fortsätt, om du vågar...</button>
       </RouterLink>
     </div>
   </div>
