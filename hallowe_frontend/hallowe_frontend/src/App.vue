@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { RouterView } from 'vue-router';
   import ViewSwitch from './components/ViewSwitch.vue';
-  import Footer from './components/Footer.vue';
 </script>
 
 <template>
@@ -9,5 +8,4 @@
       <ViewSwitch  />
     </div>
     <RouterView />
-    <Footer v-if="$route.path != '/' && $route.path != '/login' && $route.path != '/register'" />
 </template>
