@@ -2,11 +2,6 @@
 @import 'tailwindcss';
 @import 'primeicons/primeicons.css';
 
-* {
-  margin: 0 auto;
-  padding: 0;
-}
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -27,11 +22,9 @@
 a {
   text-decoration: none;
 }
-
 a:hover {
   color: #9aff6b;
 }
-
 a:hover:not {
   color: #9aff6b;
 }
@@ -39,13 +32,14 @@ a:hover:not {
 .googel-maps-links {
   @apply text-blue-600
 }
-
 .googel-maps-links:hover {
   @apply text-blue-800
 }
 
 body {
-  height: 100vh;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
   background-color: #1c1b29;
 }
 
@@ -64,15 +58,14 @@ button {
   font-size: 1em;
   font-family: inherit;
   background-color: #ff7518;
+  color: #eaeaea;
   cursor: pointer;
   transition: background-color 300ms, color 300ms, border-color 300ms;
 }
-
 button:hover {
   background-color: #9aff6b;
   color: #1c1b29;
 }
-
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
