@@ -171,7 +171,7 @@ const isFormInvalid = computed(() => {
       @submit.prevent="submitForm"
       class="m-6 p-4 rounded-2xl w-full md:max-w-xl max-w-md backdrop-blur-sm"
     >
-      <h1 class="text-4xl font-bold text-center text-orange-700 mb-6">
+      <h1 class="scary-font text-[#ff7518] text-4xl font-bold text-center mb-6">
         Hallo We 🕸️
       </h1>
 
@@ -334,7 +334,7 @@ const isFormInvalid = computed(() => {
           class="h-5 w-5 focus:ring-orange-800 border-orange-300 rounded accent-green-500"
         />
         <label for="trickOrTreat" class="ml-2 text-sm text-gray-200">
-          Ja, vi välkomnar Bus eller Godis! 👻
+          Ja, vi välkomnar bus eller godis! 👻
         </label>
       </div>
       <button
