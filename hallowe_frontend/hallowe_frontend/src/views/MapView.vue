@@ -21,7 +21,7 @@
 </script>
 
 <template>
-  <div class="py-2">
+  <div class="w-11/12 mx-auto">
     <h1 class="text-5xl scary-font text-[#ff7518] text-center">Map Page</h1>
     <div class="p-4 xl:p-0">
         <MapComp />
