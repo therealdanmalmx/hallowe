@@ -6,6 +6,7 @@ using hallowe_backend.DTOs;
 using hallowe_backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace hallowe_backend.Services
 {
@@ -17,6 +18,15 @@ namespace hallowe_backend.Services
         public RegisteredParticipantService(UserManager<RegistredParticipants> registeredParticipantManager)
         {
             _registeredParticipantManager = registeredParticipantManager;
+        }
+
+        public async Task<List<RegistredParticipants>> GetAllParticipants()
+        {
+            if (_registeredParticipantManager.Users == null)
+            {
+                return [];
+            }
+            return await _registeredParticipantManager.Users.ToListAsync();
         }
 
         public async Task<RegisteredParticipantResponse> RegisteredParticipant(RegisteredParticipantRequest request)
@@ -46,10 +56,5 @@ namespace hallowe_backend.Services
 
             return new RegisteredParticipantResponse(true);
         }
-
-        // public async Task<IActionResult> _registeredParticipantManager.GetRegisteredParticipants(List<RegistredParticipants> rp)
-        // {
-        //     return new OkObjectResult(rp);
-        // }
     }
 }
