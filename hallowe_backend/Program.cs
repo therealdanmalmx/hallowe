@@ -49,14 +49,8 @@ builder.Services.AddScoped<IRegisteredParticipantService, RegisteredParticipantS
 
 // Database connection
 
-var connectionUri = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// Parse the URI
-var dbBuilder = new NpgsqlDataSourceBuilder(connectionUri);
-var dataSource = dbBuilder.Build();
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(dataSource));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add CORS
 builder.Services.AddCors(options =>
