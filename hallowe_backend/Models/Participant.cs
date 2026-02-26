@@ -11,20 +11,14 @@ namespace hallowe_backend.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Required]
-        public string Name { get; set; } = string.Empty;
-        [Required]
-        public string StreetName { get; set; } = string.Empty;
-        [Required]
-        public string StreetNumber { get; set; } = string.Empty;
-        [Required]
-        public string City { get; set; } = string.Empty;
-        [Required]
-        public string PostalCode { get; set; } = string.Empty;
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
-        [Required]
-        public TimeSlot TimeSlots { get; set; }
+        public required string Name { get; set; } = string.Empty;
+        public required string StreetName { get; set; } = string.Empty;
+        public required string StreetNumber { get; set; } = string.Empty;
+        public required string City { get; set; } = string.Empty;
+        public required string PostalCode { get; set; } = string.Empty;
+        public required decimal Latitude { get; set; }
+        public required decimal Longitude { get; set; }
+        public required TimeSlot TimeSlots { get; set; }
         public Guid TimeSlotId { get; set; }
 
     }

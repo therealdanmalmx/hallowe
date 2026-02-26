@@ -1,6 +1,11 @@
+using System.Text;
 using hallowe_backend.Data;
+using hallowe_backend.Models;
+using hallowe_backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 
@@ -10,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
- builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(c =>
    {
        c.SwaggerDoc("v1", new OpenApiInfo
        {
@@ -19,6 +24,28 @@ builder.Services.AddEndpointsApiExplorer();
            Description = "A spooky way to let kids know you are fair game during Halloween",
        });
    });
+
+builder.Services.AddDefaultIdentity<RegistredParticipants>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtIssuer"],
+            ValidAudience = builder.Configuration["JwtAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSecurityKey"]!)
+            )
+        };
+    });
+
+builder.Services.AddScoped<IRegisteredParticipantService, RegisteredParticipantService>();
 
 // Database connection
 
@@ -42,8 +69,6 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

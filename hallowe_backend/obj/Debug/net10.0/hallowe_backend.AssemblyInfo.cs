@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("hallowe_backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+177eb0fe2adab47a53ebda312c2c6ec3a37dfb84")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f322f705b5da17e2a7638fc3963d9963c0b8017f")]
 [assembly: System.Reflection.AssemblyProductAttribute("hallowe_backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("hallowe_backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
