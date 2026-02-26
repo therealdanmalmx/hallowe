@@ -45,10 +45,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddScoped<IRegisteredParticipantService, RegisteredParticipantService>();
-
 // Database connection
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -60,6 +57,8 @@ builder.Services.AddCors(options =>
                        .AllowAnyMethod()
                        .AllowAnyHeader());
 });
+
+builder.Services.AddScoped<IRegisteredParticipantService, RegisteredParticipantService>();
 
 var app = builder.Build();
 
