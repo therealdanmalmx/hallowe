@@ -20,12 +20,12 @@ namespace hallowe_backend.Controllers
             _registeredParticipantOrder = registeredParticipantOrder;
         }
 
-        // [HttpGet]
-        // public async Task<ActionResult> GetRegisteredParticipants(RegisteredParticipantRequest request)
-        // {
-        //     return await _registeredParticipantOrder.
-        // }
-
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<RegisteredParticipantResponse>>> GetAllParticipants()
+        {
+            var result = await _registeredParticipantOrder.GetAllParticipants();
+            return Ok(result);
+        }
         [HttpPost]
         public async Task<ActionResult<RegisteredParticipantResponse>> RegisterParticipant(RegisteredParticipantRequest request)
         {
