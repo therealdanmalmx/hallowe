@@ -21,6 +21,7 @@ mono_crash.*
 
 appsettings.json
 appsettings.Development.json
+hallowe_backend.csproj
 
 # Build results
 [Dd]ebug/
