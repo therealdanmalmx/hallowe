@@ -39,8 +39,12 @@ namespace hallowe_backend.Controllers
         {
             if (location == null)
             {
-            return BadRequest("Location cannot be null");
+                return BadRequest("Location cannot be null");
             }
+
+            var locations = await _db.Locations
+                .Include(l => l.User)
+                .ToListAsync();
 
             _db.Locations.Add(location);
             await _db.SaveChangesAsync();
