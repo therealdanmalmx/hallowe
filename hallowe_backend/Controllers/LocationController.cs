@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using hallowe_backend.Data;
 using hallowe_backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace hallowe_backend.Controllers
 {
@@ -20,17 +21,18 @@ namespace hallowe_backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult<IEnumerable<Location>>> Get()
         {
-            var locations = _db.Locations.ToList();
+            var locations = await _db.Locations
+                .Include(l => l.User)  // ✅ Loads User.Name!
+                .ToListAsync();
 
-            if (locations == null || !locations.Any())
-            {
-            return NotFound("No locations found");
-            }
+            if (!locations.Any())
+                return NotFound("No locations found");
 
             return Ok(locations);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Location location)
