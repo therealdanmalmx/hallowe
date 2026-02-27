@@ -14,18 +14,18 @@ namespace hallowe_backend.Services
 {
     public class LoginService : IloginService
     {
-        private readonly SignInManager<RegistredParticipants> _registeredParticipantSignInManager;
+        private readonly SignInManager<User> _registerSignInManager;
         private readonly IConfiguration _config;
 
-        public LoginService(SignInManager<RegistredParticipants> registeredParticipantSignInManager, IConfiguration config)
+        public LoginService(SignInManager<User> registeredParticipantSignInManager, IConfiguration config)
         {
-            _registeredParticipantSignInManager = registeredParticipantSignInManager;
+            _registerSignInManager = registeredParticipantSignInManager;
             _config = config;
         }
 
         public async Task<LoginResponse> Login(LoginRequest request)
         {
-            var result = await _registeredParticipantSignInManager.PasswordSignInAsync(
+            var result = await _registerSignInManager.PasswordSignInAsync(
                 request.UserName,
                 request.Password,
                 false,
@@ -58,7 +58,7 @@ namespace hallowe_backend.Services
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return new LoginResponse(true, "", jwt);
+            return new LoginResponse(true, null, jwt);
         }
     }
 }

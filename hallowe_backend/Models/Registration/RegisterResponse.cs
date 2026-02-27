@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 
 namespace hallowe_backend.DTOs
 {
-    public class RegisteredParticipantResponse
+    public class RegisterResponse
     {
         public bool IsSuccessful { get; set; }
         public IEnumerable<string>? Errors { get; set; }
 
-        public RegisteredParticipantResponse()
+        public RegisterResponse()
         {
 
         }
 
-        public RegisteredParticipantResponse(bool isSuccessful)
+        public RegisterResponse(bool isSuccessful)
         {
             IsSuccessful = isSuccessful;
         }
-        public RegisteredParticipantResponse(bool isSuccessful, IEnumerable<string>? errors)
+        public RegisterResponse(bool isSuccessful, IEnumerable<string>? errors)
         {
             IsSuccessful = isSuccessful;
             Errors = errors;

@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen(c =>
        });
    });
 
-builder.Services.AddDefaultIdentity<RegistredParticipants>(options =>
+builder.Services.AddDefaultIdentity<User>(options =>
 {
     options.Password.RequiredLength = 8;
     options.Password.RequireUppercase = false;
@@ -63,7 +63,7 @@ builder.Services.AddCors(options =>
                        .AllowAnyHeader());
 });
 
-builder.Services.AddScoped<IRegisteredParticipantService, RegisteredParticipantService>();
+builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<IloginService, LoginService>();
 
 var app = builder.Build();
@@ -79,6 +79,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

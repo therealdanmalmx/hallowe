@@ -6,23 +6,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hallowe_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AddRegisteredParticipants : Migration
+    public partial class SetUserNameToDTO : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropIndex(
+                name: "IX_AspNetUsers_LocationId",
+                table: "AspNetUsers");
+
+            migrationBuilder.AddColumn<string>(
+                name: "UserId1",
+                table: "Locations",
+                type: "text",
+                nullable: true);
+
             migrationBuilder.CreateTable(
-                name: "RegistredParticipants",
+                name: "UserCreateDTO",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    StreetName = table.Column<string>(type: "text", nullable: false),
-                    StreetNumber = table.Column<string>(type: "text", nullable: false),
-                    City = table.Column<string>(type: "text", nullable: false),
-                    PostalCode = table.Column<string>(type: "text", nullable: false),
-                    Latitude = table.Column<decimal>(type: "numeric", nullable: false),
-                    Longitude = table.Column<decimal>(type: "numeric", nullable: false),
-                    TimeSlotId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     UserName = table.Column<string>(type: "text", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
@@ -40,26 +44,54 @@ namespace hallowe_backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RegistredParticipants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RegistredParticipants_TimeSlots_TimeSlotId",
-                        column: x => x.TimeSlotId,
-                        principalTable: "TimeSlots",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_UserCreateDTO", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RegistredParticipants_TimeSlotId",
-                table: "RegistredParticipants",
-                column: "TimeSlotId");
+                name: "IX_Locations_UserId1",
+                table: "Locations",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_LocationId",
+                table: "AspNetUsers",
+                column: "LocationId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Locations_UserCreateDTO_UserId1",
+                table: "Locations",
+                column: "UserId1",
+                principalTable: "UserCreateDTO",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Locations_UserCreateDTO_UserId1",
+                table: "Locations");
+
             migrationBuilder.DropTable(
-                name: "RegistredParticipants");
+                name: "UserCreateDTO");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Locations_UserId1",
+                table: "Locations");
+
+            migrationBuilder.DropIndex(
+                name: "IX_AspNetUsers_LocationId",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "UserId1",
+                table: "Locations");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_LocationId",
+                table: "AspNetUsers",
+                column: "LocationId",
+                unique: true);
         }
     }
 }

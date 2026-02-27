@@ -5,7 +5,7 @@
 namespace hallowe_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateTimeSlot : Migration
+    public partial class MakeLocationOptionalONRequest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

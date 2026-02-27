@@ -24,10 +24,10 @@ namespace hallowe_backend.Controllers
         {
             var result = await _loginService.Login(request);
 
-            // if (!result.IsSuccessful)
-            // {
-
-            // }
+            if (!result.IsSuccessful)
+            {
+                return new LoginResponse(false, result.Errors);
+            }
 
             return Ok(result);
         }

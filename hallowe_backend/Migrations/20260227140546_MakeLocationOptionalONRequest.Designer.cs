@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using hallowe_backend.Data;
@@ -11,9 +12,11 @@ using hallowe_backend.Data;
 namespace hallowe_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260227140546_MakeLocationOptionalONRequest")]
+    partial class MakeLocationOptionalONRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,16 +192,12 @@ namespace hallowe_backend.Migrations
                     b.Property<Guid>("TimeSlotId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TimeSlotId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Locations");
                 });
@@ -242,6 +241,9 @@ namespace hallowe_backend.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("LocationId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -280,6 +282,9 @@ namespace hallowe_backend.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LocationId")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -350,20 +355,22 @@ namespace hallowe_backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("hallowe_backend.Models.User", "User")
-                        .WithOne("Location")
-                        .HasForeignKey("hallowe_backend.Models.Location", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("TimeSlots");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("hallowe_backend.Models.User", b =>
                 {
+                    b.HasOne("hallowe_backend.Models.Location", "Location")
+                        .WithOne("User")
+                        .HasForeignKey("hallowe_backend.Models.User", "LocationId");
+
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("hallowe_backend.Models.Location", b =>
+                {
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
