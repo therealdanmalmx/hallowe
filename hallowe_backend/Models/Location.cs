@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using hallowe_backend.DTOs;
 
@@ -19,7 +20,7 @@ namespace hallowe_backend.Models
         public required decimal Longitude { get; set; }
         public required TimeSlot TimeSlots { get; set; }
         public Guid TimeSlotId { get; set; }
-        public required string UserId { get; set; }
+        public required string UserId { get; set; } = default!;
         public required User User { get; set; }
 
     }
