@@ -25,7 +25,12 @@ builder.Services.AddSwaggerGen(c =>
        });
    });
 
-builder.Services.AddDefaultIdentity<RegistredParticipants>()
+builder.Services.AddDefaultIdentity<RegistredParticipants>(options =>
+{
+    options.Password.RequiredLength = 8;
+    options.Password.RequireUppercase = false;
+    options.User.RequireUniqueEmail = true;
+})
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
