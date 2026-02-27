@@ -21,7 +21,12 @@ namespace hallowe_backend.Models
         public required TimeSlot TimeSlots { get; set; }
         public Guid TimeSlotId { get; set; }
         public required string UserId { get; set; } = default!;
-        public required User User { get; set; }
-
+        [JsonIgnore]
+        public User? User { get; set; } = default!;
+        public string Name
+        {
+            get => User?.Name ?? string.Empty;
+            private set {}
+        }
     }
 }
