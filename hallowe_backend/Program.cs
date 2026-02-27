@@ -64,6 +64,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<IRegisteredParticipantService, RegisteredParticipantService>();
+builder.Services.AddScoped<IloginService, LoginService>();
 
 var app = builder.Build();
 
@@ -83,3 +84,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
