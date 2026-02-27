@@ -21,6 +21,10 @@ namespace hallowe_backend.Data
                 .HasOne(u => u.Location)
                 .WithOne(l => l.User)
                 .HasForeignKey<Location>(l => l.UserId);
+
+                modelBuilder.Entity<Location>()
+                    .Property(l => l.Name)
+                    .IsRequired();
         }
 
     }
