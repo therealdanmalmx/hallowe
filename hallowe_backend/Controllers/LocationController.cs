@@ -46,6 +46,16 @@ namespace hallowe_backend.Controllers
                 return BadRequest("Location cannot be null");
             }
 
+            var existingLocation = await _db.Locations
+                .FirstOrDefaultAsync(l => l.StreetName == location.StreetName
+                    && l.StreetNumber == location.StreetNumber
+                    && l.PostalCode == location.PostalCode);
+
+            if (existingLocation != null)
+            {
+                return BadRequest("Location already registered");
+            }
+
             var locations = await _db.Locations
                 .Include(l => l.User)
                 .ToListAsync();
