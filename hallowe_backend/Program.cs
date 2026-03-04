@@ -14,16 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
-// builder.Services.AddSwaggerGen(c =>
-//    {
-//        c.SwaggerDoc("v1", new OpenApiInfo
-//        {
-//            Version = "v1",
-//            Title = "HalloWe",
-//            Description = "A spooky way to let kids know you are fair game during Halloween",
-//        });
-//    });
-
 
 builder.Services.AddDefaultIdentity<User>(options =>
 {
