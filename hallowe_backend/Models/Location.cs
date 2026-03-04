@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using hallowe_backend.DTOs;
-
 namespace hallowe_backend.Models
 {
     public class Location

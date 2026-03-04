@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using hallowe_backend.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
 namespace hallowe_backend.Controllers
 {
     [ApiController]

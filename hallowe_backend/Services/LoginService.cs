@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using hallowe_backend.Models;
 using hallowe_backend.Models.Login;
 using Microsoft.AspNetCore.Identity;

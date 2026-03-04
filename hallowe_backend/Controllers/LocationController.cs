@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using hallowe_backend.Data;
 using hallowe_backend.Models;
 using Microsoft.AspNetCore.Authorization;
