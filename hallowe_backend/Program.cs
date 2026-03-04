@@ -4,10 +4,8 @@ using hallowe_backend.Models;
 using hallowe_backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Npgsql;
+using Scalar.AspNetCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,15 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-   {
-       c.SwaggerDoc("v1", new OpenApiInfo
-       {
-           Version = "v1",
-           Title = "HalloWe",
-           Description = "A spooky way to let kids know you are fair game during Halloween",
-       });
-   });
+builder.Services.AddOpenApi();
+// builder.Services.AddSwaggerGen(c =>
+//    {
+//        c.SwaggerDoc("v1", new OpenApiInfo
+//        {
+//            Version = "v1",
+//            Title = "HalloWe",
+//            Description = "A spooky way to let kids know you are fair game during Halloween",
+//        });
+//    });
+
 
 builder.Services.AddDefaultIdentity<User>(options =>
 {
@@ -71,8 +71,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
