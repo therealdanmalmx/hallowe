@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using hallowe_backend.Data;
 using hallowe_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,8 @@ namespace hallowe_backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
+
     public class LocationController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
@@ -20,6 +23,7 @@ namespace hallowe_backend.Controllers
             _db = db;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Location>>> Get()
         {
