@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using hallowe_backend.Models.Login;
 using hallowe_backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hallowe_backend.Controllers
