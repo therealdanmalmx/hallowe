@@ -15,9 +15,6 @@
       const timeSlotsStore = useTimeSlotsStore();
       const userStore = useUserStore();
 
-      const {getAllUsers} = userStore;
-
-      console.log({getAllUsers})
       return { locationStore, timeSlotsStore, userStore }
     }
   })
