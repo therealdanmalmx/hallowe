@@ -4,6 +4,7 @@
   import MapComp from '../components/MapComp.vue';
   import { useLocationStore } from '../stores/locationStore';
   import { useTimeSlotsStore } from '../stores/timeSlotsStore';
+  import { useUserStore } from '../stores/userStore';
 
   export default defineComponent({
     name: 'MapView',
@@ -12,10 +13,15 @@
     setup() {
       const locationStore = useLocationStore();
       const timeSlotsStore = useTimeSlotsStore();
+      const userStore = useUserStore();
 
-      return { locationStore, timeSlotsStore }
+      const {getAllUsers} = userStore;
+
+      console.log({getAllUsers})
+      return { locationStore, timeSlotsStore, userStore }
     }
   })
+
 
 
 </script>
