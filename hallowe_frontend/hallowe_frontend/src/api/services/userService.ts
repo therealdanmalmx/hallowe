@@ -3,18 +3,18 @@ import apiClient from '../client'
 
 export const userService = {
     getAll() {
-    return apiClient.get('/userservice')
+    return apiClient.get('/user')
     },
     getById(id: string | number): Promise<any> {
-        return apiClient.get(`/userservice/${id}`)
+        return apiClient.get(`/user/${id}`)
     },
     create(user: User): Promise<any> {
-        return apiClient.post('/userservice', user)
+        return apiClient.post('/user', user)
     },
     update(id: string | number, user: User): Promise<any> {
-        return apiClient.put(`/userservice/${id}`, user)
+        return apiClient.put(`/user/${id}`, user)
     },
     delete(id: string | number): Promise<any> {
-        return apiClient.delete(`/userservice/${id}`)
+        return apiClient.delete(`/user/${id}`)
     }
 }
