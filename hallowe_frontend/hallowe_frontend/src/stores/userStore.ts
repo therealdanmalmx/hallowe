@@ -4,7 +4,7 @@ import { userService } from "../api/services/locationServices";
 import type { User } from "../types/interfaces";
 
 export const useUserStore = defineStore('userStore', () => {
-    const times = ref<User[]>([]);
+    const users = ref<User[]>([]);
     const isLoading = ref<boolean>(false);
     const error = ref<string | null>(null);
 
@@ -13,7 +13,7 @@ export const useUserStore = defineStore('userStore', () => {
             isLoading.value = true;
             error.value = null;
             const response = await userService.getAll();
-            times.value = response.data;
+            users.value = response.data;
         } catch (err) {
             console.error('Fetching time slots failed:', error);
             error.value = "Kunde inte hämta kunder. Försök igen."
@@ -21,7 +21,6 @@ export const useUserStore = defineStore('userStore', () => {
         }
     }
 
-
-  return { times, isLoading, error, getAllUsers }
+    return { users, isLoading, error, getAllUsers }
 })
 
