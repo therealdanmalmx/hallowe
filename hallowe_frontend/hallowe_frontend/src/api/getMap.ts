@@ -1,14 +1,14 @@
 import { ref } from "vue";
-import { useParticipantStore } from "../stores/participantsStore";
+import { useLocationStore } from "../stores/locationStore";
 
 export const FetchMap = async () => {
   const data = ref([]);
 
   const mapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  const participantStore = useParticipantStore();
+  const locationStore = useLocationStore();
 
-  participantStore.isLoading = true;
-  participantStore.error = null;
+  locationStore.isLoading = true;
+  locationStore.error = null;
 
   try {
     const response = await fetch(
@@ -17,18 +17,18 @@ export const FetchMap = async () => {
     const map = await response.json()
     data.value = await map.data
 
-    participantStore.isLoading = false;
+    locationStore.isLoading = false;
 
     // if (response.ok) {
 
     // } else {
     //   console.error('Error fetching data, Status:', response.statusText)
-    //   participantStore.isLoading = false;
+    //   locationStore.isLoading = false;
     // }
   } catch (err: any) {
 
     !err.message.includes('w') ? console.error('Error fetching data:', err.message) : null;
-    !err.message.includes('w') ? participantStore.error = `Kunde inte ladda kartan. Försök igen senare.` : null;
-    participantStore.isLoading = false;
+    !err.message.includes('w') ? locationStore.error = `Kunde inte ladda kartan. Försök igen senare.` : null;
+    locationStore.isLoading = false;
   }
 }

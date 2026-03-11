@@ -4,7 +4,7 @@
   import { computed, defineComponent, onMounted, ref } from 'vue';
   import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
   import { FetchMap } from '../api/getMap';
-  import { useParticipantStore } from '../stores/participantsStore';
+  import { useLocationStore } from '../stores/locationStore';
   import { useTimeSlotsStore } from '../stores/timeSlotsStore';
   import { getUserCoords, defaultCenter } from '../utils/getUserCoordinates';
   import SearchComp from './SearchComp.vue';
@@ -19,7 +19,7 @@
       const color = ref<string>("#FF7518");
       const size = ref('1.25rem');
 
-      const participantStore = useParticipantStore();
+      const locationStore = useLocationStore();
       const timeStore = useTimeSlotsStore();
       const data = ref([]);
       const baseZoom = ref<number>(window.innerWidth < 768 ? 10 : 12);
@@ -27,11 +27,11 @@
 
       // Computed properties for dynamic center and zoom
       const currentCenter = computed(() => {
-        return participantStore.mapCenter || defaultCenter.value;
+        return locationStore.mapCenter || defaultCenter.value;
       });
 
       const currentZoom = computed(() => {
-        return participantStore.mapZoom || baseZoom.value;
+        return locationStore.mapZoom || baseZoom.value;
       });
 
       const openMarker = (id: number | null) => {
@@ -41,7 +41,7 @@
       onMounted(async () => {
         getUserCoords();
         await FetchMap();
-        await participantStore.getAllParticiants();
+        await locationStore.getAllParticiants();
         await timeStore.getAllTimeSlots();
       });
 
@@ -53,7 +53,7 @@
         color,
         size,
         data,
-        participantStore,
+        locationStore,
         timeStore
       }
     }
@@ -62,8 +62,8 @@
 </script>
 
 <template>
-  <div class="h-[50vh] flex items-center justify-center" v-if="participantStore.isLoading">
-    <rotate-loader :loading="participantStore.isLoading" :color="color" :size="size"></rotate-loader>
+  <div class="h-[50vh] flex items-center justify-center" v-if="locationStore.isLoading">
+    <rotate-loader :loading="locationStore.isLoading" :color="color" :size="size"></rotate-loader>
   </div>
   <div v-else class="flex flex-col justify-center pt-8">
     <GMapMap
@@ -81,7 +81,7 @@
       class="h-[50vh] xl:h-[60vh]"
     >
       <GMapMarker
-          v-for="user in participantStore.filteredParticipants"
+          v-for="user in locationStore.filteredLocations"
           :key="user.id"
           @click="openMarker(user.id ?? null)"
           :position="{lat: user.latitude, lng: user.longitude}"
@@ -120,7 +120,7 @@
       </GMapMarker>
     </GMapMap>
   </div>
-  <div v-if="!participantStore.isLoading">
+  <div v-if="!locationStore.isLoading">
     <SearchComp />
     <AddNewAddress />
   </div>

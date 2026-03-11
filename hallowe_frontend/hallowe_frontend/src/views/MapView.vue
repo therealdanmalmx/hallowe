@@ -2,7 +2,7 @@
 
   import { defineComponent } from 'vue';
   import MapComp from '../components/MapComp.vue';
-  import { useParticipantStore } from '../stores/participantsStore';
+  import { useLocationStore } from '../stores/locationStore';
   import { useTimeSlotsStore } from '../stores/timeSlotsStore';
 
   export default defineComponent({
@@ -10,10 +10,10 @@
     components: { MapComp },
 
     setup() {
-      const participantStore = useParticipantStore();
+      const locationStore = useLocationStore();
       const timeSlotsStore = useTimeSlotsStore();
 
-      return { participantStore, timeSlotsStore }
+      return { locationStore, timeSlotsStore }
     }
   })
 
@@ -25,7 +25,7 @@
     <h1 class="text-5xl scary-font text-[#ff7518] text-center">Map Page</h1>
     <div class="p-4 xl:p-0">
         <MapComp />
-        <div v-if="participantStore.error" class="error-message">{{ participantStore.error }}</div>
+        <div v-if="locationStore.error" class="error-message">{{ locationStore.error }}</div>
         <div v-else-if="timeSlotsStore.error" class="error-message">{{ timeSlotsStore.error }}</div>
     </div>
 

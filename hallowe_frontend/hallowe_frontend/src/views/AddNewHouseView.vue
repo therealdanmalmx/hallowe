@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { userService } from '../api/services/participantServices';
-import type { Participant }  from '../types/interfaces';
+import { userService } from '../api/services/locationServices';
+import type { Location }  from '../types/interfaces';
 
 let isSubmitting = ref<boolean>(false);
 
@@ -124,7 +124,7 @@ const submitForm = async () => {
   const getCoords = await getLatLngForAddress(form.value.streetName, form.value.streetNumber, form.value.postalCode, form.value.city);
 
   if (form.value.timeSlots.date && getCoords) {
-    const participant: Participant = {
+    const participant: Location = {
       name: form.value.name,
       streetName: form.value.streetName,
       streetNumber: form.value.streetNumber,

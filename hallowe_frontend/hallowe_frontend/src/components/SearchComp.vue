@@ -1,18 +1,18 @@
 <script lang="ts">
 import { storeToRefs } from "pinia";
 import { defineComponent } from "vue";
-import { useParticipantStore } from "../stores/participantsStore";
+import { useLocationStore } from "../stores/locationStore";
 
 export default defineComponent({
 
     setup() {
-        const participantStore = useParticipantStore()
+        const locationStore = useLocationStore()
 
-        const { searchText } = storeToRefs(participantStore);
+        const { searchText } = storeToRefs(locationStore);
 
         const clearSearch = () => {
             searchText.value = '';
-            participantStore.resetMapView();
+            locationStore.resetMapView();
         };
 
         return { searchText, clearSearch };

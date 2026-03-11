@@ -1,11 +1,10 @@
 <script lang="ts">
   import { storeToRefs } from 'pinia';
-import { computed, defineComponent, onMounted, ref } from 'vue';
-import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
-import AddNewAddress from '../components/AddNewAddress.vue';
-import SearchComp from '../components/SearchComp.vue';
-import { useParticipantStore } from '../stores/participantsStore';
-
+  import { computed, defineComponent, onMounted, ref } from 'vue';
+  import RotateLoader from 'vue-spinner/src/RotateLoader.vue';
+  import AddNewAddress from '../components/AddNewAddress.vue';
+  import SearchComp from '../components/SearchComp.vue';
+  import { useLocationStore } from '../stores/locationStore';
 
   export default defineComponent({
     name: 'SearchView',
@@ -15,25 +14,25 @@ import { useParticipantStore } from '../stores/participantsStore';
 
       const color = ref<string>("#FF7518");
       const size = ref('1.25rem');
-      const participantStore = useParticipantStore();
+      const locationStore = useLocationStore();
 
-      const { filteredParticipants, searchText, isLoading, error } = storeToRefs(participantStore);
+      const { filteredLocations, searchText, isLoading, error } = storeToRefs(locationStore);
 
-      console.log({ filteredParticipants });
+      console.log({ filteredLocations });
 
       const sortedAndFilteredParticipants = computed(() => {
-        return filteredParticipants.value.sort((a: any, b: any) =>
+        return filteredLocations.value.sort((a: any, b: any) =>
         a.city.localeCompare(b.city)
       );
     });
 
       onMounted(async () => {
-        await participantStore.getAllParticiants();
-        console.log('First participant:', participantStore.participants[0]);
-        console.log('All keys:', Object.keys(participantStore.participants[0] || {}));
+        await locationStore.getAllParticiants();
+        console.log('First participant:', locationStore.locations[0]);
+        console.log('All keys:', Object.keys(locationStore.locations[0] || {}));
       });
 
-      return { sortedAndFilteredParticipants, searchText, isLoading, error, participantStore, color, size }
+      return { sortedAndFilteredParticipants, searchText, isLoading, error, locationStore, color, size }
     }
   })
 

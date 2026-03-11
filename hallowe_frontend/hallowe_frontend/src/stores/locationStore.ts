@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
-import { userService } from "../api/services/participantServices";
-import type { Participant } from "../types/interfaces";
+import { userService } from "../api/services/locationServices";
+import type { Location } from "../types/interfaces";
 
-export const useParticipantStore = defineStore('participantStore', () => {
+export const useLocationStore = defineStore('locationStore', () => {
 
-    const participants = ref<Participant[]>([]);
+    const locations = ref<Location[]>([]);
     const isLoading = ref<boolean>(false);
     const error = ref<string | null>(null);
     const searchText = ref<string>("");
@@ -13,15 +13,15 @@ export const useParticipantStore = defineStore('participantStore', () => {
     const mapCenter = ref<{ lat: number; lng: number } | null>(null);
     const mapZoom = ref<number | null>(12);
 
-    const filteredParticipants = computed(() => {
+    const filteredLocations = computed(() => {
 
         if (!searchText.value || searchText.value.trim() === '') {
-            return participants.value;
+            return locations.value;
         }
 
         const search = searchText.value.toLowerCase();
 
-        return participants.value.filter(user => {
+        return locations.value.filter(user => {
 
             const streetName = (user.streetName || '').toLowerCase();
             const postalCode = (user.postalCode || '').replace(/\s/g, '').toLowerCase();
@@ -34,7 +34,7 @@ export const useParticipantStore = defineStore('participantStore', () => {
         });
     });
 
-    watch(filteredParticipants, (newFiltered) => {
+    watch(filteredLocations, (newFiltered) => {
         if (newFiltered.length > 0 && searchText.value.trim() !== '') {
             const first = newFiltered[0];
             mapCenter.value = {
@@ -44,10 +44,10 @@ export const useParticipantStore = defineStore('participantStore', () => {
         }
     });
 
-    function zoomToParticipant(participant: Participant) {
+    function zoomToLocation(Location: Location) {
         mapCenter.value = {
-            lat: participant.latitude,
-            lng: participant.longitude
+            lat: Location.latitude,
+            lng: Location.longitude
         };
     }
 
@@ -61,10 +61,10 @@ export const useParticipantStore = defineStore('participantStore', () => {
         try {
             error.value = null;
             const response = await userService.getAll();
-            participants.value = response.data;
+            locations.value = response.data;
             isLoading.value = false;
         } catch (err) {
-            console.error('Failed to fetch participant:', err);
+            console.error('Failed to fetch Location:', err);
             error.value = "Kunde inte ladda deltagare. Försök igen";
             isLoading.value = false;
             throw error;
@@ -72,15 +72,15 @@ export const useParticipantStore = defineStore('participantStore', () => {
     }
 
     return {
-        participants,
-        filteredParticipants,
+        locations,
+        filteredLocations,
         searchText,
         mapCenter,
         mapZoom,
         error,
         isLoading,
         getAllParticiants,
-        zoomToParticipant,
+        zoomToLocation,
         resetMapView
     }
 });
