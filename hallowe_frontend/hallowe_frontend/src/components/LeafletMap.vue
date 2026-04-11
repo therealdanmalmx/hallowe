@@ -1,7 +1,7 @@
 
 <template>
-  <div class="h-[50vh] flex items-center justify-center" v-if="mapReady">
-    <rotate-loader :loading="mapReady" :color="color" :size="size"></rotate-loader>
+  <div class="h-[50vh] flex items-center justify-center" v-if="!mapReady">
+    <rotate-loader :loading="!mapReady" :color="color" :size="size"></rotate-loader>
   </div>
   <div v-else class="h-[50vh] flex flex-col justify-center pt-8">
      <l-map ref="map" v-model:zoom="zoom" :center="[51.505, -0.09]" style="height: 50vh">
@@ -52,8 +52,7 @@
                 mapReady.value = true;
             });
 
-
-            return { locationStore, timeSlotsStore, userStore, zoom }
+            return { locationStore, timeSlotsStore, userStore, zoom, mapReady }
         }
     })
 
