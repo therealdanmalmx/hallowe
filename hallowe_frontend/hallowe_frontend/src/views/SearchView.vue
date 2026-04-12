@@ -28,8 +28,6 @@
 
       onMounted(async () => {
         await locationStore.getAllParticiants();
-        console.log('First participant:', locationStore.locations[0]);
-        console.log('All keys:', Object.keys(locationStore.locations[0] || {}));
       });
 
       return { sortedAndFilteredParticipants, searchText, isLoading, error, locationStore, color, size }
@@ -40,7 +38,7 @@
 
 <template>
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
-  <div v-else class="px-4 xl:px-0 w-full lg:w-11/12 mx-auto">
+  <div v-else class="px-4 xl:px-0 w-full lg:w-8/12 mx-auto">
     <div class="h-calc(100vh_-_40px)">
       <h1 class="text-5xl scary-font text-[#ff7518] text-center">Lista</h1>
       <SearchComp />
