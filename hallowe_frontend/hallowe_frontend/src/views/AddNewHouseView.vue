@@ -80,21 +80,24 @@ const getDaysAroundOctober31 = (year: number) => {
 }
 
 const getLatLngForAddress = async (streetName: string, streetNumber: string, postalCode: string, city: string): Promise<boolean> => {
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  const address = `${streetName} ${streetNumber}, ${postalCode} ${city}`;
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+  const address = `${streetNumber} ${streetName}, ${postalCode} ${city}`;
+  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Accept-Language': 'en',
+        'User-Agent': 'HalloWe/1.0 (danmalmx@gmail.com)' // Nominatim requires this
+      }
+    });
     const data = await response.json();
 
-    if (data.status === 'OK' && data.results.length > 0) {
-      const location = data.results[0].geometry.location;
-      form.value.latitude = location.lat;
-      form.value.longitude = location.lng;
+    if (data.length > 0) {
+      form.value.latitude = parseFloat(data[0].lat);
+      form.value.longitude = parseFloat(data[0].lon);
       return true;
     } else {
-      console.error('Geocoding failed:', data.status);
+      console.error('Geocoding failed: No results found');
       return false;
     }
   } catch (error) {
@@ -139,9 +142,15 @@ const submitForm = async () => {
         endTime: form.value.timeSlots.endTime as any,
       }
     }
-    locationServices.create(participant)
-    submitted.value = true
-    isSubmitting.value = false;
+
+    try {
+      locationServices.create(participant)
+      submitted.value = true
+      isSubmitting.value = false;
+
+    } catch (error) {
+
+    }
 
   }
 
