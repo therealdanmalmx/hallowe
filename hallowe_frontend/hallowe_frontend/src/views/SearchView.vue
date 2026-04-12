@@ -42,7 +42,7 @@
   <div class="h-screen flex items-center justify-center" v-if="isLoading"><rotate-loader :loading="isLoading" :color="color" :size="size"></rotate-loader></div>
   <div v-else class="px-4 xl:px-0 w-full lg:w-11/12 mx-auto">
     <div class="h-calc(100vh_-_40px)">
-      <h1 class="text-5xl scary-font text-[#ff7518] text-center">List Page</h1>
+      <h1 class="text-5xl scary-font text-[#ff7518] text-center">Lista</h1>
       <SearchComp />
     </div>
 

@@ -9,7 +9,7 @@
 
       <!-- Left circle -->
          <RouterLink to="/map">
-           <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 cursor-pointer" title="map page">
+           <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 cursor-pointer" title="karta">
               <span
                 class="pi pi-map-marker hover:text-[#ff7518] transition-colors duration-300 ease-in-out"
                 :class="$route.path === '/map' ? 'text-[#ff7518]' : 'text-white'"
@@ -22,7 +22,7 @@
       <!-- Right circle -->
 
         <RouterLink to="/search">
-          <div class="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 cursor-pointer" title="list page">
+          <div class="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 cursor-pointer" title="lista">
               <span
                 class="pi pi-list hover:text-[#ff7518] transition-colors duration-300 ease-in-out"
                 :class="$route.path === '/search' ? 'text-[#ff7518]' : 'text-white'"
