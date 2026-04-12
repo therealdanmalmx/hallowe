@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { userService } from '../api/services/locationServices';
+import { locationServices } from '../api/services/locationServices';
 import type { Location }  from '../types/interfaces';
 
 let isSubmitting = ref<boolean>(false);
@@ -139,7 +139,7 @@ const submitForm = async () => {
         endTime: form.value.timeSlots.endTime as any,
       }
     }
-    userService.create(participant)
+    locationServices.create(participant)
     submitted.value = true
     isSubmitting.value = false;
 

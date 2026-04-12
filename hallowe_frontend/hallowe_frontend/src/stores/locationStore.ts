@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
-import { userService } from "../api/services/locationServices";
+import { locationServices } from "../api/services/locationServices";
 import type { Location } from "../types/interfaces";
 
 export const useLocationStore = defineStore('locationStore', () => {
@@ -60,7 +60,7 @@ export const useLocationStore = defineStore('locationStore', () => {
         isLoading.value = true;
         try {
             error.value = null;
-            const response = await userService.getAll();
+            const response = await locationServices.getAll();
             locations.value = response.data;
             isLoading.value = false;
         } catch (err) {

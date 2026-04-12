@@ -1,7 +1,7 @@
 import type { Location } from '../../types/interfaces'
 import apiClient from '../client'
 
-export const userService = {
+export const locationServices = {
     getAll() {
     return apiClient.get('/location')
     },
