@@ -14,7 +14,7 @@
         <l-icon
             :icon-size="[35, 35]"
             :icon-anchor="[20, 20]"
-            icon-url="/public/images/pumpkin.png"
+            icon-url="/public/images/pumpkin.webp"
         ></l-icon>
         <l-popup options="open">Hello!</l-popup>
       </l-marker>
