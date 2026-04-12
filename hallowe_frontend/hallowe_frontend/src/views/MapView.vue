@@ -28,7 +28,7 @@
 
 <template>
   <div class="w-full lg:w-11/12 mx-auto">
-    <h1 class="text-5xl scary-font text-[#ff7518] text-center">Map Page</h1>
+    <h1 class="text-5xl scary-font text-[#ff7518] text-center">Karta</h1>
     <div class="p-4 xl:p-2">
         <!-- <MapComp /> -->
         <LeafletMap />
