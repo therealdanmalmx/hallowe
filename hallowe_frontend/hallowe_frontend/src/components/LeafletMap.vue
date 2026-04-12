@@ -1,57 +1,57 @@
 
 <template>
-  <div class="h-[70vh] flex items-center justify-center" v-if="!mapReady">
+  <div class="h-[60vh] flex items-center justify-center" v-if="!mapReady">
     <rotate-loader :loading="!mapReady" :color="color" :size="size"></rotate-loader>
   </div>
-  <div v-else class="h-[50vh] flex flex-col justify-center pt-8">
+  <div v-else class="h-[55vh] flex flex-col justify-center pt-8">
     <l-map
       :zoom="currentZoom"
       :center="currentCenter"
     >
-    <l-tile-layer
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      layer-type="base"
-      name="OpenStreetMap"
-    ></l-tile-layer>
-    <l-marker
-        v-for="user in locationStore.filteredLocations"
-        :key="user.id"
-        @click="openMarker(user.id ?? null)"
-        :lat-lng="[user.latitude, user.longitude]" >
-      <l-icon
-          :icon-size="[35, 35]"
-          :icon-anchor="[20, 20]"
-          icon-url="/public/images/pumpkin.webp"
-      ></l-icon>
-      <l-popup>
-        <div class="flex flex-col text-left justify-start">
-          <div class="text-black text-base">
-            <p class="font-bold">{{ user.name }}</p>
-            <span class="flex flex-col justify-start text-sm">
-              <p>{{ user.streetName }}, {{ user.streetNumber }}</p>
-              <p>{{ user.postalCode }} {{ user.city }}</p>
-            </span>
-          </div>
+      <l-tile-layer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        layer-type="base"
+        name="OpenStreetMap"
+      ></l-tile-layer>
+      <l-marker
+          v-for="user in locationStore.filteredLocations"
+          :key="user.id"
+          @click="openMarker(user.id ?? null)"
+          :lat-lng="[user.latitude, user.longitude]" >
+        <l-icon
+            :icon-size="[30, 30]"
+            :icon-anchor="[15, 15]"
+            icon-url="/public/images/pumpkin.webp"
+        ></l-icon>
+        <l-popup>
+          <div class="flex flex-col text-left justify-start">
+            <div class="text-black text-base">
+              <p class="font-bold">{{ user.name }}</p>
+              <span class="flex flex-col justify-start text-sm">
+                <p>{{ user.streetName }}, {{ user.streetNumber }}</p>
+                <p>{{ user.postalCode }} {{ user.city }}</p>
+              </span>
+            </div>
 
-          <div v-for="time in timeSlotsStore.times.filter(t => t.id === user.timeSlotId)">
-            <div class="flex flex-col space-y-2 mt-4">
-              <div class="flex items-center text-lg space-x-2 font-bold">
-                <i class="text-[#ff7518] pi pi-calendar "></i>
-                <p class="text-sm">{{time.date}}</p>
+            <div v-for="time in timeSlotsStore.times.filter(t => t.id === user.timeSlotId)">
+              <div class="flex flex-col space-y-2 mt-4">
+                <div class="flex items-center text-lg space-x-2 font-bold">
+                  <i class="text-[#ff7518] pi pi-calendar "></i>
+                  <p class="text-sm">{{time.date}}</p>
+                </div>
+                <div class="flex items-center text-lg space-x-2 font-bold">
+                  <i class="text-[#ff7518] pi pi-clock"></i>
+                  <p class="text-sm">{{ time.startTime.slice(0, 5) }} - {{ time.endTime.slice(0, 5) }}</p>
+                </div>
+                <!-- <div class="border-t border-gray-300 mt-2 pt-1.5 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]">
+                  <a class="googel-maps-links" :href="`https://www.google.com/maps?q=${user.latitude},${user.longitude}&z=15`" target="_blank">Se på Google Maps</a>
+                </div> -->
               </div>
-              <div class="flex items-center text-lg space-x-2 font-bold">
-                <i class="text-[#ff7518] pi pi-clock"></i>
-                <p class="text-sm">{{ time.startTime.slice(0, 5) }} - {{ time.endTime.slice(0, 5) }}</p>
-              </div>
-              <!-- <div class="border-t border-gray-300 mt-2 pt-1.5 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]">
-                <a class="googel-maps-links" :href="`https://www.google.com/maps?q=${user.latitude},${user.longitude}&z=15`" target="_blank">Se på Google Maps</a>
-              </div> -->
             </div>
           </div>
-        </div>
-      </l-popup>
-    </l-marker>
-  </l-map>
+        </l-popup>
+      </l-marker>
+    </l-map>
   </div>
   <div v-if="!locationStore.isLoading">
     <SearchComp />
@@ -132,7 +132,6 @@
         }
       }
     })
-
 </script>
 
 <style>
