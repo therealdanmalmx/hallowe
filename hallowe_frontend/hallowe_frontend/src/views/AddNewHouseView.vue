@@ -52,7 +52,7 @@ const getChosenMonth = (date: Date) => {
   }
 };
 
-if (currentMonth > 10 && currentDay < 29) {
+if ((currentMonth > 9 && currentDay > 28) && (currentMonth < 11 && currentDay < 3)) {
   currentYear++;
 };
 const getDaysAroundOctober31 = (year: number) => {
@@ -136,11 +136,9 @@ const submitForm = async () => {
       longitude: form.value.longitude,
       city: form.value.city,
       trickOrTreat: form.value.trickOrTreat,
-      timeSlots: {
-        date: formatDate(form.value.timeSlots.date!) as any,
-        startTime: form.value.timeSlots.startTime as any,
-        endTime: form.value.timeSlots.endTime as any,
-      }
+      date: formatDate(form.value.timeSlots.date!) as any,
+      startTime: form.value.timeSlots.startTime as any,
+      endTime: form.value.timeSlots.endTime as any,
     }
 
     try {

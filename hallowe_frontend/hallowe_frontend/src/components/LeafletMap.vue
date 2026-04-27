@@ -33,15 +33,15 @@
               </span>
             </div>
 
-            <div v-for="time in timeSlotsStore.times.filter(t => t.id === user.timeSlotId)">
+            <div v-for="user in locationStore.filteredLocations">
               <div class="flex flex-col space-y-2 mt-4">
                 <div class="flex items-center text-lg space-x-2 font-bold">
                   <i class="text-[#ff7518] pi pi-calendar "></i>
-                  <p class="text-sm">{{time.date}}</p>
+                  <p class="text-sm">{{user.date}}</p>
                 </div>
                 <div class="flex items-center text-lg space-x-2 font-bold">
                   <i class="text-[#ff7518] pi pi-clock"></i>
-                  <p class="text-sm">{{ time.startTime.slice(0, 5) }} - {{ time.endTime.slice(0, 5) }}</p>
+                  <p class="text-sm">{{ user.startTime.slice(0, 5) }} - {{ user.endTime.slice(0, 5) }}</p>
                 </div>
                 <!-- <div class="border-t border-gray-300 mt-2 pt-1.5 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis font-['Roboto',Arial]">
                   <a class="googel-maps-links" :href="`https://www.google.com/maps?q=${user.latitude},${user.longitude}&z=15`" target="_blank">Se på Google Maps</a>
@@ -64,7 +64,6 @@
     import { LMap, LMarker, LPopup, LTileLayer, LIcon } from "@vue-leaflet/vue-leaflet";
     import { computed, defineComponent, onMounted, ref } from "vue";
     import { useLocationStore } from '../stores/locationStore';
-    import { useTimeSlotsStore } from '../stores/timeSlotsStore';
     import { useUserStore } from '../stores/userStore';
     import AddNewAddress from './AddNewAddress.vue';
     import SearchComp from './SearchComp.vue';
@@ -93,14 +92,12 @@
         const size = ref<string>('1.25rem');
         const baseZoom = ref<number>(window.innerWidth < 768 ? 4 : 6);
         const locationStore = useLocationStore();
-        const timeSlotsStore = useTimeSlotsStore();
         const userStore = useUserStore();
 
         onMounted(async () => {
           getUserCoords();
           await import("leaflet");
           await locationStore.getAllParticiants();
-          await timeSlotsStore.getAllTimeSlots();
           mapReady.value = true;
         });
 
@@ -119,7 +116,6 @@
 
         return {
           locationStore,
-          timeSlotsStore,
           userStore,
           zoom,
           mapReady,
