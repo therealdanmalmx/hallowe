@@ -3,7 +3,6 @@
   import { defineComponent } from 'vue';
 
   import { useLocationStore } from '../stores/locationStore';
-  import { useTimeSlotsStore } from '../stores/timeSlotsStore';
   import { useUserStore } from '../stores/userStore';
   import LeafletMap from '../components/LeafletMap.vue';
 
@@ -14,10 +13,9 @@
     setup() {
 
       const locationStore = useLocationStore();
-      const timeSlotsStore = useTimeSlotsStore();
       const userStore = useUserStore();
 
-      return { locationStore, timeSlotsStore, userStore }
+      return { locationStore, userStore }
     }
   })
 
@@ -31,7 +29,6 @@
     <div class="p-4 xl:p-2">
         <LeafletMap />
         <div v-if="locationStore.error" class="error-message">{{ locationStore.error }}</div>
-        <div v-else-if="timeSlotsStore.error" class="error-message">{{ timeSlotsStore.error }}</div>
     </div>
 
   </div>
