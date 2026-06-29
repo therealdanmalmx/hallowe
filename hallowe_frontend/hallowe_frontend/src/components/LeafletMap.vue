@@ -28,7 +28,7 @@
             <div class="text-black text-base">
               <p class="font-bold">{{ user.name }}</p>
               <span class="flex flex-col justify-start text-sm">
-                <p>{{ user.streetName }}, {{ user.streetNumber }}</p>
+                <p>{{ user.streetName }} {{ user.streetNumber }}</p>
                 <p>{{ user.postalCode }} {{ user.city }}</p>
               </span>
             </div>
@@ -90,7 +90,7 @@
         const mapReady = ref<boolean>(false);
         const color = ref<string>("#FF7518");
         const size = ref<string>('1.25rem');
-        const baseZoom = ref<number>(window.innerWidth < 768 ? 4 : 6);
+        const baseZoom = ref<number>(window.innerWidth < 768 ? 12 : 12);
         const locationStore = useLocationStore();
         const userStore = useUserStore();
 
@@ -111,7 +111,7 @@
         });
 
         const currentZoom = computed(() => {
-          return locationStore.mapZoom || baseZoom.value;
+          return locationStore.mapZoom.value || baseZoom.value;
         });
 
         return {
