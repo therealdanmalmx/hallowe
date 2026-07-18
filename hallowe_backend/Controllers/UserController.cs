@@ -1,6 +1,7 @@
 using hallowe_backend.DTOs;
 using hallowe_backend.Models.Login;
 using hallowe_backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hallowe_backend.Controllers
@@ -18,11 +19,19 @@ namespace hallowe_backend.Controllers
             _loginService = loginService;
         }
 
-        [HttpGet]
+        [Authorize]
+        [HttpGet("users")]
         public async Task<ActionResult<IEnumerable<RegisterResponse>>> GetAllParticipants()
         {
             var result = await _registerService.GetAllUsers();
             return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public ActionResult GetCurrentUser()
+        {
+            return Ok(new { userName = User.Identity!.Name });
         }
 
         [HttpPost("register")]
@@ -45,7 +54,7 @@ namespace hallowe_backend.Controllers
 
             if (!result.IsSuccessful)
             {
-                return new LoginResponse(false, result.Errors);
+                return Unauthorized(result);
             }
 
             return Ok(result);
