@@ -19,9 +19,9 @@
 
         <div class="space-y-4 mb-6">
           <div>
-            <label class="block text-orange-400 text-sm font-medium mb-2">Email</label>
+            <label class="block text-orange-400 text-sm font-medium mb-2">User name</label>
             <input
-              v-model="form.email"
+              v-model="form.userName"
               type="email"
               placeholder="your@email.com"
               class="w-full px-4 py-3 bg-slate-900/50 border border-orange-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 transition-all"
@@ -51,7 +51,7 @@
             </div>
           </div>
 
-          <button @click="handleLogin" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-orange-500/50 hover:shadow-xl mt-6">
+          <button @click="submitForm()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-orange-500/50 hover:shadow-xl mt-6">
             Logga in
           </button>
         </div>
@@ -90,12 +90,50 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { userService } from "../api/services/userService"
+  import type { User } from '../../types/interfaces';
+  import { useUserStore } from '../stores/userStore'
 
-const showPassword = ref(false)
-const form = ref({ email: '', password: '' })
+  const showPassword = ref(false);
+  const submitted = ref(false);
+  const isSubmitting = ref(true);
+  const form = ref({ userName: '', password: '' })
 
-const handleLogin = () => console.log('Login attempt', form.value)
-const handleSocial = (provider) => console.log(`${provider} auth`)
+  const handleLogin = () => console.log('Login attempt', form.value);
+  const handleSocial = (provider) => console.log(`${provider} auth`);
+
+  const { authCreds, loginUser } = useUserStore();
+
+  const submitForm = async () => {
+
+    if (!form.value.password || form.value.password === "") {
+      console.log("Password is required")
+    }
+    
+    if (!form.value.userName || form.value.userName === "") {
+      console.log("UserName is required")
+    }
+
+    if (form.value.userName && form.value.password) {
+      
+      try {
+        const user: User = {
+          userName: form.value.userName.trim(),
+          password: form.value.password.trim(),
+        }
+        
+        const res = await loginUser(user);
+
+        if (res.status === 400) {
+          submitted.value = true
+          isSubmitting.value = false;
+      }
+      
+    } catch (err) {
+      console.log("UserService could not be reached", err)
+    }
+  }
+}
 </script>
