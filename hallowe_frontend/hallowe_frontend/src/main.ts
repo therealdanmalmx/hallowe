@@ -8,12 +8,5 @@ import "./style.css";
 createApp(App)
   .use(router)
   .use(createPinia())
-  // .use(VueGoogleMaps, {
-  //   load: {
-  //     key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-  //     libraries: 'places',
-  //     await: true,
-  //   },
-  // })
 
 .mount("#app");
