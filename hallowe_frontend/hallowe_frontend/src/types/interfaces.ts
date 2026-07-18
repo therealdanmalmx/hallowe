@@ -11,12 +11,12 @@ export interface Location {
     date: Date,
     startTime: string,
     endTime: string,
-    
 }
 
 export interface User {
-    name: string,
     userName: string,
-    email: string,
-    phoneNumber: string
+    password: string,
+    email?: string,
+    name?: string,
+    phoneNumber?: string
 }
