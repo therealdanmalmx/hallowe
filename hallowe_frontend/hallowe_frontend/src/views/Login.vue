@@ -92,48 +92,42 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { userService } from "../api/services/userService"
+  import { useUserStore } from "../stores/userStore.ts"
   import type { User } from '../../types/interfaces';
-  import { useUserStore } from '../stores/userStore'
+  import { isAxiosError } from "axios";
+  import {router} from "../router";
 
   const showPassword = ref(false);
   const submitted = ref(false);
   const isSubmitting = ref(true);
   const form = ref({ userName: '', password: '' })
+  const {login} = useUserStore();
 
-  const handleLogin = () => console.log('Login attempt', form.value);
   const handleSocial = (provider) => console.log(`${provider} auth`);
 
-  const { authCreds, loginUser } = useUserStore();
-
   const submitForm = async () => {
-
-    if (!form.value.password || form.value.password === "") {
-      console.log("Password is required")
-    }
-    
-    if (!form.value.userName || form.value.userName === "") {
-      console.log("UserName is required")
+    if (!form.value.userName || !form.value.password) {
+      console.log("Username and password are required")
+      return
     }
 
-    if (form.value.userName && form.value.password) {
-      
-      try {
-        const user: User = {
-          userName: form.value.userName.trim(),
-          password: form.value.password.trim(),
-        }
-        
-        const res = await loginUser(user);
+    isSubmitting.value = true
+    submitted.value = false
 
-        if (res.status === 400) {
-          submitted.value = true
-          isSubmitting.value = false;
-      }
-      
-    } catch (err) {
-      console.log("UserService could not be reached", err)
+    const user: User = {
+      userName: form.value.userName.trim(),
+      password: form.value.password.trim(),
+    }
+
+    const ok = await login(user)
+    console.log({ok})
+
+    isSubmitting.value = false
+
+    if (ok) {
+      router.push('/add-address')
+    } else {
+      submitted.value = true
     }
   }
-}
 </script>
