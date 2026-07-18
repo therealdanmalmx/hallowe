@@ -23,33 +23,24 @@ export const router = createRouter({
     { 
       component: AddNewHouse, 
       path: "/add-address",
+      name: "add-address",
       meta: {
         requiresAuth: true,
       }
     },
-    { component: Login, path: "/login" },
+    { component: Login, path: "/login", name: "login" },
     { component: Register, path: "/register" },
   ],
-
-// scrollBehavior(to, from, savedPosition) {
-  //   if (savedPosition) {
-  //     return savedPosition;
-  //   } else {
-  //     setTimeout(() => {
-  //       window.scrollTo(0, 0);
-  //     }, 0);
-  //   }
-  // },
 });
 
+router.beforeEach(async (to) => {
+  const userStore = useUserStore()
 
-// router.beforeEach(async (to) => {
-//     // redirect to login page if not logged in and trying to access a restricted page
-//     const publicPages = ['/map'];
-//     const authRequired = !publicPages.includes(to.path);
-//     const auth = useUserStore();
+  if (userStore.isLoading) {
+    await userStore.getUserInfo()
+  }
 
-//     if (authRequired && auth?.authCreds) {
-//         return '/login';
-//     }
-//   });
+  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+    return { name: 'login' }
+  }
+});
