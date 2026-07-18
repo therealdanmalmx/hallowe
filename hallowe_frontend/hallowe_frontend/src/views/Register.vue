@@ -52,7 +52,7 @@
               </div>
           </div>
 
-          <button @click="handleRegister" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-orange-500/50 hover:shadow-xl mt-6">
+          <button @click="submitForm" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-orange-500/50 hover:shadow-xl mt-6">
             Skapa konto
           </button>
         </div>
@@ -94,11 +94,51 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { userService } from "../api/services/userService"
+  import type { User } from "../../types/interfaces";
 
-const showPassword = ref(false)
-const form = ref({ name: '', email: '', password: '' })
+  const showPassword = ref(false)
+  const form = ref({ name: '', email: '', password: '' })
 
-const handleRegister = () => console.log('Register attempt', form.value)
+  const handleRegister = () => console.log('Register attempt', form.value)
+
+  const submitForm = async () => {
+    
+    if (!form.value.name || form.value.name === "") {
+      console.log("Name is required")
+    }
+
+    if (!form.value.email || form.value.email === "") {
+      console.log("Email is required")
+    }
+
+    if (!form.value.password || form.value.password === "") {
+      console.log("Password is required")
+    }
+
+    if (form.value.email && form.value.password && form.value.name) {
+
+      const newUSer: User = {
+        name: form.value.name.trim(),
+        email: form.value.email.trim(),
+        password: form.value.password.trim(),
+      }
+
+      try {
+        const res = userService.register(newUSer);
+          console.log({newUSer})
+          console.log({res})
+
+        if (res.status === 400) {
+          console.log(res.message)
+        }
+        
+      
+    } catch (error) {
+      console.log("UserService could not be reached", error)
+    }
+  }
+}
 </script>
