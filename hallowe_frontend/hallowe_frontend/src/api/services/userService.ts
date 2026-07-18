@@ -1,20 +1,23 @@
 import type { User } from '../../types/interfaces'
-import apiClient from '../client'
+import { useHttpClient } from '../client'
 
 export const userService = {
     getAll() {
-    return apiClient.get('/user')
+    return useHttpClient().get('/user')
     },
     getById(id: string | number): Promise<any> {
-        return apiClient.get(`/user/${id}`)
+        return useHttpClient().get(`/user/${id}`)
     },
-    create(user: User): Promise<any> {
-        return apiClient.post('/user', user)
+    register(user: User): Promise<any> {
+        return useHttpClient().post('/user/register', user)
+    },
+    login(user: User): Promise<any> {
+        return useHttpClient().post('/user/login', user)
     },
     update(id: string | number, user: User): Promise<any> {
-        return apiClient.put(`/user/${id}`, user)
+        return useHttpClient().put(`/user/${id}`, user)
     },
     delete(id: string | number): Promise<any> {
-        return apiClient.delete(`/user/${id}`)
+        return useHttpClient().delete(`/user/${id}`)
     }
 }
