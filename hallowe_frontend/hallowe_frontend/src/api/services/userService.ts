@@ -3,7 +3,7 @@ import { useHttpClient } from '../client'
 
 export const userService = {
     getAll() {
-    return useHttpClient().get('/user')
+        return useHttpClient().get('/user/users')
     },
     getById(id: string | number): Promise<any> {
         return useHttpClient().get(`/user/${id}`)
