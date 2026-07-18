@@ -1,26 +1,73 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import { userService } from "../api/services/userService";
-import type { User } from "../types/interfaces";
+
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
+import type { User } from '../types/interfaces'
+import { userService } from "../api/services/userService"
+import { useHttpClient } from '../api/client'
 
 export const useUserStore = defineStore('userStore', () => {
-    const users = ref<User[]>([]);
-    const isLoading = ref<boolean>(false);
-    const error = ref<string | null>(null);
+  const user = ref<User | null | undefined>(undefined)
+  const isLoading = computed(() => user.value === undefined)
+  const isAuthenticated = computed(() => !!user.value)
 
-    async function getAllUsers() {
-        try {
-            isLoading.value = true;
-            error.value = null;
-            const response = await userService.getAll();
-            users.value = response.data;
-        } catch (err) {
-            console.error('Fetching time slots failed:', error);
-            error.value = "Kunde inte hämta kunder. Försök igen."
-            throw error;
-        }
+  async function getUserInfo(): Promise<boolean> {
+    try {
+      const { data } = await useHttpClient().get<User>('/user/me', {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+
+      console.log('api/user returned:', data)
+
+      if (typeof data === 'object' && data !== null && typeof data.userName === 'string' && data.userName !== '') {
+        user.value = data
+        return true
+      }
+
+      user.value = null
+      return false
+    } catch {
+      user.value = null
+      return false
     }
+  }
 
-    return { users, isLoading, error, getAllUsers }
+  async function login(credentials: User): Promise<boolean> {
+  
+    try {
+    await userService.login(credentials)
+    // Cookie is now set by the browser automatically (from Set-Cookie on this response).
+    // Fetch the user to populate the store:
+    // return await getUserInfo();
+  } catch(err) {
+      console.log('login POST failed', err)
+      return false
+  }
+
+  const ok = await getUserInfo();
+
+  if (!ok) {
+    console.log('login OK but getUserInfo failed — cookie not being sent?')
+  }
+
+  return ok  
+
+}
+
+  function register(): void {
+    window.location.href = '/register'
+  }
+
+  function logout(): void {
+    window.location.href = '/logout'
+  }
+
+  return {
+    user,
+    isAuthenticated,
+    isLoading,
+    getUserInfo,
+    login,
+    register,
+    logout,
+  }
 })
-
