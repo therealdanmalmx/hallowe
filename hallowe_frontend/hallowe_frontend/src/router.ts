@@ -6,8 +6,9 @@ import Search from "./views/SearchView.vue";
 import AddNewHouse from "./views/AddNewHouseView.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
+import { useUserStore } from "./stores/userStore";
 
-export default createRouter({
+export const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
@@ -19,11 +20,18 @@ export default createRouter({
       path: "/map",
     },
     { component: Search, path: "/search" },
-    { component: AddNewHouse, path: "/add-address" },
+    { 
+      component: AddNewHouse, 
+      path: "/add-address",
+      meta: {
+        requiresAuth: true,
+      }
+    },
     { component: Login, path: "/login" },
     { component: Register, path: "/register" },
   ],
-  // scrollBehavior(to, from, savedPosition) {
+
+// scrollBehavior(to, from, savedPosition) {
   //   if (savedPosition) {
   //     return savedPosition;
   //   } else {
@@ -33,3 +41,15 @@ export default createRouter({
   //   }
   // },
 });
+
+
+// router.beforeEach(async (to) => {
+//     // redirect to login page if not logged in and trying to access a restricted page
+//     const publicPages = ['/map'];
+//     const authRequired = !publicPages.includes(to.path);
+//     const auth = useUserStore();
+
+//     if (authRequired && auth?.authCreds) {
+//         return '/login';
+//     }
+//   });
