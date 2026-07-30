@@ -75,7 +75,7 @@
 
           <button
             type="button"
-            @click.prevent="handleSocial('Facebook')"
+            @click.prevent="() => facebookAuth()"
             class="w-full flex items-center justify-center gap-3 bg-slate-900/50 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-500 text-white py-3 px-4 rounded-lg transition-all font-medium"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -130,6 +130,10 @@
   
   const googleAuth = () => {
     window.location.href = 'http://localhost:5168/api/user/google'
+  }
+
+  const facebookAuth = () => {
+    window.location.href = 'http://localhost:5168/api/user/facebook'
   }
 
   const submitForm = async () => {
