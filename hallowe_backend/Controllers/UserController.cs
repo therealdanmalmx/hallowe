@@ -64,25 +64,15 @@ namespace hallowe_backend.Controllers
         }
         
         [HttpGet("google")]
-        public IActionResult GoogleLogin()
-        {
-            var properties = new AuthenticationProperties
-            {
-                RedirectUri = "http://localhost:5173/add-address"
-            };
+        public IActionResult GoogleLogin() =>
+            Challenge(
+                new AuthenticationProperties { RedirectUri = "http://localhost:5173/add-address" },
+                GoogleDefaults.AuthenticationScheme);
 
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
-        }
-        
         [HttpGet("facebook")]
-        public IActionResult FacebookLogin()
-        {
-            var properties = new AuthenticationProperties
-            {
-                RedirectUri = "http://localhost:5173/add-address"
-            };
-
-            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
-        }
+        public IActionResult FacebookLogin() =>
+            Challenge(
+                new AuthenticationProperties { RedirectUri = "http://localhost:5173/add-address" },
+                FacebookDefaults.AuthenticationScheme);
     }
 }
