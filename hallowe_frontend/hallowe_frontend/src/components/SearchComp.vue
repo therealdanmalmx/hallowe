@@ -24,7 +24,7 @@ export default defineComponent({
     <form class="my-10">
         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">search</label>
         <div class="relative flex items-center justify-end">
-            <div class="p-4 absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <div class="p-4 absolute inset-y-0 inset-s-0 flex items-center ps-3 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg>
@@ -38,9 +38,9 @@ export default defineComponent({
             />
             <button
                 v-if="searchText"
-                @click.prevent="clearSearch()"
+                @click="clearSearch"
                 type="button"
-                class="absolute inset-y-0 end-0 flex items-center pe-3"
+                class="absolute inset-y-0 inset-e-0 flex items-center pe-3"
             >
                 <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
