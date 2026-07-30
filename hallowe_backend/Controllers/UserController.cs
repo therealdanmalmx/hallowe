@@ -1,6 +1,8 @@
 using hallowe_backend.DTOs;
 using hallowe_backend.Models.Login;
 using hallowe_backend.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,6 +60,17 @@ namespace hallowe_backend.Controllers
             }
 
             return Ok(result);
+        }
+        
+        [HttpGet("google")]
+        public IActionResult GoogleLogin()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = "http://localhost:5173/add-address"
+            };
+
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
     }
 }
