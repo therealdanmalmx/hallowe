@@ -64,7 +64,7 @@
         <div class="space-y-3">
           <button
             type="button"
-            @click.prevent="handleSocial('Google')"
+            @click.prevent="() => googleAuth()"
             class="w-full flex items-center justify-center gap-3 bg-slate-900/50 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-500 text-white py-3 px-4 rounded-lg transition-all font-medium"
           >
             <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -127,6 +127,10 @@
   const {login} = useUserStore();
 
   const handleSocial = (provider) => console.log(`${provider} auth`);
+  
+  const googleAuth = () => {
+    window.location.href = 'http://localhost:5168/api/user/google'
+  }
 
   const submitForm = async () => {
     if (!form.value.userName || !form.value.password) {
