@@ -1,31 +1,25 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using hallowe_backend.Models;
 using hallowe_backend.Models.Login;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 
 namespace hallowe_backend.Services
 {
     public class LoginService : IloginService
     {
-        private readonly SignInManager<User> _registerSignInManager;
-        private readonly IConfiguration _config;
+        private readonly SignInManager<User> _signInManager;
 
-        public LoginService(SignInManager<User> registeredParticipantSignInManager, IConfiguration config)
+        public LoginService(SignInManager<User> signInManager)
         {
-            _registerSignInManager = registeredParticipantSignInManager;
-            _config = config;
+            _signInManager = signInManager;
         }
 
         public async Task<LoginResponse> Login(LoginRequest request)
         {
-            var result = await _registerSignInManager.PasswordSignInAsync(
+            var result = await _signInManager.PasswordSignInAsync(
                 request.UserName,
                 request.Password,
-                false,
-                false
+                isPersistent: false,
+                lockoutOnFailure: false
             );
 
             if (!result.Succeeded)
@@ -33,28 +27,7 @@ namespace hallowe_backend.Services
                 return new LoginResponse(false, "Email eller lösenord är fel");
             }
 
-            var claims = new []
-            {
-                new Claim(ClaimTypes.Name, request.UserName)
-            };
-
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_config["JwtsecurityKey"]!)
-            );
-
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expiryDate = DateTime.UtcNow.AddDays(Convert.ToInt16(_config["JwtExpiryDate"]));
-            var token = new JwtSecurityToken(
-                issuer: _config["JwtIssuer"],
-                audience: _config["JwtAudience"],
-                claims: claims,
-                expires: expiryDate,
-                signingCredentials: credentials
-            );
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return new LoginResponse(true, null, jwt);
+            return new LoginResponse(true, null);
         }
     }
 }

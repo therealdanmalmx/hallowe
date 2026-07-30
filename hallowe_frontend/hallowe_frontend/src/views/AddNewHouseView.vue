@@ -52,7 +52,7 @@ const getChosenMonth = (date: Date) => {
   }
 };
 
-if (currentMonth > 10 && currentDay < 29) {
+if ((currentMonth > 9 && currentDay > 28) && (currentMonth < 11 && currentDay < 3)) {
   currentYear++;
 };
 const getDaysAroundOctober31 = (year: number) => {
@@ -115,58 +115,55 @@ const form = ref({
   trickOrTreat: false,
   latitude: 0,
   longitude: 0,
-  timeSlots: {
-    date: null as Date | null,
-    startTime: '',
-    endTime: '',
-  }
+  date: null as Date | null,
+  startTime: '',
+  endTime: '',
 })
-const submitted = ref(false)
+const submitted = ref(false);
+
 const submitForm = async () => {
   isSubmitting.value = true;
   const getCoords = await getLatLngForAddress(form.value.streetName, form.value.streetNumber, form.value.postalCode, form.value.city);
 
-  if (form.value.timeSlots.date && getCoords) {
+  if (form.value.date && getCoords) {
     const participant: Location = {
-      name: form.value.name,
-      streetName: form.value.streetName,
-      streetNumber: form.value.streetNumber,
-      postalCode: form.value.postalCode,
+      name: form.value.name.trim(),
+      streetName: form.value.streetName.trim(),
+      streetNumber: form.value.streetNumber.trim(),
+      postalCode: form.value.postalCode.trim(),
       latitude: form.value.latitude,
       longitude: form.value.longitude,
-      city: form.value.city,
+      city: form.value.city.trim(),
       trickOrTreat: form.value.trickOrTreat,
-      timeSlots: {
-        date: formatDate(form.value.timeSlots.date!) as any,
-        startTime: form.value.timeSlots.startTime as any,
-        endTime: form.value.timeSlots.endTime as any,
-      }
+      date: form.value.date,
+      startTime: form.value.startTime,
+      endTime: form.value.endTime,
     }
 
     try {
-      locationServices.create(participant)
-      submitted.value = true
-      isSubmitting.value = false;
+      const location = locationServices.create(participant);
 
+      if (location) {
+        submitted.value = true
+        isSubmitting.value = false;
+      }
+      
     } catch (error) {
 
     }
-
   }
-
 }
-
 
 const isFormInvalid = computed(() => {
   return (
-    form.value.name &&
-    form.value.streetName &&
-    form.value.streetNumber &&
+    form.value.name.trim() &&
+    form.value.streetName.trim() &&
+    form.value.streetNumber.trim() &&
     form.value.postalCode &&
-    form.value.city &&
-    form.value.timeSlots.date &&
-    form.value.timeSlots.startTime &&
-    form.value.timeSlots.endTime
+    form.value.city.trim() &&
+    form.value.date &&
+    form.value.startTime &&
+    form.value.endTime
 
   )
 })
@@ -272,7 +269,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.timeSlots.date"
+              v-model="form.date"
               :value="getDaysAroundOctober31(currentYear).twoDaysBefore"
               class="h-4 w-4 accent-orange-500"
             />
@@ -282,7 +279,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.timeSlots.date"
+              v-model="form.date"
               :value="getDaysAroundOctober31(currentYear).oneDaysBefore"
               class="h-4 w-4 accent-orange-500"
             />
@@ -292,7 +289,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.timeSlots.date"
+              v-model="form.date"
               :value="getDaysAroundOctober31(currentYear).oct31"
               class="h-4 w-4 accent-orange-500"
             />
@@ -303,7 +300,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.timeSlots.date"
+              v-model="form.date"
               :value="getDaysAroundOctober31(currentYear).oneDaysAfter"
               class="h-4 w-4 accent-orange-500"
             />
@@ -313,7 +310,7 @@ const isFormInvalid = computed(() => {
           <label class="flex items-center p-2 bg-[#eaeaea] text-black rounded-lg cursor-pointer">
             <input
               type="radio"
-              v-model="form.timeSlots.date"
+              v-model="form.date"
               :value="getDaysAroundOctober31(currentYear).twoDaysAfter"
               class="h-4 w-4 accent-orange-500"
             />
@@ -324,16 +321,16 @@ const isFormInvalid = computed(() => {
       <div class="flex justify-between gap-x-4 ">
         <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Från:</label>
-          <input v-model="form.timeSlots.startTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+          <input v-model="form.startTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
         <div class="text-left w-1/2">
           <label for="time" class="mb-4 text-sm font-medium text-gray-900 dark:text-white pl-2 ">Till:</label>
-          <input v-model="form.timeSlots.endTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
+          <input v-model="form.endTime" type="time" id="time" class="bg-[#eaeaea] border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" min="09:00" max="22:00" value="00:00" required />
         </div>
       </div>
 
-      <div v-if="form.timeSlots.date && form.timeSlots.startTime && form.timeSlots.endTime" class="flex items-center my-4 mt-8 text-sm text-[#FF7518]">
-        Du har valt att fira Halloween på {{ getDayOfTheWeek(form.timeSlots.date) }} den {{ form.timeSlots.date.getDate()}}:e {{ getChosenMonth(form.timeSlots.date) }}  mellan {{ form.timeSlots.startTime }} och {{ form.timeSlots.endTime }}
+      <div v-if="form.date && form.startTime && form.endTime" class="flex items-center my-4 mt-8 text-sm text-[#FF7518]">
+        Du har valt att fira Halloween på {{ getDayOfTheWeek(form.date) }} den {{ form.date.getDate()}}:e {{ getChosenMonth(form.date) }}  mellan {{ form.startTime }} och {{ form.endTime }}
       </div>
       <div class="flex items-center my-4 mt-8">
         <input
@@ -363,6 +360,9 @@ const isFormInvalid = computed(() => {
       <p v-if="submitted" class="text-green-500 text-center mt-4 font-medium">
         Tack, {{ form.name }}! Din adress har sparats! 🧡
       </p>
+      <!-- <p v-if="!submitted" class="text-red-500 text-center mt-4 font-medium">
+        Din adress kunde inte sparas! Försök igen.
+      </p> -->
 
     </form>
   </div>

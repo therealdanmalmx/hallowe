@@ -1,20 +1,20 @@
 import type { Location } from '../../types/interfaces'
-import apiClient from '../client'
+import {useHttpClient} from '../client'
 
 export const locationServices = {
     getAll() {
-    return apiClient.get('/location')
+        return useHttpClient().get('/location')
     },
     getById(id: string | number): Promise<any> {
-        return apiClient.get(`/location/${id}`)
+        return useHttpClient().get(`/location/${id}`)
     },
     create(participant: Location): Promise<any> {
-        return apiClient.post('/location', participant)
+        return useHttpClient().post('/location', participant)
     },
     update(id: string | number, participant: Location): Promise<any> {
-        return apiClient.put(`/location/${id}`, participant)
+        return useHttpClient().put(`/location/${id}`, participant)
     },
     delete(id: string | number): Promise<any> {
-        return apiClient.delete(`/location/${id}`)
+        return useHttpClient().delete(`/location/${id}`)
     }
 }

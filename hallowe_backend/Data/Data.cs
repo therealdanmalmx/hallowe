@@ -10,7 +10,6 @@ namespace hallowe_backend.Data
 
             public DbSet<Location> Locations { get; set; }
             public override DbSet<User> Users { get; set; }
-            public DbSet<TimeSlot> TimeSlots { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

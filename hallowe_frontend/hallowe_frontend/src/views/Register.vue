@@ -52,7 +52,7 @@
               </div>
           </div>
 
-          <button @click="handleRegister" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-orange-500/50 hover:shadow-xl mt-6">
+          <button @click="submitForm" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-orange-500/50 hover:shadow-xl mt-6">
             Skapa konto
           </button>
         </div>
@@ -60,23 +60,21 @@
           <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-orange-500/30"></div></div>
           <div class="relative flex justify-center text-sm"><span class="px-2 bg-slate-800/50 text-orange-400">eller använd:</span></div>
         </div>
-
         <div class="space-y-3">
           <button
-            @click="handleSocialAuth('Google')"
+            type="button"
+            @click.prevent="handleSocial('Google')"
             class="w-full flex items-center justify-center gap-3 bg-slate-900/50 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-500 text-white py-3 px-4 rounded-lg transition-all font-medium"
           >
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+              <path d="M564 325.8C564 467.3 467.1 568 324 568C186.8 568 76 457.2 76 320C76 182.8 186.8 72 324 72C390.8 72 447 96.5 490.3 136.9L422.8 201.8C334.5 116.6 170.3 180.6 170.3 320C170.3 406.5 239.4 476.6 324 476.6C422.2 476.6 459 406.2 464.8 369.7L324 369.7L324 284.4L560.1 284.4C562.4 297.1 564 309.3 564 325.8z"/>
             </svg>
             Google
           </button>
 
           <button
-            @click="handleSocialAuth('Facebook')"
+            type="button"
+            @click.prevent="handleSocial('Facebook')"
             class="w-full flex items-center justify-center gap-3 bg-slate-900/50 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-500 text-white py-3 px-4 rounded-lg transition-all font-medium"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -84,6 +82,30 @@
             </svg>
             Facebook
           </button>
+
+          <button
+            type="button"
+            @click.prevent="handleSocial('Instagram')"
+            class="w-full flex items-center justify-center gap-3 bg-slate-900/50 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-500 text-white py-3 px-4 rounded-lg transition-all font-medium"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5Zm0 1.5h8.5a4.25 4.25 0 0 1 4.25 4.25v8.5a4.25 4.25 0 0 1-4.25 4.25h-8.5A4.25 4.25 0 0 1 3.5 16.25v-8.5A4.25 4.25 0 0 1 7.75 3.5Zm9.75 1.25a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM12 6.25A5.75 5.75 0 1 0 17.75 12 5.76 5.76 0 0 0 12 6.25Zm0 1.5A4.25 4.25 0 1 1 7.75 12 4.26 4.26 0 0 1 12 7.75Z"/>
+            </svg>
+            Instagram
+          </button>
+          
+
+          <button
+            type="button"
+            @click.prevent="handleSocial('LinkedIn')"
+            class="w-full flex items-center justify-center gap-3 bg-slate-900/50 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-500 text-white py-3 px-4 rounded-lg transition-all font-medium"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452H16.89v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.345V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 11.001-4.123 2.062 2.062 0 01-.001 4.123zM7.119 20.452H3.556V9h3.563v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            LinkedIn
+          </button>
+          
         </div>
 
         <p class="text-center text-slate-400 text-xs mt-6">
@@ -94,11 +116,52 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { userService } from "../api/services/userService"
+  import type { User } from "../../types/interfaces";
 
-const showPassword = ref(false)
-const form = ref({ name: '', email: '', password: '' })
+  const showPassword = ref(false)
+  const form = ref({ name: '', email: '', password: '' })
 
-const handleRegister = () => console.log('Register attempt', form.value)
+  const handleSocial = (provider) => console.log(`${provider} reg`);
+
+
+  const submitForm = async () => {
+    
+    if (!form.value.name || form.value.name === "") {
+      console.log("Name is required")
+    }
+
+    if (!form.value.email || form.value.email === "") {
+      console.log("Email is required")
+    }
+
+    if (!form.value.password || form.value.password === "") {
+      console.log("Password is required")
+    }
+
+    if (form.value.email && form.value.password && form.value.name) {
+
+      const newUSer: User = {
+        name: form.value.name.trim(),
+        email: form.value.email.trim(),
+        password: form.value.password.trim(),
+      }
+
+      try {
+        const res = userService.register(newUSer);
+          console.log({newUSer})
+          console.log({res})
+
+        if (res.status === 400) {
+          console.log(res.message)
+        }
+        
+      
+    } catch (error) {
+      console.log("UserService could not be reached", error)
+    }
+  }
+}
 </script>

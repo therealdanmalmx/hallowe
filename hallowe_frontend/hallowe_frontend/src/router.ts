@@ -6,8 +6,9 @@ import Search from "./views/SearchView.vue";
 import AddNewHouse from "./views/AddNewHouseView.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
+import { useUserStore } from "./stores/userStore";
 
-export default createRouter({
+export const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
@@ -19,17 +20,27 @@ export default createRouter({
       path: "/map",
     },
     { component: Search, path: "/search" },
-    { component: AddNewHouse, path: "/add-address" },
-    { component: Login, path: "/login" },
+    { 
+      component: AddNewHouse, 
+      path: "/add-address",
+      name: "add-address",
+      meta: {
+        requiresAuth: true,
+      }
+    },
+    { component: Login, path: "/login", name: "login" },
     { component: Register, path: "/register" },
   ],
-  // scrollBehavior(to, from, savedPosition) {
-  //   if (savedPosition) {
-  //     return savedPosition;
-  //   } else {
-  //     setTimeout(() => {
-  //       window.scrollTo(0, 0);
-  //     }, 0);
-  //   }
-  // },
+});
+
+router.beforeEach(async (to) => {
+  const userStore = useUserStore()
+
+  if (userStore.isLoading) {
+    await userStore.getUserInfo()
+  }
+
+  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+    return { name: 'login' }
+  }
 });
