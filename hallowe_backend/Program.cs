@@ -32,16 +32,21 @@ builder.Services.AddAuthentication(options =>
         options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
     })
-    .AddCookie()
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromHours(2);
+        options.SlidingExpiration = true;   // renews if >50% elapsed
+        options.Cookie.MaxAge = options.ExpireTimeSpan; // persist across restarts
+    })
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
     })
     .AddFacebook(options =>
     {
-        options.AppId = builder.Configuration["Authentication:Facebook:AppId"];
-        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+        options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
+        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
     });
     
 // builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -70,9 +75,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy => policy
         .WithOrigins("http://localhost:5173")
+        .AllowCredentials()
         .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials());
+        .AllowAnyMethod());
 });
 
 builder.Services.AddScoped<IRegisterService, RegisterService>();
