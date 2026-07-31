@@ -9,6 +9,8 @@ namespace hallowe_backend.Models
         [JsonIgnore]
         public Location? Location { get; set; }
 
+        public Guid? LocationId { get; set; }
+
         public User() {}
 
         public User(
