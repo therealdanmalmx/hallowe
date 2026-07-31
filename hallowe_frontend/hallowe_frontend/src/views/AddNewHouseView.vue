@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { locationServices } from '../api/services/locationServices';
 import type { Location }  from '../types/interfaces';
+import { format } from 'date-fns';
 
 let isSubmitting = ref<boolean>(false);
 
@@ -135,13 +136,16 @@ const submitForm = async () => {
       longitude: form.value.longitude,
       city: form.value.city.trim(),
       trickOrTreat: form.value.trickOrTreat,
-      date: form.value.date,
+      // date: format(form.value.date, "YYYY-MM-DD"),
+      date: form.value.date!.toISOString().split("T")[0],
       startTime: form.value.startTime,
       endTime: form.value.endTime,
     }
 
     try {
+      console.log({participant})
       const location = locationServices.create(participant);
+      console.log({location})
 
       if (location) {
         submitted.value = true
@@ -149,7 +153,7 @@ const submitForm = async () => {
       }
       
     } catch (error) {
-
+      console.error(error);
     }
   }
 }
