@@ -151,7 +151,6 @@
     }
 
     const ok = await login(user)
-    console.log({ok})
 
     isSubmitting.value = false
 
