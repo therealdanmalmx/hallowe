@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full justify-center md:justify-end">
+  <div class="flex w-full items-center justify-center md:justify-end">
     <div class="relative w-30 h-12">
       <!-- Main pill shape -->
       <div class="absolute inset-0 border-2 border-[#ff7518] rounded-full"></div>
@@ -31,6 +31,33 @@
             </span>
           </div>
         </RouterLink>
-    </div>
+      </div>
+      <div class="block md:pl-4" v-if="isLoggedIn" @click="() => logout()">
+        Logout
+      </div>
   </div>
 </template>
+
+<script setup lang="ts">
+  import { ref, onMounted } from "vue"
+  const isLoggedIn = ref(false);
+
+    onMounted(async () => {
+      const response = await fetch('http://localhost:5168/api/user/me', {
+        credentials: 'include',
+      })
+
+      isLoggedIn.value = response.ok
+    });
+
+    const logout = async () => {
+      const loggedOut = await fetch("http://localhost:5168/api/user/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (loggedOut.ok) {
+        window.location.href = '/map'
+      }
+    }
+  </script>
