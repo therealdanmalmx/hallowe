@@ -1,10 +1,13 @@
 using hallowe_backend.DTOs;
+using hallowe_backend.Models;
 using hallowe_backend.Models.Login;
 using hallowe_backend.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hallowe_backend.Controllers
@@ -15,11 +18,13 @@ namespace hallowe_backend.Controllers
     {
         private readonly IRegisterService _registerService;
         private readonly IloginService _loginService;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserController(IRegisterService registerService, IloginService loginService)
+        public UserController(IRegisterService registerService, IloginService loginService, SignInManager<User> signInManager)
         {
             _registerService = registerService;
             _loginService = loginService;
+            _signInManager = signInManager;
         }
 
         [Authorize]
@@ -34,7 +39,11 @@ namespace hallowe_backend.Controllers
         [HttpGet("me")]
         public ActionResult GetCurrentUser()
         {
-            return Ok(new { userName = User.Identity!.Name });
+            return Ok(new
+            { 
+                id = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value,
+                userName = User.Identity!.Name,
+            });
         }
 
         [HttpPost("register")]
@@ -61,6 +70,15 @@ namespace hallowe_backend.Controllers
             }
 
             return Ok(result);
+        }
+        
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            /* await HttpContext.SignOutAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme); */
+            await _signInManager.SignOutAsync();
+            return NoContent();
         }
         
         [HttpGet("google")]
