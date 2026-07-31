@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import { locationServices } from '../api/services/locationServices';
 import type { Location }  from '../types/interfaces';
-import { format } from 'date-fns';
 
 let isSubmitting = ref<boolean>(false);
 
