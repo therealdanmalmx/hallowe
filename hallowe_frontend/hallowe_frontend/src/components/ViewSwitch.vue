@@ -46,5 +46,4 @@
 
   const { isAuthenticated, logOutUser } = useUserStore();
 
-    }
   </script>
