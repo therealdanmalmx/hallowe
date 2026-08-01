@@ -111,7 +111,7 @@
         });
 
         const currentZoom = computed(() => {
-          return locationStore.mapZoom.value || baseZoom.value;
+          return locationStore.mapZoom || baseZoom.value;
         });
 
         return {
