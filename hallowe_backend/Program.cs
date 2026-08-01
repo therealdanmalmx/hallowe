@@ -1,13 +1,10 @@
-using System.Text;
 using hallowe_backend.Data;
 using hallowe_backend.Models;
 using hallowe_backend.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+// Database connection
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Identity — registers the "Identity.Application" cookie scheme and sets it as default
 builder.Services.AddDefaultIdentity<User>(options =>
 {
     options.Password.RequiredLength = 8;
@@ -25,52 +27,44 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddAuthentication(options =>
+// Configure Identity's cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromHours(2);
+    options.SlidingExpiration = true;              // renews if >50% elapsed
+    options.Cookie.MaxAge = options.ExpireTimeSpan; // persist across restarts
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;    // same-site in dev (localhost ports)
+
+    // This is an API: return status codes instead of redirecting to /Account/Login
+    options.Events.OnRedirectToLogin = ctx =>
     {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
-    })
-    .AddCookie(options =>
+        ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = ctx =>
     {
-        options.ExpireTimeSpan = TimeSpan.FromHours(2);
-        options.SlidingExpiration = true;   // renews if >50% elapsed
-        options.Cookie.MaxAge = options.ExpireTimeSpan; // persist across restarts
-    })
+        ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+        return Task.CompletedTask;
+    };
+});
+
+// External providers — no scheme defaults here; Identity's already correct
+builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
         options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
         options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        options.SignInScheme = IdentityConstants.ExternalScheme;
     })
     .AddFacebook(options =>
     {
         options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
         options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
+        options.SignInScheme = IdentityConstants.ExternalScheme;
     });
-    
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuer = true,
-//             ValidateAudience = true,
-//             ValidateLifetime = true,
-//             ValidateIssuerSigningKey = true,
-//             ValidIssuer = builder.Configuration["JwtIssuer"],
-//             ValidAudience = builder.Configuration["JwtAudience"],
-//             IssuerSigningKey = new SymmetricSecurityKey(
-//                 Encoding.UTF8.GetBytes(builder.Configuration["JwtSecurityKey"]!)
-//             )
-//         };
-//     });
 
-// Database connection
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Add CORS
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy => policy
@@ -86,13 +80,11 @@ builder.Services.AddScoped<IloginService, LoginService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
-
-app.UseHttpsRedirection();
 
 app.UseCors("Frontend");
 
@@ -102,4 +94,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
