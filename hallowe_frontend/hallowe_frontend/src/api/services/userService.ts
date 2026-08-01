@@ -14,6 +14,9 @@ export const userService = {
     login(user: User): Promise<any> {
         return useHttpClient().post('/user/login', user)
     },
+logout() {
+    return useHttpClient().post('/user/logout')
+},
     update(id: string | number, user: User): Promise<any> {
         return useHttpClient().put(`/user/${id}`, user)
     },
