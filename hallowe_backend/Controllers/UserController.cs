@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using hallowe_backend.DTOs;
 using hallowe_backend.Models;
 using hallowe_backend.Models.Login;
@@ -19,12 +20,19 @@ namespace hallowe_backend.Controllers
         private readonly IRegisterService _registerService;
         private readonly IloginService _loginService;
         private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public UserController(IRegisterService registerService, IloginService loginService, SignInManager<User> signInManager)
+        public UserController(
+            IRegisterService registerService, 
+            IloginService loginService, 
+            SignInManager<User> signInManager,
+            UserManager<User> userManager
+        )
         {
             _registerService = registerService;
             _loginService = loginService;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [Authorize]
@@ -41,7 +49,7 @@ namespace hallowe_backend.Controllers
         {
             return Ok(new
             { 
-                id = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value,
+                id = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 userName = User.Identity!.Name,
             });
         }
@@ -75,22 +83,65 @@ namespace hallowe_backend.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            /* await HttpContext.SignOutAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme); */
             await _signInManager.SignOutAsync();
             return NoContent();
         }
-        
+                
         [HttpGet("google")]
-        public IActionResult GoogleLogin() =>
-            Challenge(
-                new AuthenticationProperties { RedirectUri = "http://localhost:5173/add-address" },
-                GoogleDefaults.AuthenticationScheme);
+        public IActionResult GoogleLogin()
+        {
+            var props = _signInManager.ConfigureExternalAuthenticationProperties(
+                GoogleDefaults.AuthenticationScheme,
+                Url.Action(nameof(ExternalCallback))!);   // → /api/user/external-callback
+            return Challenge(props, GoogleDefaults.AuthenticationScheme);
+        }
 
         [HttpGet("facebook")]
-        public IActionResult FacebookLogin() =>
-            Challenge(
-                new AuthenticationProperties { RedirectUri = "http://localhost:5173/add-address" },
-                FacebookDefaults.AuthenticationScheme);
-    }
+        public IActionResult FacebookLogin()
+        {
+            var props = _signInManager.ConfigureExternalAuthenticationProperties(
+                FacebookDefaults.AuthenticationScheme,
+                Url.Action(nameof(ExternalCallback))!);
+            return Challenge(props, FacebookDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("external-callback")]
+        public async Task<IActionResult> ExternalCallback()
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info is null)
+                return Redirect("http://localhost:5173/login?error=external");
+
+            // Existing linked account?
+            var result = await _signInManager.ExternalLoginSignInAsync(
+                info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
+
+            if (!result.Succeeded)
+            {
+                // First time — create the user and link the login
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+                if (email is null)
+                    return Redirect("http://localhost:5173/login?error=noemail");
+
+                var user = await _userManager.FindByEmailAsync(email)
+                           ?? new User { Name = name, Email = email, EmailConfirmed = true };
+
+                if (user.Id == default)
+                {
+                    var created = await _userManager.CreateAsync(user);
+                    if (!created.Succeeded)
+                        return Redirect("http://localhost:5173/login?error=create");
+                }
+
+                await _userManager.AddLoginAsync(user, info);
+                await _signInManager.SignInAsync(user, isPersistent: true);
+            }
+
+            // External cookie has served its purpose
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            return Redirect("http://localhost:5173/add-address");
+            }
+        }
 }
