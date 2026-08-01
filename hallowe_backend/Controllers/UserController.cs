@@ -4,7 +4,6 @@ using hallowe_backend.Models;
 using hallowe_backend.Models.Login;
 using hallowe_backend.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
