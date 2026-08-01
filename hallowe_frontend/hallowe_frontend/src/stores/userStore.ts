@@ -29,36 +29,43 @@ export const useUserStore = defineStore('userStore', () => {
       user.value = null
       return false
     }
-  }
+  };
 
   async function login(credentials: User): Promise<boolean> {
-  
+    
     try {
-    await userService.login(credentials)
-    // Cookie is now set by the browser automatically (from Set-Cookie on this response).
-    // Fetch the user to populate the store:
-    // return await getUserInfo();
-  } catch(err) {
+      await userService.login(credentials)
+      // Cookie is now set by the browser automatically (from Set-Cookie on this response).
+      // Fetch the user to populate the store:
+      // return await getUserInfo();
+    } catch(err) {
       console.log('login POST failed', err)
       return false
+    }
+    
+    const ok = await getUserInfo();
+    
+    if (!ok) {
+      console.log('login OK but getUserInfo failed — cookie not being sent?')
+    }
+    
+    return ok  
   }
-
-  const ok = await getUserInfo();
-
-  if (!ok) {
-    console.log('login OK but getUserInfo failed — cookie not being sent?')
+  
+async function logOutUser(): Promise<boolean> {
+  try {
+    await userService.logout()
+    return true
+  } catch (error) {
+    console.error(error)
+    return false
+  } finally {
+    window.location.href = "/map"
   }
-
-  return ok  
-
 }
 
   function register(): void {
     window.location.href = '/register'
-  }
-
-  function logout(): void {
-    window.location.href = '/logout'
   }
 
   return {
@@ -68,6 +75,6 @@ export const useUserStore = defineStore('userStore', () => {
     getUserInfo,
     login,
     register,
-    logout,
+    logOutUser,
   }
-})
+});
