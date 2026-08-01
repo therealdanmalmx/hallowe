@@ -32,7 +32,7 @@
           </div>
         </RouterLink>
       </div>
-      <div class="block md:pl-4" v-if="isLoggedIn" @click="() => logout()">
+      <div class="block md:pl-4" v-if="isAuthenticated" @click="() => logOutUser()">
         Logout
       </div>
   </div>
@@ -40,24 +40,11 @@
 
 <script setup lang="ts">
   import { ref, onMounted } from "vue"
-  const isLoggedIn = ref(false);
+  import { useUserStore } from "../stores/userStore.ts"
+  import { userService } from "../api/services/userService"
 
-    onMounted(async () => {
-      const response = await fetch('http://localhost:5168/api/user/me', {
-        credentials: 'include',
-      })
 
-      isLoggedIn.value = response.ok
-    });
+  const { isAuthenticated, logOutUser } = useUserStore();
 
-    const logout = async () => {
-      const loggedOut = await fetch("http://localhost:5168/api/user/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (loggedOut.ok) {
-        window.location.href = '/map'
-      }
     }
   </script>
