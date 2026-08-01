@@ -38,7 +38,7 @@ export default defineComponent({
             />
             <button
                 v-if="searchText"
-                @click="clearSearch"
+                @click="clearSearch()"
                 type="button"
                 class="absolute inset-y-0 inset-e-0 flex items-center pe-3"
             >
