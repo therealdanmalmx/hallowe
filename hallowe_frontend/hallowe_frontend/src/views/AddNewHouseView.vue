@@ -135,7 +135,6 @@ const submitForm = async () => {
       longitude: form.value.longitude,
       city: form.value.city.trim(),
       trickOrTreat: form.value.trickOrTreat,
-      // date: format(form.value.date, "YYYY-MM-DD"),
       date: form.value.date!.toISOString().split("T")[0],
       startTime: form.value.startTime,
       endTime: form.value.endTime,
