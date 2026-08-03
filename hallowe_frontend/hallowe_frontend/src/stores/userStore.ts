@@ -9,12 +9,15 @@ export const useUserStore = defineStore('userStore', () => {
   const user = ref<User | null | undefined>(undefined)
   const isLoading = computed(() => user.value === undefined)
   const isAuthenticated = computed(() => !!user.value)
+  const userId = ref<string>("");
 
   async function getUserInfo(): Promise<boolean> {
     try {
       const { data } = await useHttpClient().get<User>('/user/me', {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
       })
+
+      userId.value = data.id;
 
       console.log('api/user returned:', data)
 
@@ -76,5 +79,6 @@ async function logOutUser(): Promise<boolean> {
     login,
     register,
     logOutUser,
+    userId,
   }
 });
