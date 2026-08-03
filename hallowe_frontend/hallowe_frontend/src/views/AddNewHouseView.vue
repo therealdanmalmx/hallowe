@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { locationServices } from '../api/services/locationServices';
+import { useUserStore } from "../stores/userStore.ts"
 import type { Location }  from '../types/interfaces';
+
+const { userId } = useUserStore();
 
 let isSubmitting = ref<boolean>(false);
 
@@ -107,6 +110,7 @@ const getLatLngForAddress = async (streetName: string, streetNumber: string, pos
 };
 
 const form = ref({
+  id: '',
   name: '',
   streetName: '',
   streetNumber: '',
@@ -127,6 +131,7 @@ const submitForm = async () => {
 
   if (form.value.date && getCoords) {
     const participant: Location = {
+      userId: userId,
       name: form.value.name.trim(),
       streetName: form.value.streetName.trim(),
       streetNumber: form.value.streetNumber.trim(),
@@ -139,6 +144,8 @@ const submitForm = async () => {
       startTime: form.value.startTime,
       endTime: form.value.endTime,
     }
+
+    console.log({participant})
 
     try {
       console.log({participant})
