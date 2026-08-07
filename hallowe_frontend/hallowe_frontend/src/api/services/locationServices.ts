@@ -11,10 +11,10 @@ export const locationServices = {
     create(participant: Location): Promise<any> {
         return useHttpClient().post('/location', participant)
     },
-    update(id: string | number, participant: Location): Promise<any> {
-        return useHttpClient().put(`/location/${id}`, participant)
+    update(userId: string, participant: Location): Promise<any> {
+        return useHttpClient().put(`/location/${userId}`, participant)
     },
-    delete(id: string | number): Promise<any> {
-        return useHttpClient().delete(`/location/${id}`)
-    }
+    // delete(id: string | number): Promise<any> {
+    //     return useHttpClient().delete(`/location/${id}`)
+    // }
 }
