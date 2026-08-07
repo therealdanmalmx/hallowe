@@ -1,5 +1,6 @@
 export interface Location {
     id?: number
+    userId: string;
     name: string,
     streetName: string,
     streetNumber: string,
