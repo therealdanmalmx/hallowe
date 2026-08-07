@@ -51,7 +51,8 @@
       </l-marker>
     </l-map>
   </div>
-  <div v-if="!locationStore.isLoading">
+  <div v-if="!
+  zoom.isLoading">
     <SearchComp />
     <AddNewAddress />
   </div>
@@ -71,14 +72,14 @@
     export default defineComponent({
       name: 'MapView',
       components: {
-          LMap,
-          LTileLayer,
-          LMarker,
-          LIcon,
-          LPopup,
-          AddNewAddress,
-          SearchComp,
-          RotateLoader
+        LMap,
+        LTileLayer,
+        LMarker,
+        LIcon,
+        LPopup,
+        AddNewAddress,
+        SearchComp,
+        RotateLoader
       },
 
       setup() {
@@ -114,6 +115,37 @@
           return locationStore.mapZoom || baseZoom.value;
         });
 
+        const users: User = [
+          {
+            userId: '56a495b5-31a1-4eb4-9dac-3c69038f8b4c',
+            name: 'Daniel Malmgren de Oliveira',
+            streetName: 'Torstensonsgatan',
+            streetNumber: '53',
+            postalCode: '503 42',
+            city: 'Borås',
+            trickOrTreat: true,
+            latitude: 57.7230154,
+            longitude: 12.9467115,
+            date: '2026-10-01',
+            startTime: '18:00:00',
+            endTime: '20:00:00',
+          },
+          {
+            userId: 'ed1fff37-b2c3-44ca-910e-77e203e92290',
+            name: 'Berit Andersson',
+            streetName: 'Folkungagatan',
+            streetNumber: '22',
+            postalCode: '506 35',
+            city: 'Borås',
+            trickOrTreat: true,
+            latitude: 57.7357605,
+            longitude: 12.945107,
+            date: '2026-10-01',
+            startTime: '12:00:00',
+            endTime: '14:00:00',
+          },
+        ]
+
         return {
           locationStore,
           userStore,
@@ -124,7 +156,8 @@
           color,
           size,
           currentCenter,
-          currentZoom
+          currentZoom,
+          users,
         }
       }
     })
