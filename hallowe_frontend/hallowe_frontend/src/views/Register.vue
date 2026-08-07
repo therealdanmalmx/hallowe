@@ -19,16 +19,6 @@
 
         <div class="space-y-4 mb-6">
           <div>
-            <label class="block text-orange-400 text-sm font-medium mb-2">Full Name</label>
-            <input
-              v-model="form.name"
-              type="text"
-              placeholder="Your name"
-              class="w-full px-4 py-3 bg-slate-900/50 border border-orange-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 transition-all"
-            />
-          </div>
-
-          <div>
             <label class="block text-orange-400 text-sm font-medium mb-2">Email</label>
             <input
               v-model="form.email"
@@ -123,16 +113,12 @@
   import type { User } from "../../types/interfaces";
 
   const showPassword = ref(false)
-  const form = ref({ name: '', email: '', password: '' })
+  const form = ref({ email: '', password: '' })
 
   const handleSocial = (provider) => console.log(`${provider} reg`);
 
 
   const submitForm = async () => {
-    
-    if (!form.value.name || form.value.name === "") {
-      console.log("Name is required")
-    }
 
     if (!form.value.email || form.value.email === "") {
       console.log("Email is required")
@@ -142,10 +128,9 @@
       console.log("Password is required")
     }
 
-    if (form.value.email && form.value.password && form.value.name) {
+    if (form.value.email && form.value.password) {
 
       const newUSer: User = {
-        name: form.value.name.trim(),
         email: form.value.email.trim(),
         password: form.value.password.trim(),
       }
