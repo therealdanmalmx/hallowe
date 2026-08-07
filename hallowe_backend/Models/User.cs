@@ -1,11 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 namespace hallowe_backend.Models
 {
     public class User : IdentityUser
     {
-        public required string Name { get; set; }
-
         [JsonIgnore]
         public Location? Location { get; set; }
 
@@ -14,16 +13,11 @@ namespace hallowe_backend.Models
         public User() {}
 
         public User(
-            string name,
-            string userName,
-            string email,
-            string phoneNumber
+            string email
         )
         {
-            Name = name;
-            UserName = userName;
             Email = email;
-            PhoneNumber = phoneNumber;
+            UserName = email;
         }
     }
 }
