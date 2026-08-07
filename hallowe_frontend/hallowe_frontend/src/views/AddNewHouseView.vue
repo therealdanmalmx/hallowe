@@ -188,12 +188,13 @@ const submitForm = async () => {
     }
 
     try {
-      const location = hasLocation ? locationServices.update(userId.value, participant) : locationServices.create(participant);
+      const location = hasLocation.value ? locationServices.update(userId.value, participant) : locationServices.create(participant);
 
       if (location) {
         submitted.value = true
         isSubmitting.value = false;
       }
+      return;
       
     } catch (error) {
       error.value = error;
