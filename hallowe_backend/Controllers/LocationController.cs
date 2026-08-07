@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using hallowe_backend.Data;
+using hallowe_backend.DTOs;
 using hallowe_backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +26,7 @@ namespace hallowe_backend.Controllers
         public async Task<ActionResult<IEnumerable<Location>>> Get()
         {
             var locations = await _db.Locations
-                .Include(l => l.User)  // ✅ Loads User.Name!
+                .Include(l => l.User) 
                 .ToListAsync();
 
             if (!locations.Any())
@@ -35,31 +37,89 @@ namespace hallowe_backend.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Location location)
+        public async Task<IActionResult> Post([FromBody] AddNewLocationRequest addLocation)
         {
-            if (location == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            if(userId is null)
+            {
+                return Unauthorized();
+            }
+            
+            if (addLocation is null)
             {
                 return BadRequest("Location cannot be null");
             }
 
             var existingLocation = await _db.Locations
-                .FirstOrDefaultAsync(l => l.StreetName == location.StreetName
-                    && l.StreetNumber == location.StreetNumber
-                    && l.PostalCode == location.PostalCode);
+                .FirstOrDefaultAsync(l => l.StreetName == addLocation.StreetName
+                    && l.StreetNumber == addLocation.StreetNumber
+                    && l.PostalCode == addLocation.PostalCode);
 
             if (existingLocation != null)
             {
                 return BadRequest("Location already registered");
             }
 
-            var locations = await _db.Locations
-                .Include(l => l.User)
-                .ToListAsync();
+            var newLocation = new Location
+            {
+                UserId = userId!,
+                Name = addLocation.Name,
+                StreetName = addLocation.StreetName,
+                StreetNumber = addLocation.StreetNumber,
+                City = addLocation.City,
+                PostalCode = addLocation.PostalCode,
+                Latitude = addLocation.Latitude,
+                Longitude = addLocation.Longitude,
+                TrickOrTreat = addLocation.TrickOrTreat,
+                Date = addLocation.Date,
+                StartTime = addLocation.StartTime,
+                EndTime = addLocation.EndTime,
+            };
 
-            _db.Locations.Add(location);
+            _db.Locations.Add(newLocation);
             await _db.SaveChangesAsync();
 
-            return CreatedAtRoute(new { id = location.Id }, location);
+            return CreatedAtAction(nameof(Get), new { userId }, newLocation.Id);        }
+
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> Put(string userId, [FromBody] UpdateLocationRequest updateLocation)
+        {
+            
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            if (currentUserId is null)
+            {
+                return Unauthorized();
+            }
+            
+            if (!string.Equals(currentUserId, userId, StringComparison.Ordinal))
+            {
+                return Forbid();
+            }
+
+            var existingLocation = await _db.Locations.FirstOrDefaultAsync(l => l.UserId == userId);
+            
+            if (existingLocation is null)
+            {
+                return NotFound("You are not authorized to update this location");
+            }
+            
+            existingLocation.Name = updateLocation.Name;
+            existingLocation.StreetName = updateLocation.StreetName;
+            existingLocation.StreetNumber = updateLocation.StreetNumber;
+            existingLocation.PostalCode = updateLocation.PostalCode;
+            existingLocation.City = updateLocation.City;
+            existingLocation.Latitude = updateLocation.Latitude;
+            existingLocation.Longitude = updateLocation.Longitude;
+            existingLocation.TrickOrTreat = updateLocation.TrickOrTreat;
+            existingLocation.Date = updateLocation.Date;
+            existingLocation.StartTime = updateLocation.StartTime;
+            existingLocation.EndTime = updateLocation.EndTime;
+            
+            await _db.SaveChangesAsync();
+
+            return Ok(existingLocation);
         }
     }
 }
