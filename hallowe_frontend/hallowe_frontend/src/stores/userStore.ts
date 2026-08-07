@@ -19,8 +19,6 @@ export const useUserStore = defineStore('userStore', () => {
 
       userId.value = data.id;
 
-      console.log('api/user returned:', data)
-
       if (typeof data === 'object' && data !== null && typeof data.userName === 'string' && data.userName !== '') {
         user.value = data
         return true
