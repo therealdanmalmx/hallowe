@@ -18,8 +18,6 @@
 
       const { filteredLocations, searchText, isLoading, error } = storeToRefs(locationStore);
 
-      console.log({ filteredLocations });
-
       const sortedAndFilteredParticipants = computed(() => {
         return filteredLocations.value.sort((a: any, b: any) =>
         a.city.localeCompare(b.city)
