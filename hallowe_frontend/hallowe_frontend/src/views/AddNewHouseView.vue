@@ -375,7 +375,6 @@ const toISODate = (date: Date) => {
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysAfter.getMonth() + 1}}</span>
           </label>
         </div>
-        {{ form.date }}
       </div>
       <div class="flex justify-between gap-x-4 ">
         <div class="text-left w-1/2">
