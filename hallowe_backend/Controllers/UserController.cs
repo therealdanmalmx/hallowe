@@ -124,7 +124,7 @@ namespace hallowe_backend.Controllers
                     return Redirect("http://localhost:5173/login?error=noemail");
 
                 var user = await _userManager.FindByEmailAsync(email)
-                           ?? new User { Name = name, Email = email, EmailConfirmed = true };
+                           ?? new User { Email = email, EmailConfirmed = true };
 
                 if (user.Id == default)
                 {
