@@ -28,10 +28,8 @@ namespace hallowe_backend.Services
         {
             var newUser = new User
             {
-                Name = request.Name,
                 UserName = request.Email,
                 Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
             };
 
             var result = await _userManager.CreateAsync(newUser, request.Password);
