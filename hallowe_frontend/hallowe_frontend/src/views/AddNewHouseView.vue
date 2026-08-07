@@ -194,8 +194,7 @@ const submitForm = async () => {
         submitted.value = true
         isSubmitting.value = false;
       }
-      return;
-      
+            
     } catch (error) {
       error.value = error;
       console.error(error);
