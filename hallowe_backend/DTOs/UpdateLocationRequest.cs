@@ -4,7 +4,7 @@ using hallowe_backend.Models;
 
 namespace hallowe_backend.DTOs;
 
-public class AddNewLocation
+public class UpdateLocationRequest
 {
     [MaxLength(35)]
     public required string Name { get; set; }
