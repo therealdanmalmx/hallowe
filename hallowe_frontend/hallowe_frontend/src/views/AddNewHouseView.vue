@@ -1,18 +1,25 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted, reactive } from 'vue'
+import {storeToRefs} from 'pinia'
 import { locationServices } from '../api/services/locationServices';
 import { useUserStore } from "../stores/userStore.ts"
+import { useLocationStore } from "../stores/locationStore.ts"
 import type { Location }  from '../types/interfaces';
 
-const { userId } = useUserStore();
+const locationStore = useLocationStore();
+const userStore = useUserStore();
+const { userId, isAuthenticated } = storeToRefs(userStore);
+const { locations } = storeToRefs(locationStore)
 
+let hasLocation = ref<boolean>(false);
 let isSubmitting = ref<boolean>(false);
-
+let isDeleting = ref<boolean>(false);
+let error = ref<string>("");
+  
 const year = ref(new Date);
 let currentYear = year.value.getFullYear();
 const currentDay = year.value.getDate();
 const currentMonth = year.value.getMonth() + 1;
-
 
 const formatDate = (date: Date): string => {
   const day = date.getDate();
@@ -26,27 +33,26 @@ const formatDate = (date: Date): string => {
   return currentDate;
 };
 
-const getDayOfTheWeek = (date: Date) => {
-
-  switch (date.getDay()) {
-    case 0:
-      return 'Måndag'
-    case 1:
-      return 'Tisdag'
-    case 2:
-      return 'Onsdag'
-    case 3:
-      return 'Torsdag'
-    case 4:
-      return 'Fredag'
-    case 5:
-      return 'Lördag'
-    case 6:
-      return 'Söndag'
+const getDayOfTheWeek = (date: Date | string | number) => {
+  const day = date instanceof Date ? date : new Date(date)
+  if (isNaN(day.getTime())) {
+    return ''
   }
-};
 
-const getChosenMonth = (date: Date) => {
+  const days = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag']
+  return days[day.getDay()]
+}
+
+const chosenDate = computed(() => {
+  const date = new Date(form.date)
+  return isNaN(date.getTime()) ? null : date
+});
+
+const getChosenMonth = (date: Date | string | number) => {
+  const month = date instanceof Date ? date : new Date(date)
+  if (isNaN(month.getTime())) {
+    return ''
+  }
   switch (date.getMonth() + 1) {
     case 10:
       return 'Oktober'
@@ -80,7 +86,7 @@ const getDaysAroundOctober31 = (year: number) => {
     oneDaysAfter,
     twoDaysAfter,
   };
-}
+};
 
 const getLatLngForAddress = async (streetName: string, streetNumber: string, postalCode: string, city: string): Promise<boolean> => {
   const address = `${streetNumber} ${streetName}, ${postalCode} ${city}`;
@@ -96,22 +102,24 @@ const getLatLngForAddress = async (streetName: string, streetNumber: string, pos
     const data = await response.json();
 
     if (data.length > 0) {
-      form.value.latitude = parseFloat(data[0].lat);
-      form.value.longitude = parseFloat(data[0].lon);
+      form.latitude = parseFloat(data[0].lat);
+      form.longitude = parseFloat(data[0].lon);
       return true;
     } else {
       console.error('Geocoding failed: No results found');
       return false;
     }
   } catch (error) {
+    error.value = error;
     console.error('Error fetching geocoding data:', error);
     return false;
   }
 };
 
-const form = ref({
+const form = reactive({
   id: '',
   name: '',
+  userId: '',
   streetName: '',
   streetNumber: '',
   postalCode: '',
@@ -122,35 +130,65 @@ const form = ref({
   date: null as Date | null,
   startTime: '',
   endTime: '',
-})
+});
+
 const submitted = ref(false);
+
+onMounted(async () => {
+  await locationStore.getAllParticiants()   // ← actually load the data
+})
+
+
+watch(locations, (loc) => {
+
+  if (!isAuthenticated.value || !loc) {
+    return
+  }
+
+  const userLocation = locations.value.find(l => {
+    return l.userId === userId.value
+  })
+
+  if (!userLocation) {
+    return
+  }
+
+  hasLocation.value = true;
+  
+  form.name = userLocation.name;
+  form.userId = userLocation.userId;
+  form.streetName = userLocation.streetName;
+  form.streetNumber = userLocation.streetNumber;
+  form.postalCode = userLocation.postalCode;
+  form.city = userLocation.city;
+  form.date = userLocation.date;
+  form.startTime = userLocation.startTime;
+  form.endTime = userLocation.endTime;
+  form.trickOrTreat = isAuthenticated ? true : false;
+}, { immediate: true, deep: true });
 
 const submitForm = async () => {
   isSubmitting.value = true;
-  const getCoords = await getLatLngForAddress(form.value.streetName, form.value.streetNumber, form.value.postalCode, form.value.city);
+  const getCoords = await getLatLngForAddress(form.streetName, form.streetNumber, form.postalCode, form.city);
 
-  if (form.value.date && getCoords) {
+  if (form.date && getCoords) {
     const participant: Location = {
-      userId: userId,
-      name: form.value.name.trim(),
-      streetName: form.value.streetName.trim(),
-      streetNumber: form.value.streetNumber.trim(),
-      postalCode: form.value.postalCode.trim(),
-      latitude: form.value.latitude,
-      longitude: form.value.longitude,
-      city: form.value.city.trim(),
-      trickOrTreat: form.value.trickOrTreat,
-      date: form.value.date!.toISOString().split("T")[0],
-      startTime: form.value.startTime,
-      endTime: form.value.endTime,
+      userId: hasLocation.value ? form.userId : userId.value,
+      name: form.name.trim(),
+      streetName: form.streetName.trim(),
+      streetNumber: form.streetNumber.trim(),
+      postalCode: form.postalCode.trim(),
+      latitude: form.latitude,
+      longitude: form.longitude,
+      city: form.city.trim(),
+      trickOrTreat: form.trickOrTreat,
+      date: form.date,
+      startTime: form.startTime,
+      endTime: form.endTime,
     }
 
-    console.log({participant})
-
     try {
-      console.log({participant})
-      const location = locationServices.create(participant);
-      console.log({location})
+      const location = hasLocation ? locationServices.update(userId.value, participant) : locationServices.create(participant);
 
       if (location) {
         submitted.value = true
@@ -158,24 +196,35 @@ const submitForm = async () => {
       }
       
     } catch (error) {
+      error.value = error;
       console.error(error);
     }
   }
 }
 
+const deleteLocation = () => {
+  confirm("Vill du radera både din address och ditt konto?");
+};
+
 const isFormInvalid = computed(() => {
   return (
-    form.value.name.trim() &&
-    form.value.streetName.trim() &&
-    form.value.streetNumber.trim() &&
-    form.value.postalCode &&
-    form.value.city.trim() &&
-    form.value.date &&
-    form.value.startTime &&
-    form.value.endTime
-
+    form.name.trim() &&
+    form.streetName.trim() &&
+    form.streetNumber.trim() &&
+    form.postalCode &&
+    form.city.trim() &&
+    form.date &&
+    form.startTime &&
+    form.endTime
   )
-})
+});
+
+const toISODate = (date: Date) => {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
 
 //TODO: Lägg till validering för formuläret samt fixa disabled knappen
 </script>
@@ -279,7 +328,7 @@ const isFormInvalid = computed(() => {
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(currentYear).twoDaysBefore"
+              :value="toISODate(getDaysAroundOctober31(currentYear).twoDaysBefore)"
               class="h-4 w-4 accent-orange-500"
             />
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysBefore.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysBefore.getMonth() +1}}</span>
@@ -289,7 +338,7 @@ const isFormInvalid = computed(() => {
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(currentYear).oneDaysBefore"
+              :value="toISODate(getDaysAroundOctober31(currentYear).oneDaysBefore)"
               class="h-4 w-4 accent-orange-500"
             />
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).oneDaysBefore.getDate()}} / {{getDaysAroundOctober31(currentYear).oneDaysBefore.getMonth() + 1}}</span>
@@ -299,7 +348,7 @@ const isFormInvalid = computed(() => {
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(currentYear).oct31"
+              :value="toISODate(getDaysAroundOctober31(currentYear).oct31)"
               class="h-4 w-4 accent-orange-500"
             />
             <span class="ml-2 xl:text-orange-600">{{getDaysAroundOctober31(currentYear).oct31.getDate()}} / {{getDaysAroundOctober31(currentYear).oct31.getMonth() + 1 }}</span>
@@ -310,7 +359,7 @@ const isFormInvalid = computed(() => {
             <input
               type="radio"
               v-model="form.date"
-              :value="getDaysAroundOctober31(currentYear).oneDaysAfter"
+              :value="toISODate(getDaysAroundOctober31(currentYear).oneDaysAfter)"
               class="h-4 w-4 accent-orange-500"
             />
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).oneDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).oneDaysAfter.getMonth() + 1}}</span>
@@ -326,6 +375,7 @@ const isFormInvalid = computed(() => {
             <span class="ml-2">{{getDaysAroundOctober31(currentYear).twoDaysAfter.getDate()}} / {{getDaysAroundOctober31(currentYear).twoDaysAfter.getMonth() + 1}}</span>
           </label>
         </div>
+        {{ form.date }}
       </div>
       <div class="flex justify-between gap-x-4 ">
         <div class="text-left w-1/2">
@@ -339,8 +389,7 @@ const isFormInvalid = computed(() => {
       </div>
 
       <div v-if="form.date && form.startTime && form.endTime" class="flex items-center my-4 mt-8 text-sm text-[#FF7518]">
-        Du har valt att fira Halloween på {{ getDayOfTheWeek(form.date) }} den {{ form.date.getDate()}}:e {{ getChosenMonth(form.date) }}  mellan {{ form.startTime }} och {{ form.endTime }}
-      </div>
+        Du har valt att fira Halloween på {{ getDayOfTheWeek(chosenDate) }} den {{ chosenDate.getDate() }}:e {{ getChosenMonth(chosenDate) }} mellan {{ form.startTime.slice(0, 5) }} och {{ form.endTime.slice(0, 5) }}      </div>
       <div class="flex items-center my-4 mt-8">
         <input
           v-model="form.trickOrTreat"
@@ -363,15 +412,25 @@ const isFormInvalid = computed(() => {
         ]"
       >
         <i v-if="isSubmitting" class="pi pi-spin pi-spinner-dotted font-bold text-xl"></i>
-        <span v-else>Skicka in</span>
+        <span v-else>{{ hasLocation ? "Uppdatera address" : "Skicka in"}}</span>
+      </button>
+
+      <button
+        v-if="hasLocation"
+        type="submit"
+        @click="deleteLocation"
+        class="w-full h-12 font-semibold py-2 px-4 rounded-lg mt-4 shadow-2xl transition bg-[#ff1818]!  hover:bg-[#9AFF6B]"
+      >
+        <i v-if="isDeleting" class="pi pi-spin pi-spinner-dotted font-bold text-xl"></i>
+        <span v-else>Radera konto</span>
       </button>
 
       <p v-if="submitted" class="text-green-500 text-center mt-4 font-medium">
-        Tack, {{ form.name }}! Din adress har sparats! 🧡
+        Tack, {{ form.name.split(" ")[0] }}! Din {{ hasLocation ? "information" : "adress"}} har {{hasLocation ? "uppdaterats!" : "sparats!"}} 🧡
       </p>
-      <!-- <p v-if="!submitted" class="text-red-500 text-center mt-4 font-medium">
+      <p v-if="error" class="text-red-500 text-center mt-4 font-medium">
         Din adress kunde inte sparas! Försök igen.
-      </p> -->
+      </p>
 
     </form>
   </div>
