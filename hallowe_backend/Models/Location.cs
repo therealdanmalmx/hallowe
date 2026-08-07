@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+
 namespace hallowe_backend.Models
 {
     public class Location
@@ -15,13 +17,15 @@ namespace hallowe_backend.Models
         public required string City { get; set; }
         [MaxLength(6)]
         public required string PostalCode { get; set; }
-        public required decimal Latitude { get; set; }
-        public required decimal Longitude { get; set; }
-        public required bool TrickOrTreat { get; set; }
+        [Precision(9, 6)]
+        public decimal Latitude { get; set; }
+        [Precision(9, 6)]
+        public decimal Longitude { get; set; }
+        public bool TrickOrTreat { get; set; }
         public DateOnly Date { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
-        public required string UserId { get; set; } = default!;
+        public required string UserId { get; set; }
         [JsonIgnore]
         public User? User { get; set; } = default!;
     }
