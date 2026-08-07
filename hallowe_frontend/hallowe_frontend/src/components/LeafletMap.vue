@@ -51,8 +51,7 @@
       </l-marker>
     </l-map>
   </div>
-  <div v-if="!
-  zoom.isLoading">
+  <div v-if="!locationStore.isLoading">
     <SearchComp />
     <AddNewAddress />
   </div>
