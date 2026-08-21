@@ -5,6 +5,7 @@ import { locationServices } from '../api/services/locationServices';
 import { useUserStore } from "../stores/userStore.ts"
 import { useLocationStore } from "../stores/locationStore.ts"
 import type { Location }  from '../types/interfaces';
+import DeleteDialog from '../components/DeleteDialog.vue';
 
 const locationStore = useLocationStore();
 const userStore = useUserStore();
@@ -15,7 +16,7 @@ let hasLocation = ref<boolean>(false);
 let isSubmitting = ref<boolean>(false);
 let isDeleting = ref<boolean>(false);
 let error = ref<string>("");
-  
+
 const year = ref(new Date);
 let currentYear = year.value.getFullYear();
 const currentDay = year.value.getDate();
@@ -167,7 +168,16 @@ watch(locations, (loc) => {
   form.trickOrTreat = isAuthenticated ? true : false;
 }, { immediate: true, deep: true });
 
+const baseline = ref(null);
+const isDirty = computed(() => baseline.value !== form);
+
 const submitForm = async () => {
+  
+  if (hasLocation.value && !isDirty.value) {
+    submitted.value = "Inga ändringar att spara.";
+    return;
+  }
+
   isSubmitting.value = true;
   const getCoords = await getLatLngForAddress(form.streetName, form.streetNumber, form.postalCode, form.city);
 
@@ -188,13 +198,15 @@ const submitForm = async () => {
     }
 
     try {
-      const location = hasLocation.value ? locationServices.update(userId.value, participant) : locationServices.create(participant);
+      const location = hasLocation.value ? await locationServices.update(userId.value, participant) : await locationServices.create(participant);
 
-      if (location) {
-        submitted.value = true
-        isSubmitting.value = false;
-      }
-            
+      if (!location) {
+        return;
+      } 
+      baseline.value = form;          // now "clean" again
+      submitted.value = `Tack, ${form.name.split(" ")[0]}! Din ${hasLocation.value ? "information" : "adress"} har ${hasLocation .value? "uppdaterats!" : "sparats!"} 🧡`
+      isSubmitting.value = false;
+      
     } catch (error) {
       error.value = error;
       console.error(error);
@@ -204,6 +216,7 @@ const submitForm = async () => {
 
 const deleteLocation = () => {
   confirm("Vill du radera både din address och ditt konto?");
+  DeleteDialog;
 };
 
 const isFormInvalid = computed(() => {
@@ -414,18 +427,17 @@ const toISODate = (date: Date) => {
         <span v-else>{{ hasLocation ? "Uppdatera address" : "Skicka in"}}</span>
       </button>
 
-      <button
+      <div
         v-if="hasLocation"
         type="submit"
-        @click="deleteLocation"
-        class="w-full h-12 font-semibold py-2 px-4 rounded-lg mt-4 shadow-2xl transition bg-[#ff1818]!  hover:bg-[#9AFF6B]"
+        
       >
         <i v-if="isDeleting" class="pi pi-spin pi-spinner-dotted font-bold text-xl"></i>
-        <span v-else>Radera konto</span>
-      </button>
+        <span v-else><DeleteDialog /></span>
+      </div>
 
       <p v-if="submitted" class="text-green-500 text-center mt-4 font-medium">
-        Tack, {{ form.name.split(" ")[0] }}! Din {{ hasLocation ? "information" : "adress"}} har {{hasLocation ? "uppdaterats!" : "sparats!"}} 🧡
+        {{ submitted }}
       </p>
       <p v-if="error" class="text-red-500 text-center mt-4 font-medium">
         Din adress kunde inte sparas! Försök igen.
