@@ -14,7 +14,7 @@ export const locationServices = {
     update(userId: string, participant: Location): Promise<any> {
         return useHttpClient().put(`/location/${userId}`, participant)
     },
-    // delete(id: string | number): Promise<any> {
-    //     return useHttpClient().delete(`/location/${id}`)
-    // }
+    delete(id: string | number): Promise<any> {
+        return useHttpClient().delete(`/location/${id}`)
+    }
 }
