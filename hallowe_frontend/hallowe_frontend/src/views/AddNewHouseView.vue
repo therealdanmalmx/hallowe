@@ -45,7 +45,11 @@ const getDayOfTheWeek = (date: Date | string | number) => {
 }
 
 const chosenDate = computed(() => {
-  const date = new Date(form.date)
+  if (!form.date) {
+    return null
+  }
+
+  const date = form.date instanceof Date ? form.date : new Date(form.date)
   return isNaN(date.getTime()) ? null : date
 });
 
@@ -54,7 +58,7 @@ const getChosenMonth = (date: Date | string | number) => {
   if (isNaN(month.getTime())) {
     return ''
   }
-  switch (date.getMonth() + 1) {
+  switch (month.getMonth() + 1) {
     case 10:
       return 'Oktober'
     case 11:
@@ -110,9 +114,9 @@ const getLatLngForAddress = async (streetName: string, streetNumber: string, pos
       console.error('Geocoding failed: No results found');
       return false;
     }
-  } catch (error) {
-    error.value = error;
-    console.error('Error fetching geocoding data:', error);
+  } catch (err: unknown) {
+    error.value = err instanceof Error ? err.message : String(err);
+    console.error('Error fetching geocoding data:', err);
     return false;
   }
 };
@@ -133,7 +137,7 @@ const form = reactive({
   endTime: '',
 });
 
-const submitted = ref(false);
+const submitted = ref('');
 
 onMounted(async () => {
   await locationStore.getAllParticiants()   // ← actually load the data
@@ -168,7 +172,7 @@ watch(locations, (loc) => {
   form.trickOrTreat = isAuthenticated ? true : false;
 }, { immediate: true, deep: true });
 
-const baseline = ref(null);
+const baseline = ref<typeof form | null>(null);
 const isDirty = computed(() => baseline.value !== form);
 
 const submitForm = async () => {
@@ -207,9 +211,9 @@ const submitForm = async () => {
       submitted.value = `Tack, ${form.name.split(" ")[0]}! Din ${hasLocation.value ? "information" : "adress"} har ${hasLocation .value? "uppdaterats!" : "sparats!"} 🧡`
       isSubmitting.value = false;
       
-    } catch (error) {
-      error.value = error;
-      console.error(error);
+    } catch (err: unknown) {
+      error.value = err instanceof Error ? err.message : String(err);
+      console.error(err);
     }
   }
 }
@@ -401,7 +405,7 @@ const toISODate = (date: Date) => {
       </div>
 
       <div v-if="form.date && form.startTime && form.endTime" class="flex items-center my-4 mt-8 text-sm text-[#FF7518]">
-        Du har valt att fira Halloween på {{ getDayOfTheWeek(chosenDate) }} den {{ chosenDate.getDate() }}:e {{ getChosenMonth(chosenDate) }} mellan {{ form.startTime.slice(0, 5) }} och {{ form.endTime.slice(0, 5) }}      </div>
+        Du har valt att fira Halloween på {{ getDayOfTheWeek(chosenDate as Date) }} den {{ (chosenDate as Date).getDate() }}:e {{ getChosenMonth(chosenDate as Date) }} mellan {{ form.startTime.slice(0, 5) }} och {{ form.endTime.slice(0, 5) }}      </div>
       <div class="flex items-center my-4 mt-8">
         <input
           v-model="form.trickOrTreat"
