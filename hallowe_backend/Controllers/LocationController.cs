@@ -121,5 +121,29 @@ namespace hallowe_backend.Controllers
 
             return Ok(existingLocation);
         }
+
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> Delete(string userId)
+        {
+            var getUsersAddress = await _db.Locations.FirstOrDefaultAsync(l => l.UserId == userId);
+
+            if (getUsersAddress is null)
+            {
+                return NotFound("Location not found");
+            }
+            
+            var user = await _db.Users.FindAsync(getUsersAddress.UserId);
+
+            if (user is null)
+            {
+                return NotFound("User not found");
+            }
+            
+            _db.Locations.Remove(getUsersAddress);
+            _db.Users.Remove(user);
+            await _db.SaveChangesAsync();
+            
+            return NoContent();
+        }
     }
 }
