@@ -3,8 +3,8 @@
   import { defineComponent } from 'vue';
 
   import LeafletMap from '../components/LeafletMap.vue';
-import { useLocationStore } from '../stores/locationStore';
-import { useUserStore } from '../stores/userStore';
+  import { useLocationStore } from '../stores/locationStore';
+  import { useUserStore } from '../stores/userStore';
 
   export default defineComponent({
     name: 'MapView',
@@ -18,8 +18,6 @@ import { useUserStore } from '../stores/userStore';
       return { locationStore, userStore }
     }
   })
-
-
 
 </script>
 
