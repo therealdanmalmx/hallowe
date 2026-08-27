@@ -115,11 +115,10 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { useUserStore } from "../stores/userStore.ts"
-  import type { User } from '../../types/interfaces';
-  import { isAxiosError } from "axios";
-  import {router} from "../router";
+  import { ref } from 'vue';
+  import { router } from "../router";
+  import { useUserStore } from "../stores/userStore.ts";
+  import type { User } from '../types/interfaces.ts';
 
   const showPassword = ref(false);
   const submitted = ref(false);
@@ -127,7 +126,7 @@
   const form = ref({ userName: '', password: '' })
   const {login} = useUserStore();
 
-  const handleSocial = (provider) => console.log(`${provider} auth`);
+  const handleSocial = (provider: string) => console.log(`${provider} auth`);
   
   const googleAuth = () => {
     window.location.href = 'http://localhost:5168/api/user/google'
