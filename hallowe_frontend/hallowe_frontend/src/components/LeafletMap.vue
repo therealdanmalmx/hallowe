@@ -51,7 +51,7 @@
       </l-marker>
     </l-map>
   </div>
-  <div v-if="!locationStore.isLoading">
+  <div v-if="!locationStore.isLoading" class="py-4">
     <SearchComp />
     <AddNewAddress />
   </div>
