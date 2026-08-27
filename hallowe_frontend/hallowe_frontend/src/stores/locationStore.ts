@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import { locationServices } from "../api/services/locationServices";
 import type { Location } from "../types/interfaces";
+import { useToast } from "vue-toastification";
 
 export const useLocationStore = defineStore('locationStore', () => {
 
@@ -9,6 +10,8 @@ export const useLocationStore = defineStore('locationStore', () => {
     const isLoading = ref<boolean>(false);
     const error = ref<string | null>(null);
     const searchText = ref<string>("");
+    const toast = useToast();
+
 
     const mapCenter = ref<{ lat: number; lng: number } | null>(null);
     const mapZoom = ref<number | null>(12);
@@ -64,8 +67,7 @@ export const useLocationStore = defineStore('locationStore', () => {
             locations.value = response.data;
             isLoading.value = false;
         } catch (err) {
-            console.error('Failed to fetch Location:', err);
-            error.value = "Kunde inte ladda deltagare. Försök igen";
+            toast.error("Kunde inte ladda deltagare. Försök igen senare.", {timeout: 3000});
             isLoading.value = false;
             throw error;
         }
@@ -81,6 +83,7 @@ export const useLocationStore = defineStore('locationStore', () => {
         isLoading,
         getAllParticiants,
         zoomToLocation,
-        resetMapView
+        resetMapView,
+        toast
     }
 });
