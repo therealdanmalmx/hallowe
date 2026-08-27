@@ -67,10 +67,9 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from "vue"
+  import { ref } from "vue";
   import { useRouter } from "vue-router";
-  import { useUserStore } from "../stores/userStore.ts"
-  import { userService } from "../api/services/userService"
+  import { useUserStore } from "../stores/userStore.ts";
   
   const router = useRouter();
 
