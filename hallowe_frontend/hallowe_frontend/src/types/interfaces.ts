@@ -15,7 +15,7 @@ export interface Location {
 }
 
 export interface User {
-    id: string,
+    id?: string,
     userName: string,
     password: string,
     email?: string,
