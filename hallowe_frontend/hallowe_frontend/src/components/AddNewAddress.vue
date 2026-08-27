@@ -23,7 +23,7 @@
   const toast = useToast();
 
   const sendToAddress = () => {
-    toast.warning("Du måste ha ett konto för att registrera en address", {timeout: 3000})
+    toast.warning("Du måste ha ett konto för att lägga till en address", {timeout: 3000})
   }
 
 </script>
