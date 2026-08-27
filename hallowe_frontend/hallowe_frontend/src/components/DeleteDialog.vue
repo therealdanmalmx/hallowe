@@ -39,7 +39,7 @@
                             <button
                                 type="button"
                                 class="flex-1! rounded-xl! py-3! font-semibold! bg-[#ff1818]! border-none! text-white! shadow-lg! hover:bg-[#c90000]!"
-                                @click="visible = false"
+                                @click="deleteLoactionAndUser(), visible = false"
                             >
                                 Radera
                             </button>
@@ -53,7 +53,33 @@
 
 <script setup>
 import { ref } from 'vue';
+import { locationServices } from '../api/services/locationServices';
+import { useUserStore } from "../stores/userStore.ts"
+import { storeToRefs } from 'pinia'
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const userStore = useUserStore();
+const { userId, isAuthenticated } = storeToRefs(userStore);
+const { logOutUser } = useUserStore();
 
 const visible = ref(false);
+
+const deleteLoactionAndUser = async () => {
+    try {
+        const location = await locationServices.delete(userId.value);
+
+        if (!location) {
+            return;
+        }
+
+        await logOutUser();
+        router.push("/map")
+
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 </script>
