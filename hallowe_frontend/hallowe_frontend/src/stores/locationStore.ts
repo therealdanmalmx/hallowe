@@ -67,7 +67,7 @@ export const useLocationStore = defineStore('locationStore', () => {
             locations.value = response.data;
             isLoading.value = false;
         } catch (err) {
-            toast.error("Kunde inte ladda deltagare. Försök igen senare.", {timeout: 3000});
+            toast.error("Kunde inte ladda deltagare. Försök igen senare.", {timeout: false});
             isLoading.value = false;
             throw error;
         }
