@@ -182,9 +182,8 @@ const submitForm = async () => {
     return;
   }
 
-  isSubmitting.value = true;
   const getCoords = await getLatLngForAddress(form.streetName, form.streetNumber, form.postalCode, form.city);
-
+  
   if (form.date && getCoords) {
     const participant: Location = {
       userId: hasLocation.value ? form.userId : userId.value,
@@ -200,10 +199,11 @@ const submitForm = async () => {
       startTime: form.startTime,
       endTime: form.endTime,
     }
-
+    
     try {
+      isSubmitting.value = true;
       const location = hasLocation.value ? await locationServices.update(userId.value, participant) : await locationServices.create(participant);
-
+      
       if (!location) {
         return;
       } 
@@ -214,15 +214,10 @@ const submitForm = async () => {
     } catch (err: unknown) {
       error.value = err instanceof Error ? err.message : String(err);
       console.error(err);
+      isSubmitting.value = true;
     }
   }
 }
-
-const deleteLocation = () => {
-  confirm("Vill du radera både din address och ditt konto?");
-  DeleteDialog;
-};
-
 const isFormInvalid = computed(() => {
   return (
     form.name.trim() &&
@@ -233,6 +228,19 @@ const isFormInvalid = computed(() => {
     form.date &&
     form.startTime &&
     form.endTime
+  )
+});
+
+const updatedForm = computed(() => {
+  return (
+    form.name !== form.name && form.name,
+    form.streetName !== form.streetName && form.streetName,
+    form.streetNumber !== form.streetNumber && form.streetNumber, 
+    form.postalCode !== form.postalCode && form.postalCode,
+    form.city !== form.city && form.city,
+    form.date !== form.date && form.date,
+    form.startTime !== form.startTime && form.startTime,
+    form.endTime !== form.endTime && form.endTime
   )
 });
 
