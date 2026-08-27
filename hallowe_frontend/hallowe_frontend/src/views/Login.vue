@@ -119,7 +119,9 @@
   import { router } from "../router";
   import { useUserStore } from "../stores/userStore.ts";
   import type { User } from '../types/interfaces.ts';
+  import { useToast } from "vue-toastification";
 
+  const toast = useToast();
   const showPassword = ref(false);
   const submitted = ref(false);
   const isSubmitting = ref(true);
@@ -157,6 +159,7 @@
     if (ok) {
       router.push('/add-address')
     } else {
+      toast.error("Du kunde inte loggas in. Prova igen.", {timeout: 3000});
       submitted.value = true
     }
   }

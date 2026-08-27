@@ -110,12 +110,23 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { userService } from "../api/services/userService"
-  import type { User } from "../../types/interfaces";
+  import type { User } from '../types/interfaces';
+  import { useToast } from "vue-toastification";
+
+  const toast = useToast();
 
   const showPassword = ref(false)
   const form = ref({ email: '', password: '' })
+  
+  const googleAuth = () => {
+    window.location.href = 'http://localhost:5168/api/user/google'
+  }
 
-  const handleSocial = (provider) => console.log(`${provider} reg`);
+  const facebookAuth = () => {
+    window.location.href = 'http://localhost:5168/api/user/facebook'
+  }
+
+  const handleSocial = (provider: string) => console.log(`${provider} reg`);
 
 
   const submitForm = async () => {
@@ -131,22 +142,19 @@
     if (form.value.email && form.value.password) {
 
       const newUSer: User = {
-        email: form.value.email.trim(),
+        userName: form.value.email.trim(),
         password: form.value.password.trim(),
       }
 
       try {
-        const res = userService.register(newUSer);
-          console.log({newUSer})
-          console.log({res})
+        const res = await userService.register(newUSer);
 
         if (res.status === 400) {
-          console.log(res.message)
+          toast.error(res.message, {timeout: 3000})
         }
         
-      
-    } catch (error) {
-      console.log("UserService could not be reached", error)
+      } catch (error) {
+        toast.error(`UserService could not be reached: ${error}`, {timeout: 3000})
     }
   }
 }

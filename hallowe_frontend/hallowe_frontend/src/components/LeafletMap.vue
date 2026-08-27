@@ -114,7 +114,7 @@
           return locationStore.mapZoom || baseZoom.value;
         });
 
-        const users: User = [
+        const users = [
           {
             userId: '56a495b5-31a1-4eb4-9dac-3c69038f8b4c',
             name: 'Daniel Malmgren de Oliveira',
