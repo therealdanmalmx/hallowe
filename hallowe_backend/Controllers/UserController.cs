@@ -22,8 +22,8 @@ namespace hallowe_backend.Controllers
         private readonly UserManager<User> _userManager;
 
         public UserController(
-            IRegisterService registerService, 
-            IloginService loginService, 
+            IRegisterService registerService,
+            IloginService loginService,
             SignInManager<User> signInManager,
             UserManager<User> userManager
         )
@@ -47,7 +47,7 @@ namespace hallowe_backend.Controllers
         public ActionResult GetCurrentUser()
         {
             return Ok(new
-            { 
+            {
                 id = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 userName = User.Identity!.Name,
             });
@@ -78,14 +78,14 @@ namespace hallowe_backend.Controllers
 
             return Ok(result);
         }
-        
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return NoContent();
         }
-                
+
         [HttpGet("google")]
         public IActionResult GoogleLogin()
         {
@@ -124,7 +124,7 @@ namespace hallowe_backend.Controllers
                     return Redirect("http://localhost:5173/login?error=noemail");
 
                 var user = await _userManager.FindByEmailAsync(email)
-                           ?? new User { Email = email, EmailConfirmed = true };
+                           ?? new User { Email = email, UserName = email, EmailConfirmed = true };
 
                 if (user.Id == default)
                 {
@@ -137,10 +137,9 @@ namespace hallowe_backend.Controllers
                 await _signInManager.SignInAsync(user, isPersistent: true);
             }
 
-            // External cookie has served its purpose
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             return Redirect("http://localhost:5173/add-address");
-            }
         }
+    }
 }
