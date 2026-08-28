@@ -17,7 +17,7 @@ export const useUserStore = defineStore('userStore', () => {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
       })
 
-      userId.value = data.id;
+      userId.value = data.id ?? '';
 
       if (typeof data === 'object' && data !== null && typeof data.userName === 'string' && data.userName !== '') {
         user.value = data
