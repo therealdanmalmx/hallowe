@@ -6,6 +6,7 @@ using hallowe_backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -104,6 +105,15 @@ namespace hallowe_backend.Controllers
             return Challenge(props, FacebookDefaults.AuthenticationScheme);
         }
 
+        [HttpGet("twitter")]
+        public IActionResult TwitterLogin()
+        {
+            var props = _signInManager.ConfigureExternalAuthenticationProperties(
+                TwitterDefaults.AuthenticationScheme,
+                Url.Action(nameof(ExternalCallback))!);
+            return Challenge(props, TwitterDefaults.AuthenticationScheme);
+        }
+
         [HttpGet("external-callback")]
         public async Task<IActionResult> ExternalCallback()
         {
@@ -119,22 +129,37 @@ namespace hallowe_backend.Controllers
             {
                 // First time — create the user and link the login
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
-                if (email is null)
-                    return Redirect("http://localhost:5173/login?error=noemail");
+                if (string.IsNullOrWhiteSpace(email)) email = null;
 
-                var user = await _userManager.FindByEmailAsync(email)
-                           ?? new User { Email = email, UserName = email, EmailConfirmed = true };
+                var user = email is null ? null : await _userManager.FindByEmailAsync(email);
 
-                if (user.Id == default)
+                if (user is null)
                 {
+                    user = new User
+                    {
+                        UserName = email ?? $"{info.LoginProvider}-{info.ProviderKey}",
+                        Email = email,
+                        EmailConfirmed = email is not null,
+                    };
                     var created = await _userManager.CreateAsync(user);
                     if (!created.Succeeded)
-                        return Redirect("http://localhost:5173/login?error=create");
+                    {
+                        var msg = string.Join(" | ", created.Errors.Select(e => e.Code + ": " + e.Description));
+                        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                        return Redirect($"http://localhost:5173/login?error=create&detail={Uri.EscapeDataString(msg)}");
+                    }
                 }
 
-                await _userManager.AddLoginAsync(user, info);
+                var linked = await _userManager.AddLoginAsync(user, info);
+                if (!linked.Succeeded)
+                {
+                    var msg = string.Join(" | ", linked.Errors.Select(e => e.Code + ": " + e.Description));
+                    await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                    return Redirect($"http://localhost:5173/login?error=link&detail={Uri.EscapeDataString(msg)}");
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: true);
+
             }
 
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);

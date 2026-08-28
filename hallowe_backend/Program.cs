@@ -1,10 +1,9 @@
 using hallowe_backend.Data;
 using hallowe_backend.Models;
 using hallowe_backend.Services;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,9 +20,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Identity — registers the "Identity.Application" cookie scheme and sets it as default
 builder.Services.AddDefaultIdentity<User>(options =>
 {
+
     options.Password.RequiredLength = 8;
     options.Password.RequireUppercase = false;
-    options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = false;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -61,6 +61,18 @@ builder.Services.AddAuthentication()
     {
         options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
         options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
+        options.SignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddLinkedIn(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:LinkedIn:ClientId"]!;
+        options.ClientSecret = builder.Configuration["Authentication:LinkedIn:ClientSecret"]!;
+        options.SignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddTwitter(options =>
+    {
+        options.ConsumerKey = builder.Configuration["Authentication:Twitter:ConsumerKey"]!;
+        options.ConsumerSecret = builder.Configuration["Authentication:Twitter:ConsumerSecret"]!;
         options.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
