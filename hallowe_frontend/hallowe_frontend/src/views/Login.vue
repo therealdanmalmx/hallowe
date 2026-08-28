@@ -82,28 +82,28 @@
             type="button"
             @click.prevent="facebookAuth"
             title="Logga in med Facebook"
-          >
-          <svg class="size-10 cursor-pointer" viewBox="0 0 128 128">
-            <rect fill="#3d5a98" x="4.83" y="4.83" width="118.35" height="118.35" rx="6.53" ry="6.53"></rect><path fill="#fff" d="M86.48 123.17V77.34h15.38l2.3-17.86H86.48v-11.4c0-5.17 1.44-8.7 8.85-8.7h9.46v-16A126.56 126.56 0 0091 22.7c-13.62 0-23 8.3-23 23.61v13.17H52.62v17.86H68v45.83z"></path>
-          </svg>
+            >
+            <svg class="size-10 cursor-pointer" viewBox="0 0 128 128">
+              <rect fill="#3d5a98" x="4.83" y="4.83" width="118.35" height="118.35" rx="6.53" ry="6.53"></rect><path fill="#fff" d="M86.48 123.17V77.34h15.38l2.3-17.86H86.48v-11.4c0-5.17 1.44-8.7 8.85-8.7h9.46v-16A126.56 126.56 0 0091 22.7c-13.62 0-23 8.3-23 23.61v13.17H52.62v17.86H68v45.83z"></path>
+            </svg>
             <!-- <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
             </svg> -->
           </button>
-
+          
           <button
-            type="button"
-            @click.prevent="() => handleSocial('X')"
+          type="button"
+            @click.prevent="TwitterInAuth"
             title="Logga in med X"
-          >
+            >
             <svg class="size-10 cursor-pointer" viewBox="0 0 128 128">
               <path d="M75.916 54.2 122.542 0h-11.05L71.008 47.06 38.672 0H1.376l48.898 71.164L1.376 128h11.05L55.18 78.303 89.328 128h37.296L75.913 54.2ZM60.782 71.79l-4.955-7.086-39.42-56.386h16.972L65.19 53.824l4.954 7.086 41.353 59.15h-16.97L60.782 71.793Z" fill="#000" style="stroke-width:.104373"></path>
             </svg>
           </button>
-
+          
           <button
-            type="button"
-            @click.prevent="() => handleSocial('LinkedIn')"
+          type="button"
+            @click.prevent="LinkedInAuth"
             title="Logga in med LinkedIn"
           >
             <svg class="size-10 cursor-pointer" viewBox="0 0 128 128">
@@ -138,6 +138,12 @@
 
   const facebookAuth = () => {
     window.location.href = 'http://localhost:5168/api/user/facebook'
+  }
+  const LinkedInAuth = () => {
+    window.location.href = 'http://localhost:5168/api/user/linkedin'
+  }
+  const TwitterInAuth = () => {
+    window.location.href = 'http://localhost:5168/api/user/twitter'
   }
 
   const submitForm = async () => {
