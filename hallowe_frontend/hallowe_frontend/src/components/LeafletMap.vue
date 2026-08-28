@@ -83,7 +83,7 @@
 
       setup() {
 
-        const zoom = ref(15);
+        const zoom = ref(18);
         const openedMarkerID = ref<number>(0);
         const mapReady = ref<boolean>(false);
         const color = ref<string>("#FF7518");
