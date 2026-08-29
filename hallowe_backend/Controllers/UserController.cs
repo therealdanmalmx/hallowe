@@ -114,6 +114,15 @@ namespace hallowe_backend.Controllers
             return Challenge(props, TwitterDefaults.AuthenticationScheme);
         }
 
+        [HttpGet("linkedin")]
+        public IActionResult LinkedInLogin()
+        {
+            var props = _signInManager.ConfigureExternalAuthenticationProperties(
+                "LinkedIn",
+                Url.Action(nameof(ExternalCallback))!);
+            return Challenge(props, "LinkedIn");
+        }
+
         [HttpGet("external-callback")]
         public async Task<IActionResult> ExternalCallback()
         {
