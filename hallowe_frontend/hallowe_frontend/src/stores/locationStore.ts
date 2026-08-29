@@ -84,6 +84,5 @@ export const useLocationStore = defineStore('locationStore', () => {
         getAllParticiants,
         zoomToLocation,
         resetMapView,
-        toast
     }
 });
