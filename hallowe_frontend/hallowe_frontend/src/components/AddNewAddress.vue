@@ -5,7 +5,7 @@
             <div class="pi pi-pencil"></div>
             <div class="px-2">Uppdatera address</div>
         </button>
-        <button v-else-if="!userHasLocation()" class="flex items-center" @click="goToAddress()">
+        <button v-else-if="isAuthenticated && !userHasLocation()" class="flex items-center" @click="goToAddress()">
             <div class="pi pi-plus"></div>
             <div class="px-2">Lägg till en ny address</div>
         </button>
@@ -28,7 +28,7 @@ import { router } from "../router.ts";
   const { locations } = useLocationStore();
 
   const userHasLocation = () => {
-    return locations.find((l) => l.userId === userId);
+    return !!locations.find((l) => l.userId === userId);
   }
 
   const route = useRoute();
