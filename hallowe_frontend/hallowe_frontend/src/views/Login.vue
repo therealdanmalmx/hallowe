@@ -111,6 +111,9 @@
             </svg>
           </button>          
         </div>
+         <p class="text-center text-slate-400 text-xs mt-6">
+          Genom att fortsätta godkänner du våran <span class="text-[#ff7518]"> <RouterLink to="/privacy-policy">integritetspolicy</RouterLink>  </span>
+        </p>
       </div>
     </div>
   </div>
