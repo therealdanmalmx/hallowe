@@ -7,6 +7,8 @@ import AddNewHouse from "./views/AddNewHouseView.vue";
 import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import { useUserStore } from "./stores/userStore";
+import PrivacyPolicy from "./views/PrivacyPolicy.vue";
+
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -30,11 +32,13 @@ export const router = createRouter({
     },
     { component: Login, path: "/login", name: "login" },
     { component: Register, path: "/register" },
+    { component: PrivacyPolicy, path: "/privacy-policy" },
   ],
 });
 
 router.beforeEach(async (to) => {
   const userStore = useUserStore()
+  
 
   if (userStore.isLoading) {
     await userStore.getUserInfo()
